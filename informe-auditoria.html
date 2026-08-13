@@ -1013,14 +1013,31 @@ en el plan de mejoras, ordenado por impacto y coste, con el esfuerzo estimado de
 <p class="dek">Los límites de esta auditoría, dichos por nosotros. Un informe que no declara sus
 huecos hace suponer que no los tiene.</p>
 
+<p>La auditoría se organizó en fases. Este es el estado de cada una, incluidas las que no llegaron
+a hacerse:</p>
+<div class="tw"><table>
+<tr><th>Fase</th><th>Qué cubre</th><th>Estado</th></tr>
+<tr><td><strong>0</strong></td><td>Línea base de la interfaz: 96 recorridos de pantalla</td><td><span class="tag good">✓ Completa</span></td></tr>
+<tr><td><strong>1</strong></td><td>Operaciones de lectura de la API: 66 comprobadas</td><td><span class="tag good">✓ Completa</span></td></tr>
+<tr><td><strong>2</strong></td><td>Catálogo de reglas: las 177 declaradas</td><td><span class="tag good">✓ Completa</span></td></tr>
+<tr><td><strong>3a</strong></td><td>Permisos de las 28 operaciones de escritura</td><td><span class="tag good">✓ Completa</span></td></tr>
+<tr><td><strong>3b</strong></td><td>Ciclo de vida de los datos: alta, edición y borrado</td><td><span class="tag warn">~ Parcial</span> — cinco operaciones fuera</td></tr>
+<tr><td><strong>4a</strong></td><td>Reconciliación con la revisión de agosto</td><td><span class="tag good">✓ Completa</span></td></tr>
+<tr><td><strong>4b</strong></td><td><strong>Experiencia de uso según el rol</strong></td><td><span class="tag crit">▲ Pendiente</span></td></tr>
+<tr><td><strong>4c</strong></td><td>Revisión de experiencia de uso asistida por IA</td><td><span class="tag neu">· Fuera por decisión</span></td></tr>
+<tr><td><strong>5</strong></td><td><strong>Diccionario de datos frente al esquema real</strong></td><td><span class="tag crit">▲ Pendiente</span></td></tr>
+<tr><td>—</td><td>Fiabilidad de las cifras y calidad interna del código</td><td><span class="tag good">✓ Completa</span></td></tr>
+</table></div>
+
+
 <h3>Pendiente, y no depende de nadie</h3>
 <div class="card">
-<p><strong>La experiencia de uso según el rol.</strong> Se recorrieron las pantallas con las cuentas
+<p><strong>Fase 4b · La experiencia de uso según el rol.</strong> Se recorrieron las pantallas con las cuentas
 de los tres roles y se guardaron las capturas, pero no se analizó en qué se diferencia lo que ve un
 usuario básico de lo que ve un superadmin. Es la dimensión que la revisión anterior no pudo cubrir
 —usó una sola cuenta— y la que explicaría mejor el hallazgo <code>H-04</code>, las pantallas que
 quedan en blanco.</p>
-<p style="margin-bottom:0"><strong>El diccionario de datos frente al esquema real.</strong> La
+<p style="margin-bottom:0"><strong>Fase 5 · El diccionario de datos frente al esquema real.</strong> La
 plataforma documenta sus tablas en <code>docs/DICCIONARIO_DATOS.md</code>, pero no se contrastó con
 las tablas que existen de verdad en la base de datos. Hay un indicio de desfase: la migración
 aplicada esta semana añadió tres columnas a la tabla de alertas y el diccionario no las recoge. Es
