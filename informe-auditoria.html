@@ -1021,10 +1021,9 @@ a hacerse:</p>
 <tr><td><strong>1</strong></td><td>Operaciones de lectura de la API: 66 comprobadas</td><td><span class="tag good">✓ Completa</span></td></tr>
 <tr><td><strong>2</strong></td><td>Catálogo de reglas: las 177 declaradas</td><td><span class="tag good">✓ Completa</span></td></tr>
 <tr><td><strong>3a</strong></td><td>Permisos de las 28 operaciones de escritura</td><td><span class="tag good">✓ Completa</span></td></tr>
-<tr><td><strong>3b</strong></td><td>Ciclo de vida de los datos: alta, edición y borrado</td><td><span class="tag warn">~ Parcial</span> — cinco operaciones fuera</td></tr>
+<tr><td><strong>3b</strong></td><td>Ciclo de vida de los datos: alta, edición y borrado</td><td><span class="tag warn">~ Parcial</span> — <a href="#operaciones-fuera">cinco operaciones fuera</a></td></tr>
 <tr><td><strong>4a</strong></td><td>Reconciliación con la revisión de agosto</td><td><span class="tag good">✓ Completa</span></td></tr>
-<tr><td><strong>4b</strong></td><td><strong>Experiencia de uso según el rol</strong></td><td><span class="tag crit">▲ Pendiente</span></td></tr>
-<tr><td><strong>4c</strong></td><td>Revisión de experiencia de uso asistida por IA</td><td><span class="tag neu">· Fuera por decisión</span></td></tr>
+<tr><td><strong>4b</strong></td><td><strong>Experiencia de uso</strong>: análisis por rol y revisión asistida por IA</td><td><span class="tag crit">▲ Pendiente</span></td></tr>
 <tr><td><strong>5</strong></td><td><strong>Diccionario de datos frente al esquema real</strong></td><td><span class="tag crit">▲ Pendiente</span></td></tr>
 <tr><td>—</td><td>Fiabilidad de las cifras y calidad interna del código</td><td><span class="tag good">✓ Completa</span></td></tr>
 </table></div>
@@ -1032,11 +1031,16 @@ a hacerse:</p>
 
 <h3>Pendiente, y no depende de nadie</h3>
 <div class="card">
-<p><strong>Fase 4b · La experiencia de uso según el rol.</strong> Se recorrieron las pantallas con las cuentas
-de los tres roles y se guardaron las capturas, pero no se analizó en qué se diferencia lo que ve un
-usuario básico de lo que ve un superadmin. Es la dimensión que la revisión anterior no pudo cubrir
-—usó una sola cuenta— y la que explicaría mejor el hallazgo <code>H-04</code>, las pantallas que
-quedan en blanco.</p>
+<p><strong>Fase 4b · La experiencia de uso.</strong> Tiene dos partes, ninguna hecha.</p>
+<p><em>El análisis por rol:</em> se recorrieron las pantallas con las cuentas de los tres roles y se
+guardaron las capturas, pero no se comparó en qué se diferencia lo que ve un usuario básico de lo que
+ve un superadmin. Es la dimensión que la revisión anterior no pudo cubrir —usó una sola cuenta— y la
+que explicaría mejor el hallazgo <code>H-04</code>, las pantallas que quedan en blanco.</p>
+<p><em>La revisión asistida por inteligencia artificial:</em> sobre esas mismas capturas, aprovechando
+el servicio de IA que la plataforma ya usa. Detectaría problemas de claridad y jerarquía visual que
+ninguna herramienta automática ve. Antes de ejecutarla hay que decidir una cosa: nueve de las capturas
+muestran correos de personas, y enviarlas a un modelo es una decisión de tratamiento de datos, no
+técnica. Se resuelve excluyéndolas o difuminándolas, como ya hizo el equipo anterior.</p>
 <p style="margin-bottom:0"><strong>Fase 5 · El diccionario de datos frente al esquema real.</strong> La
 plataforma documenta sus tablas en <code>docs/DICCIONARIO_DATOS.md</code>, pero no se contrastó con
 las tablas que existen de verdad en la base de datos. Hay un indicio de desfase: la migración
@@ -1061,13 +1065,9 @@ contrastarlas.</p>
 <div class="card">
 <p><strong>No se hizo una prueba de intrusión.</strong> Lo revisado son permisos y configuración
 observables; una prueba de intrusión exige un alcance autorizado por escrito.</p>
-<p><strong>No se midió el comportamiento bajo carga.</strong> Todas las mediciones son de un solo
-usuario: no se sabe cómo responde con varias auditorías simultáneas.</p>
-<p style="margin-bottom:0"><strong>Queda disponible una revisión de experiencia de usuario asistida
-por inteligencia artificial</strong> sobre las capturas ya tomadas, aprovechando el mismo servicio de
-IA que la plataforma usa. Detectaría problemas de claridad y jerarquía visual que ninguna herramienta
-automática ve. No se ejecutó porque implica enviar capturas con datos personales a un modelo, y esa
-es una decisión de tratamiento de datos, no técnica.</p>
+<p style="margin-bottom:0"><strong>No se midió el comportamiento bajo carga.</strong> Todas las
+mediciones son de un solo usuario: no se sabe cómo responde con varias auditorías simultáneas.</p>
+
 </div>
 
 
@@ -1540,7 +1540,7 @@ comprobarlo. Resultado: <strong>ningún dato de prueba llegó a producción</str
 <td style="font-size:13.5px;color:var(--gris)">4 acciones presentes</td></tr>
 </table></div>
 
-<h3>Qué quedó fuera de esta fase</h3>
+<h3 id="operaciones-fuera">Las cinco operaciones que quedaron fuera</h3>
 <div class="tabla-wrap"><table>
 <tr><th>Operación</th><th>Motivo</th></tr>
 <tr><td><code>POST /api/users</code></td><td>Crea una cuenta real en Firebase Authentication, que <strong>no está emulado</strong></td></tr>
