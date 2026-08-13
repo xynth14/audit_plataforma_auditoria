@@ -1010,20 +1010,47 @@ en el plan de mejoras, ordenado por impacto y coste, con el esfuerzo estimado de
 <a class="btn" href="plan-de-mejoras.html">Abrir el plan de mejoras →</a>
 </div>
 <h2 id="s8">8. Qué queda pendiente y qué necesitamos</h2>
-<p class="dek">Los límites de esta auditoría, dichos por nosotros.</p>
+<p class="dek">Los límites de esta auditoría, dichos por nosotros. Un informe que no declara sus
+huecos hace suponer que no los tiene.</p>
+
+<h3>Pendiente, y no depende de nadie</h3>
 <div class="card">
-<p><strong>La gestión de usuarios, el lanzamiento de auditorías y el envío de correo no se probaron en funcionamiento.</strong> Actúan sobre el sistema de cuentas de Google, sobre los servidores de auditoría y sobre correo real, que la copia local no reproduce. Para cubrirlos hace falta un entorno de pruebas separado, porque
-el entorno de pruebas comparte la base de datos con producción y cualquier prueba habría alterado
-información real. Para cubrirlo hace falta <strong>un entorno de pruebas separado</strong>. Es la
-única petición con coste que hacemos.</p>
-<p><strong>Las 51 reglas «sin confirmar» no se pudieron resolver.</strong> Para saber si
-funcionan hay que enfrentarlas a una página que las infrinja a propósito. Es la continuación natural
-del trabajo.</p>
-<p><strong>Queda disponible una revisión de experiencia de usuario asistida por inteligencia
-artificial</strong> sobre las capturas que ya tomamos, aprovechando el mismo servicio de IA que la
-plataforma ya usa. Detectaría problemas de claridad y jerarquía visual que ninguna herramienta
-automática puede ver.</p>
-<p style="margin-bottom:0"><strong>No se hizo una prueba de intrusión</strong> —exige un alcance autorizado por escrito— ni se midió el comportamiento con varias auditorías simultáneas. Ambas cosas quedan fuera por decisión, no por olvido.</p>
+<p><strong>La experiencia de uso según el rol.</strong> Se recorrieron las pantallas con las cuentas
+de los tres roles y se guardaron las capturas, pero no se analizó en qué se diferencia lo que ve un
+usuario básico de lo que ve un superadmin. Es la dimensión que la revisión anterior no pudo cubrir
+—usó una sola cuenta— y la que explicaría mejor el hallazgo <code>H-04</code>, las pantallas que
+quedan en blanco.</p>
+<p style="margin-bottom:0"><strong>El diccionario de datos frente al esquema real.</strong> La
+plataforma documenta sus tablas en <code>docs/DICCIONARIO_DATOS.md</code>, pero no se contrastó con
+las tablas que existen de verdad en la base de datos. Hay un indicio de desfase: la migración
+aplicada esta semana añadió tres columnas a la tabla de alertas y el diccionario no las recoge. Es
+análisis sin riesgo y responde a una consulta que ya nos hicieron.</p>
+</div>
+
+<h3>Pendiente, y necesita algo que hoy no existe</h3>
+<div class="card">
+<p><strong>Cinco operaciones sin probar en funcionamiento:</strong> crear usuarios, desactivarlos,
+restablecer contraseñas, lanzar auditorías y enviar correo. Actúan sobre el sistema de cuentas de
+Google, sobre los servidores de auditoría y sobre correo real, que la copia local no reproduce.
+Requieren <strong>un entorno de pruebas separado</strong>. Es la única petición con coste de toda
+esta auditoría.</p>
+<p style="margin-bottom:0"><strong>Las 51 reglas «sin confirmar».</strong> Existen en el
+código pero nunca han detectado nada, y no se puede distinguir si es que el sitio las cumple o que no
+llegan a ejecutarse. Resolverlo exige un conjunto de páginas con defectos conocidos contra el que
+contrastarlas.</p>
+</div>
+
+<h3>Fuera del alcance por decisión, no por olvido</h3>
+<div class="card">
+<p><strong>No se hizo una prueba de intrusión.</strong> Lo revisado son permisos y configuración
+observables; una prueba de intrusión exige un alcance autorizado por escrito.</p>
+<p><strong>No se midió el comportamiento bajo carga.</strong> Todas las mediciones son de un solo
+usuario: no se sabe cómo responde con varias auditorías simultáneas.</p>
+<p style="margin-bottom:0"><strong>Queda disponible una revisión de experiencia de usuario asistida
+por inteligencia artificial</strong> sobre las capturas ya tomadas, aprovechando el mismo servicio de
+IA que la plataforma usa. Detectaría problemas de claridad y jerarquía visual que ninguna herramienta
+automática ve. No se ejecutó porque implica enviar capturas con datos personales a un modelo, y esa
+es una decisión de tratamiento de datos, no técnica.</p>
 </div>
 
 
