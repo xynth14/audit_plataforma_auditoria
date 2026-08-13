@@ -1,0 +1,582 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Plan de mejoras · Plataforma PAIN</title>
+<style>
+:root{color-scheme:light;--fondo:#f4f5f7;--sup:#fff;--sup2:#fafbfc;--tinta:#14161a;--tinta2:#4a5160;
+--tinta3:#767d8c;--linea:#e2e5ea;--acento:#da291c;--ok:#0ca30c}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){color-scheme:dark;
+--fondo:#14150f;--sup:#1a1a19;--sup2:#212120;--tinta:#fff;--tinta2:#c3c2b7;--tinta3:#8e8d85;
+--linea:#33332f;--acento:#ff6a5e}}
+:root[data-theme="dark"]{color-scheme:dark;--fondo:#14150f;--sup:#1a1a19;--sup2:#212120;--tinta:#fff;
+--tinta2:#c3c2b7;--tinta3:#8e8d85;--linea:#33332f;--acento:#ff6a5e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.w{max-width:1000px;margin:0 auto;padding:0 26px 90px}
+header{background:var(--sup);border-top:6px solid var(--acento);padding:44px 0 30px;border-bottom:1px solid var(--linea);margin-bottom:32px}
+header .w{padding-bottom:0}
+.eyebrow{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta3);margin:0 0 10px}
+h1{font-size:33px;margin:0 0 10px;letter-spacing:-.025em}
+.lede{font-size:18px;color:var(--tinta2);margin:0;max-width:72ch}
+h2{font-size:22px;margin:0 0 4px;letter-spacing:-.02em}
+p{max-width:74ch}
+.bloque{background:var(--sup);border:1px solid var(--linea);border-radius:14px;margin:22px 0;overflow:hidden}
+.bh{padding:22px 26px 18px;border-bottom:1px solid var(--linea);background:var(--sup2)}
+.bh .num{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;
+ border-radius:50%;background:var(--acento);color:#fff;font-weight:700;font-size:16px;margin-bottom:10px}
+.bh .lema{color:var(--tinta3);font-size:14.5px;margin:2px 0 0}
+.bh .razon{margin:12px 0 0;font-size:15px;color:var(--tinta2)}
+.item{padding:18px 26px;border-bottom:1px solid var(--linea)}
+.item:last-child{border-bottom:0}
+.item .top{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:5px}
+.item h3{margin:0;font-size:16.5px;font-weight:640;flex:1;min-width:260px}
+.item .det{margin:6px 0 0;font-size:14.5px;color:var(--tinta2)}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11.5px;font-weight:700;
+ text-transform:uppercase;letter-spacing:.05em;color:#fff;white-space:nowrap}
+.dias{font-variant-numeric:tabular-nums;font-weight:700;font-size:14px;color:var(--tinta);
+ background:var(--sup2);border:1px solid var(--linea);border-radius:6px;padding:2px 9px;white-space:nowrap}
+.cod{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:var(--tinta3)}
+.fuente{font-size:11.5px;color:var(--tinta3);border:1px solid var(--linea);border-radius:99px;padding:1px 8px}
+table{width:100%;border-collapse:collapse;background:var(--sup);font-size:14.5px}
+.tw{overflow-x:auto;border:1px solid var(--linea);border-radius:12px;margin:16px 0}
+th,td{padding:10px 14px;text-align:left;border-bottom:1px solid var(--linea)}
+th{background:var(--sup2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--tinta3)}
+tr:last-child td{border-bottom:0}
+.nota{border-left:4px solid var(--acento);background:var(--sup);padding:16px 20px;margin:18px 0;border-radius:0 10px 10px 0}
+.nota.ok{border-left-color:var(--ok)}
+code{background:var(--sup2);border:1px solid var(--linea);padding:1px 5px;border-radius:5px;font-size:13px;font-family:ui-monospace,Consolas,monospace}
+footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--linea);font-size:13.5px;color:var(--tinta3)}
+@media print{body{background:#fff}.bloque{break-inside:avoid}}
+</style></head><body>
+
+<header><div class="w">
+<p class="eyebrow">Documento interno · Plan de trabajo</p>
+<h1>Plan de mejoras — Plataforma PAIN</h1>
+<p class="lede">Los 29 trabajos que se desprenden de las dos revisiones hechas a la plataforma,
+ordenados por relación entre impacto y coste. 13 de agosto de 2026.</p>
+</div></header>
+
+<div class="w">
+
+<h2 style="margin-top:8px">Qué es este documento</h2>
+<p>PAIN es la plataforma que audita la salud digital de <code>claro.com.pe</code>: rastrea el sitio
+con diez módulos —SEO, técnico, enlaces, etiquetado, contenido, rendimiento, imágenes— y presenta
+los resultados en una interfaz web con roles y reportes.</p>
+
+<p>Entre agosto y hoy se han hecho <strong>dos revisiones independientes</strong> de esa plataforma:</p>
+<div class="tw"><table>
+<tr><th>Revisión</th><th>Cómo se hizo</th><th>Qué pudo ver</th></tr>
+<tr><td><strong>Primera</strong><br><span style="font-size:13px;color:var(--tinta3)">agosto 2026</span></td>
+<td>Desde fuera, con un navegador automatizado y una sola cuenta. <strong>Sin acceso al código fuente.</strong></td>
+<td>Experiencia de uso, accesibilidad, rendimiento de red, configuración de seguridad y compatibilidad entre navegadores.</td></tr>
+<tr><td><strong>Segunda</strong><br><span style="font-size:13px;color:var(--tinta3)">esta auditoría</span></td>
+<td>Con el código fuente, con las cuentas de los tres roles y con una copia aislada de los datos.</td>
+<td>Además de lo anterior: permisos de la API, ciclo de vida de los datos, coherencia del catálogo de reglas, dependencias y calidad interna.</td></tr>
+</table></div>
+<p><strong>Este plan reúne los trabajos que se desprenden de ambas</strong>, ordenados por relación
+entre impacto y coste. Cada trabajo lleva un código (<code>H-01</code>, <code>H-22</code>…) que
+remite al hallazgo correspondiente en el informe técnico, donde está la evidencia completa.</p>
+
+<div class="nota"><strong>Cómo leer las estimaciones.</strong> Son de <em>esfuerzo de desarrollo</em>:
+lo que tarda una persona en hacer el cambio. <strong>No incluyen</strong> revisión, pruebas,
+despliegue ni tiempos de espera, así que no son fechas de entrega. Salen de la naturaleza de cada
+cambio tal como se observó en el código, y quien conozca el proyecto puede ajustarlas.</p>
+<p><strong>«Requiere definición previa»</strong> no significa que sea difícil, sino que
+<strong>no se puede estimar todavía</strong>: son trabajos que amplían lo que la plataforma sabe
+hacer, y su tamaño depende de decisiones de alcance que no corresponden a esta auditoría —cuántas
+reglas nuevas, con qué profundidad, en qué orden—. Los demás bloques sí son correcciones sobre algo
+que ya existe, y por eso se pueden acotar.</p>
+<p style="margin-bottom:0">El <strong>bloque 0</strong> es condición previa. Mientras un informe de
+PAIN no permita distinguir «esta página se revisó y está bien» de «esta regla nunca se ejecutó»,
+mejorar lo demás no resuelve el problema de fondo: que las cifras se puedan citar.</p></div>
+
+<div class="tw"><table>
+<tr><th>Bloque</th><th>Qué resuelve</th><th class="n">Trabajos</th><th>Esfuerzo total estimado</th></tr>
+<tr><td><strong>0</strong></td><td>Que las cifras se puedan citar</td>
+<td class="n">7</td><td>8 a 11 jornadas</td></tr><tr><td><strong>1</strong></td><td>Arreglos de una línea</td>
+<td class="n">8</td><td>1½ jornadas</td></tr><tr><td><strong>2</strong></td><td>Que la plataforma se pueda usar</td>
+<td class="n">5</td><td>6 a 9 jornadas</td></tr><tr><td><strong>3</strong></td><td>Los dos hallazgos estructurales que siguen abiertos</td>
+<td class="n">2</td><td>5 a 8 jornadas</td></tr><tr><td><strong>4</strong></td><td>Ciclo de vida y robustez</td>
+<td class="n">3</td><td>3½ a 4½ jornadas</td></tr><tr><td><strong>5</strong></td><td>Ampliar lo que la plataforma sabe hacer</td>
+<td class="n">4</td><td>Requiere definición previa</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--tinta3)">Una <strong>jornada</strong> es un día de trabajo de
+una persona. Los rangos suman el esfuerzo de todos los trabajos del bloque y no suponen que se
+hagan en paralelo.</p>
+
+<div class="bloque">
+<div class="bh">
+<div class="num">0</div>
+<h2>Que las cifras se puedan citar</h2>
+<p class="lema">Condición previa a publicar cualquier resultado de la plataforma</p>
+<p class="razon">Mientras un informe de PAIN no permita distinguir «se revisó y está bien» de «esa regla nunca se ejecutó», cualquier resultado que se presente es discutible. Este bloque no añade capacidades: hace que las que ya existen se puedan defender.</p>
+</div>
+<div class="item">
+<div class="top">
+<h3>Declarar el estado real de cada regla</h3>
+<span class="pill" style="background:#4a3aa7">producto</span>
+<span class="dias">2–3 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-10</span>
+
+
+
+</div>
+<p class="det">Marcar en el catálogo qué reglas están implementadas y cuáles planificadas, y que la interfaz distinga «cumple» de «no evaluada». Hoy 145 de 177 tienen motor detrás (94 confirmadas con hallazgos reales) y 32 no dejan rastro.</p>
+</div><div class="item">
+<div class="top">
+<h3>Reconciliar las cifras de enlaces rotos</h3>
+<span class="pill" style="background:#1baf7a">back</span>
+<span class="dias">2–3 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-20</span>
+
+
+
+</div>
+<p class="det">Cuatro indicadores dicen contar lo mismo y no cuadran entre sí: <code>broken_links</code> 6 399, internos 45, externos 554, <code>broken_links_findings</code> 779, y la lista suma 6 497. Internos más externos dan 599. Es el único hallazgo que impide citar un número. Definir qué cuenta cada uno y hacerlos reconciliar, o renombrarlos.</p>
+</div><div class="item">
+<div class="top">
+<h3>Completar la tabla de equivalencias entre motor y catálogo</h3>
+<span class="pill" style="background:#1baf7a">back</span>
+<span class="dias">1 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-25</span>
+
+
+
+</div>
+<p class="det">El BFF traduce el código que emite cada módulo al del catálogo con <code>FINDING_CODE_ALIASES</code> (45 entradas), pero deja fuera pares evidentes: <code>PERF_PAGE_HEAVY</code> no traduce a <code>PERF_PESO_DE_PAGINA_ALTO</code>, ni <code>PERF_IMAGES_HEAVY</code> a <code>PERF_IMAGENES_PESADAS</code>. Por eso el catálogo <em>subestima</em> la cobertura real. Completarla y añadir una comprobación que avise de cualquier código emitido sin equivalencia.</p>
+</div><div class="item">
+<div class="top">
+<h3>Rotular qué unidad cuenta cada indicador</h3>
+<span class="pill" style="background:#2a78d6">front</span>
+<span class="dias">½ d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-21</span>
+
+
+
+</div>
+<p class="det">El panel de SEO muestra 121 —páginas afectadas— junto a una lista de 1 453 —ocurrencias—. Ambas correctas, pero nada lo indica. Escribir la unidad al lado del número («121 páginas con defectos», «1 453 ocurrencias»). Es la corrección más barata de todo el plan y elimina la apariencia de contradicción entre cifras.</p>
+</div><div class="item">
+<div class="top">
+<h3>Dar de alta los 14 códigos que ya se emiten</h3>
+<span class="pill" style="background:#eda100">catálogo</span>
+<span class="dias">1–2 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-12</span>
+
+
+
+</div>
+<p class="det">La plataforma reporta 14 tipos de hallazgo que su catálogo no describe, así que llegan al usuario sin definición, severidad ni recomendación.</p>
+</div><div class="item">
+<div class="top">
+<h3>Consolidar el bloque duplicado de rendimiento</h3>
+<span class="pill" style="background:#eda100">catálogo</span>
+<span class="dias">1 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-11</span>
+
+
+
+</div>
+<p class="det">El catálogo declara el bloque de rendimiento dos veces: treinta reglas con nombres en español y quince con nombres en inglés, que describen en parte lo mismo. Al depurarlo queda a la vista el hueco real: 5 ya funcionaban bajo el nombre en inglés, 11 son variantes de umbral de reglas existentes y solo 14 son capacidades que faltan de verdad.</p>
+</div><div class="item">
+<div class="top">
+<h3>Impedir colecciones colgando de un subdominio inexistente</h3>
+<span class="pill" style="background:#1baf7a">back</span>
+<span class="dias">½ d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-16</span>
+
+
+
+</div>
+<p class="det">Hoy devuelve «creado» y guarda un registro inalcanzable y permanente. La comprobación ya está escrita en el endpoint de programaciones: es replicarla.</p>
+</div>
+</div><div class="bloque">
+<div class="bh">
+<div class="num">1</div>
+<h2>Arreglos de una línea</h2>
+<p class="lema">Ocho correcciones puntuales, ninguna de más de una hora salvo la última</p>
+<p class="razon">Son cambios puntuales que no exigen decisiones de diseño ni tocar la lógica de la plataforma. Es la mejor relación entre riesgo eliminado y esfuerzo de toda la lista: incluye las tres librerías con vulnerabilidades y la única operación que hoy no comprueba permisos.</p>
+</div>
+<div class="item">
+<div class="top">
+<h3>Actualizar las tres librerías con vulnerabilidades conocidas</h3>
+<span class="pill" style="background:#eb6834">infra</span>
+<span class="dias">2 h</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-22</span>
+
+
+
+</div>
+<p class="det"><code>lxml 5.3.0</code> (alta, procesamiento de XML externo → 6.1.0), <code>google-cloud-aiplatform 1.71.1</code> (alta → 1.133.0) y <code>requests 2.32.3</code> (dos avisos moderados → 2.33.0), esta última en nueve de los once servicios. Son relevantes porque la plataforma descarga y procesa contenido no confiable de internet: es su modo normal de trabajo, no un caso extremo.</p>
+</div><div class="item">
+<div class="top">
+<h3>Fijar las versiones del módulo de imágenes</h3>
+<span class="pill" style="background:#eb6834">infra</span>
+<span class="dias">1 h</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-24</span>
+
+
+
+</div>
+<p class="det">Es el único servicio que declara sus diez dependencias sin versión. Regenerar el archivo desde el entorno que hoy funciona en producción.</p>
+</div><div class="item">
+<div class="top">
+<h3>Exigir rol en la operación de vaciado de caché</h3>
+<span class="pill" style="background:#1baf7a">back</span>
+<span class="dias">1 h</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-14</span>
+
+
+
+</div>
+<p class="det"><code>POST /api/cache/invalidate</code> es la única operación de escritura sin comprobación de rol. Cualquier usuario con sesión puede vaciar la caché y forzar a reconsultar BigQuery, que se factura por consulta.</p>
+</div><div class="item">
+<div class="top">
+<h3>Añadir <code>method="post"</code> al formulario de acceso</h3>
+<span class="pill" style="background:#2a78d6">front</span>
+<span class="dias">1 h</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-06</span>
+
+
+
+</div>
+<p class="det">Si el componente externo de Google no carga, el envío nativo pondría correo y contraseña en la barra de direcciones.</p>
+</div><div class="item">
+<div class="top">
+<h3>Alinear el permiso de categorías de URL</h3>
+<span class="pill" style="background:#1baf7a">back</span>
+<span class="dias">1 h</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-05</span>
+
+
+
+</div>
+<p class="det">La interfaz reserva la pantalla a superadmin; el servidor permite consultarla a un administrador. Decidir cuál es la política y aplicarla en ambos lados.</p>
+</div><div class="item">
+<div class="top">
+<h3>Confirmar quién puede ampliar los accesos de un usuario</h3>
+<span class="pill" style="background:#5b6270">decisión</span>
+<span class="dias">1 h</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-15</span>
+
+
+
+</div>
+<p class="det">Cambiar el rol exige superadmin; cambiar a qué subdominios accede, solo administrador. Puede ser intencional: conviene que quede escrito.</p>
+</div><div class="item">
+<div class="top">
+<h3>Rotar las contraseñas de las cuentas de prueba</h3>
+<span class="pill" style="background:#5b6270">operación</span>
+<span class="dias">1 h</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-08</span>
+
+
+<span class="cod">depende de: cierre de la auditoría</span>
+</div>
+<p class="det">Dos de las tres cuentas facilitadas comparten contraseña. Con una contraseña compartida la bitácora deja de servir para saber quién hizo qué.</p>
+</div><div class="item">
+<div class="top">
+<h3>Un identificador por módulo</h3>
+<span class="pill" style="background:#eda100">catálogo</span>
+<span class="dias">½ d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-13</span>
+
+
+
+</div>
+<p class="det">M3, M6 y M8 designan dos módulos distintos cada uno. Impide automatizar cualquier informe de cobertura por módulo.</p>
+</div>
+</div><div class="bloque">
+<div class="bh">
+<div class="num">2</div>
+<h2>Que la plataforma se pueda usar</h2>
+<p class="lema">Accesibilidad y claridad — trabajo de desarrollo, sin decisiones de arquitectura</p>
+<p class="razon">Ninguno compromete la seguridad; todos comprometen que la herramienta se use. Y hay un argumento adicional: PAIN audita accesibilidad en claro.com.pe, así que incumplirla en su propia interfaz debilita el informe que entrega.</p>
+</div>
+<div class="item">
+<div class="top">
+<h3>Corregir el contraste de color</h3>
+<span class="pill" style="background:#2a78d6">front</span>
+<span class="dias">1 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-02</span>
+
+
+
+</div>
+<p class="det">Es el fallo más numeroso y el más barato: normalmente se resuelve ajustando unas pocas variables de estilo. El caso dominante es un verde de estado con un contraste de 3,31 frente al 4,5 que exige la norma.</p>
+</div><div class="item">
+<div class="top">
+<h3>Ampliar la zona de pulsación de los controles</h3>
+<span class="pill" style="background:#2a78d6">front</span>
+<span class="dias">1–2 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-18</span>
+
+
+
+</div>
+<p class="det">2,934 de 5,205 controles (56 %) miden menos de 44 px. No hace falta agrandar lo que se ve: basta ampliar el área activa.</p>
+</div><div class="item">
+<div class="top">
+<h3>Añadir estructura semántica a las páginas</h3>
+<span class="pill" style="background:#2a78d6">front</span>
+<span class="dias">2–3 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-03</span>
+
+
+
+</div>
+<p class="det">Envolver el contenido en <code>&lt;main&gt;</code>, <code>&lt;nav&gt;</code> y <code>&lt;header&gt;</code>, y garantizar un único título principal por pantalla. Permite a un lector de pantalla saltar al contenido en vez de recorrer la página entera.</p>
+</div><div class="item">
+<div class="top">
+<h3>Explicar por qué una pantalla está vacía</h3>
+<span class="pill" style="background:#2a78d6">front</span>
+<span class="dias">1 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-04</span>
+
+
+
+</div>
+<p class="det">Hoy una pantalla sin permiso se sirve, falla en silencio y queda en blanco. Distinguir el «no tienes permiso» del error genérico evita consultas a soporte.</p>
+</div><div class="item">
+<div class="top">
+<h3>Devolver «no existe» en lugar de «sin resultados»</h3>
+<span class="pill" style="background:#1baf7a">back</span>
+<span class="dias">1–2 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-09</span>
+
+
+
+</div>
+<p class="det">31 operaciones responden 200 ante identificadores inventados. Un enlace roto se ve idéntico a una auditoría sin hallazgos. Es el mismo patrón repetido en varias rutas.</p>
+</div>
+</div><div class="bloque">
+<div class="bh">
+<div class="num">3</div>
+<h2>Los dos hallazgos estructurales que siguen abiertos</h2>
+<p class="lema">Vienen de la auditoría anterior y no se han movido</p>
+<p class="razon">La revisión de agosto señaló tres problemas estructurales de navegación. Uno —el enlace directo a cada módulo— ya se resolvió. Estos dos siguen igual, y son los que más afectan al uso diario: dificultan moverse por la herramienta y encontrar un dato dentro de una pantalla.</p>
+</div>
+<div class="item">
+<div class="top">
+<h3>Navegación persistente entre secciones</h3>
+<span class="pill" style="background:#2a78d6">front</span>
+<span class="dias">2–3 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">UX-2</span>
+<span class="fuente">detectado en agosto, aún abierto</span>
+
+
+</div>
+<p class="det">El menú global solo existe en la pantalla inicial. Medido hoy: media de 0,7 enlaces de navegación visibles por pantalla, y ninguno en Subdominios ni Colecciones. Moverse entre secciones obliga a volver atrás.</p>
+</div><div class="item">
+<div class="top">
+<h3>Reducir la densidad de las vistas de resultados</h3>
+<span class="pill" style="background:#2a78d6">front</span>
+<span class="dias">3–5 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-19</span>
+<span class="fuente">detectado en agosto, aún abierto</span>
+
+
+</div>
+<p class="det">La vista de imágenes mide 15,437 px de alto en móvil y las tablas llegan a 21 columnas. Paginar, plegar por defecto y ocultar las columnas que repiten el mismo valor en todas las filas.</p>
+</div>
+</div><div class="bloque">
+<div class="bh">
+<div class="num">4</div>
+<h2>Ciclo de vida y robustez</h2>
+<p class="lema">Deuda que hoy no molesta y mañana sí</p>
+<p class="razon">Ninguno tiene efecto visible ahora. Todos empeoran con el uso: cuantos más datos acumule la plataforma, más caro será resolverlos.</p>
+</div>
+<div class="item">
+<div class="top">
+<h3>Poder eliminar o archivar subdominios y colecciones</h3>
+<span class="pill" style="background:#1baf7a">back+front</span>
+<span class="dias">2–3 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-17</span>
+
+
+
+</div>
+<p class="det">Hoy no existe ninguna operación de borrado para ninguno de los dos. Todo lo que se crea permanece a la vista de todos. Existe un campo <code>is_active</code> que no se usa para filtrar.</p>
+</div><div class="item">
+<div class="top">
+<h3>Redirigir según el rol en lugar de servir la pantalla vacía</h3>
+<span class="pill" style="background:#2a78d6">front</span>
+<span class="dias">1 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-07</span>
+
+
+<span class="cod">depende de: H-04</span>
+</div>
+<p class="det">Los datos están protegidos —lo verificamos—, pero la interfaz entrega igualmente el armazón de pantallas que el usuario no puede usar.</p>
+</div><div class="item">
+<div class="top">
+<h3>Acotar y cachear la obtención de credenciales internas</h3>
+<span class="pill" style="background:#1baf7a">back</span>
+<span class="dias">½ d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-01</span>
+
+
+
+</div>
+<p class="det">La comprobación de salud pide un token por módulo sin límite de tiempo ni caché. Hoy es rápido; si el servicio de credenciales se degradara, la pantalla de diagnóstico sería la primera en dejar de responder.</p>
+</div>
+</div><div class="bloque">
+<div class="bh">
+<div class="num">5</div>
+<h2>Ampliar lo que la plataforma sabe hacer</h2>
+<p class="lema">Inversión de producto, a planificar</p>
+<p class="razon">Es el único bloque que añade capacidades nuevas. Mientras no esté, el bloque 0 garantiza que nadie confunda una regla ausente con una página limpia.</p>
+</div>
+<div class="item">
+<div class="top">
+<h3>Conjunto de páginas de referencia con defectos conocidos</h3>
+<span class="pill" style="background:#4a3aa7">producto</span>
+<span class="dias">a planificar</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+
+<span class="fuente">detectado en agosto, aún abierto</span>
+
+
+</div>
+<p class="det">Un puñado de páginas con fallos intencionados contra los que contrastar lo que la plataforma detecta. Es lo que permitiría demostrar que las reglas aciertan y convertir PAIN en algo certificable ante un cliente. Es lo único que permitiría demostrar, con evidencia, que cada regla detecta lo que dice detectar. También resolvería las 51 reglas que hoy existen en el código pero nunca han producido un hallazgo: sin páginas de prueba no se puede saber si es que el sitio las cumple o es que no llegan a ejecutarse.</p>
+</div><div class="item">
+<div class="top">
+<h3>Implementar las capacidades de rendimiento ausentes</h3>
+<span class="pill" style="background:#1baf7a">back</span>
+<span class="dias">a planificar</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+
+
+
+<span class="cod">depende de: H-11</span>
+</div>
+<p class="det">Minificación, recursos que bloquean el dibujado, caché de navegador, número de peticiones, fuentes web. Unas veinte reglas reales, una vez descontados los duplicados del bloque 0.</p>
+</div><div class="item">
+<div class="top">
+<h3>Primeras pruebas automatizadas y verificación antes de desplegar</h3>
+<span class="pill" style="background:#1baf7a">back+front</span>
+<span class="dias">a planificar</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-23</span>
+
+
+
+</div>
+<p class="det">Hoy no existe ninguna prueba ni integración continua en todo el repositorio: once servicios en producción donde cada cambio sale sin comprobar nada. No hace falta cubrirlo todo. Convertir en prueba cada hallazgo corregido de este informe —el 404 de <code>H-09</code>, la validación de <code>H-16</code>, los permisos de <code>H-14</code>— impide que regresen y crea la red que hoy no existe.</p>
+</div><div class="item">
+<div class="top">
+<h3>Entorno de pruebas separado</h3>
+<span class="pill" style="background:#eb6834">infra</span>
+<span class="dias">a planificar</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+
+
+<span class="fuente">requiere una decisión previa</span>
+
+</div>
+<p class="det">Sin él quedan sin verificar cinco operaciones: crear usuarios, desactivarlos, restablecer contraseñas, lanzar auditorías y enviar correo. Es la única petición con coste que se desprende de esta auditoría.</p>
+</div>
+</div>
+
+<h2>Trabajo que ya está hecho, y por eso no figura arriba</h2>
+<p>La primera revisión, la de agosto, dejó siete observaciones de experiencia de uso e
+infraestructura. <strong>Cuatro se corrigieron entre entonces y hoy</strong>, y esta auditoría lo
+comprobó una por una:</p>
+
+<div class="tw"><table>
+<tr><th>Lo que se observó en agosto</th><th>Estado comprobado ahora</th></tr>
+<tr><td>El servidor no enviaba ninguna de las cinco cabeceras de seguridad HTTP básicas</td>
+<td><strong>Corregido.</strong> Las seis están presentes en producción, incluida una política de contenido.</td></tr>
+<tr><td>Ningún archivo se guardaba en la memoria del navegador: todo se descargaba en cada visita</td>
+<td><strong>Corregido.</strong> Los archivos de estilo y de programa declaran caché de un día.</td></tr>
+<tr><td>No se podía enviar a otra persona el enlace directo a un módulo de resultados</td>
+<td><strong>Corregido.</strong> Cada uno de los once módulos tiene su propia dirección, sobrevive a recargar la página y el botón Atrás del navegador funciona.</td></tr>
+<tr><td>Los desplegables de filtro no tenían nombre para lectores de pantalla. Era el único fallo de accesibilidad de gravedad crítica</td>
+<td><strong>Corregido.</strong> De los 35 desplegables medidos en las once vistas, todos tienen nombre accesible.</td></tr>
+</table></div>
+<p>Las tres observaciones que siguen abiertas están recogidas arriba: el tamaño de los controles
+(<code>H-18</code>, bloque 2), la densidad de las pantallas y la desaparición del menú de navegación
+(<code>H-19</code> y <code>UX-2</code>, bloque 3).</p>
+
+<h3>Y la dimensión que aquella revisión consideraba la más grave</h3>
+<p>La primera revisión encontró que <strong>varias cifras se contradecían entre pantallas de una
+misma auditoría</strong> —una pantalla decía «cero hallazgos de SEO» mientras otra listaba más de
+cien defectos— y sospechaba que un módulo contaba cada problema dos veces. La calificó de
+<em>deficiente</em>, la describió como «la dimensión que decide si el producto sirve» y estimó entre
+tres y cinco días de trabajo antes de poder publicar cualquier resultado.</p>
+
+<p>Esta auditoría lo verificó contando directamente contra el sistema, en vez de comparar pantallas.
+El resultado es mucho mejor:</p>
+
+<div class="tw"><table>
+<tr><th>Lo que se sospechaba</th><th>Lo que se encontró</th></tr>
+<tr><td>Los totales no cuadran entre pantallas</td>
+<td><strong>Cuadran.</strong> Los siete módulos con datos coinciden exactamente entre el resumen de la auditoría y el detalle de cada módulo: 17,723 hallazgos, sin una sola discrepancia.</td></tr>
+<tr><td>Un módulo cuenta cada problema dos veces</td>
+<td><strong>Ya no ocurre.</strong> Sobre 500 registros analizados no hay ningún duplicado.</td></tr>
+<tr><td>Las cifras de SEO se contradicen entre sí</td>
+<td><strong>No hay error de cálculo.</strong> Un panel cuenta páginas afectadas y otro cuenta ocurrencias: ambos son correctos, pero la pantalla no dice cuál es cuál. Se resuelve escribiendo la unidad al lado del número (<code>H-21</code>, media jornada).</td></tr>
+<tr><td>Las cifras de enlaces rotos no cuadran</td>
+<td><strong>Sigue igual.</strong> Es el único punto de este grupo que exige trabajo real (<code>H-20</code>).</td></tr>
+</table></div>
+<div class="nota ok" style="margin-bottom:0"><strong>En resumen:</strong> de aquel bloque de tres a
+cinco jornadas quedan dos trabajos, y uno de ellos es de media jornada. La fiabilidad de las cifras
+dejó de ser el mayor obstáculo del producto.</div>
+
+<footer>Plan de mejoras · Auditoría de la Plataforma PAIN · 13 de agosto de 2026<br>
+El detalle de cada hallazgo está en <code>informe-fase0.html</code>; la versión para dirección,
+en <code>resumen-ejecutivo.html</code>.</footer>
+</div></body></html>

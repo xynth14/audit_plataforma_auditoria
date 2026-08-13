@@ -1,0 +1,21 @@
+# Credenciales. Nunca se versionan.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Evidencia cruda con datos de producción: no forma parte del entregable.
+out/*.json
+out/*.log
+out/volcado-firestore.json
+
+# Dependencias
+node_modules/
+.venv*/
+__pycache__/
+
+# Sistema
+Thumbs.db
+desktop.ini
+.DS_Store

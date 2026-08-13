@@ -1,0 +1,2239 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Informe de auditoría · Plataforma PAIN</title>
+<style>
+:root{
+  color-scheme:light;
+  --fondo:#f4f5f7; --sup:#ffffff; --sup2:#fafbfc;
+  --tinta:#14161a; --tinta2:#4a5160; --tinta3:#767d8c;
+  --linea:#e2e5ea; --acento:#da291c;
+  --good:#0ca30c; --warn:#fab219; --ser:#ec835a; --crit:#d03b3b;
+  --barra:#2a78d6;
+}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){
+  color-scheme:dark;
+  --fondo:#14150f; --sup:#1a1a19; --sup2:#212120;
+  --tinta:#ffffff; --tinta2:#c3c2b7; --tinta3:#8e8d85;
+  --linea:#33332f; --acento:#ff6a5e;
+  --barra:#3987e5;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --fondo:#14150f; --sup:#1a1a19; --sup2:#212120;
+  --tinta:#ffffff; --tinta2:#c3c2b7; --tinta3:#8e8d85;
+  --linea:#33332f; --acento:#ff6a5e; --barra:#3987e5;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);
+ font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.w{max-width:1000px;margin:0 auto;padding:0 26px 90px}
+header{background:var(--sup);border-top:6px solid var(--acento);padding:46px 0 32px;
+ border-bottom:1px solid var(--linea);margin-bottom:36px}
+header .w{padding-bottom:0}
+.eyebrow{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta3);margin:0 0 10px}
+h1{font-size:34px;line-height:1.2;margin:0 0 10px;letter-spacing:-.025em}
+.lede{font-size:18px;color:var(--tinta2);margin:0;max-width:70ch}
+h2{font-size:23px;margin:52px 0 6px;letter-spacing:-.02em}
+h2+.dek{color:var(--tinta3);margin:0 0 18px;font-size:15px}
+h3{font-size:17px;margin:30px 0 10px}
+p{max-width:74ch}
+.card{background:var(--sup);border:1px solid var(--linea);border-radius:12px;padding:22px 26px;margin:16px 0}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:22px 0}
+.tile{background:var(--sup);border:1px solid var(--linea);border-radius:12px;padding:18px 20px}
+.tile .n{font-size:32px;font-weight:660;letter-spacing:-.03em;line-height:1.05}
+.tile .l{font-size:13px;color:var(--tinta2);margin-top:6px}
+.tile .sub{font-size:12.5px;color:var(--tinta3);margin-top:2px}
+table{width:100%;border-collapse:collapse;background:var(--sup);font-size:14.5px}
+.tw{overflow-x:auto;border:1px solid var(--linea);border-radius:12px;margin:16px 0}
+th,td{padding:11px 14px;text-align:left;border-bottom:1px solid var(--linea);vertical-align:top}
+th{background:var(--sup2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;
+ color:var(--tinta3);font-weight:650;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+code{background:var(--sup2);border:1px solid var(--linea);padding:1px 6px;border-radius:5px;
+ font-size:13px;font-family:ui-monospace,Consolas,monospace}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:99px;
+ font-size:12.5px;font-weight:650;white-space:nowrap;border:1px solid transparent}
+.tag.crit{color:var(--crit);border-color:var(--crit);background:color-mix(in srgb,var(--crit) 10%,transparent)}
+.tag.ser{color:var(--ser);border-color:var(--ser);background:color-mix(in srgb,var(--ser) 12%,transparent)}
+.tag.warn{color:var(--tinta2);border-color:var(--warn);background:color-mix(in srgb,var(--warn) 16%,transparent)}
+.tag.neu{color:var(--tinta3);border-color:var(--linea);background:var(--sup2)}
+.tag.good{color:var(--good);border-color:var(--good);background:color-mix(in srgb,var(--good) 10%,transparent)}
+.nota{border-left:4px solid var(--acento);background:var(--sup);padding:16px 20px;margin:18px 0;
+ border-radius:0 10px 10px 0}
+.nota.ok{border-left-color:var(--good)} .nota.info{border-left-color:var(--barra)}
+.h{background:var(--sup);border:1px solid var(--linea);border-radius:12px;padding:20px 24px;margin:14px 0}
+.h .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.h .cod{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:var(--tinta3)}
+.h h3{margin:0;font-size:18px;letter-spacing:-.01em}
+.h .par{margin:10px 0 0}
+.h .neg{margin:10px 0 0;padding:12px 16px;background:var(--sup2);border-radius:8px;font-size:15px}
+.h .neg b{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--tinta3);
+ display:block;margin-bottom:3px;font-weight:650}
+/* ── Barra de cobertura (part-to-whole, 3 segmentos, hueco de 2px) ── */
+.cob{display:flex;gap:2px;height:46px;margin:20px 0 14px}
+.cob div{position:relative;display:flex;align-items:center;justify-content:center;
+ font-size:14px;font-weight:650;color:#fff}
+.cob .s1{background:var(--good);border-radius:6px 0 0 6px}
+.cob .s2{background:var(--warn);color:#14161a}
+.cob .s3{background:var(--crit);border-radius:0 6px 6px 0}
+.leg{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:14px;margin-bottom:6px}
+.leg span{display:flex;align-items:center;gap:8px}
+.sw{width:12px;height:12px;border-radius:3px;flex:none}
+/* ── Comparativa por pantalla (serie única, etiqueta directa) ── */
+.cmp{display:grid;grid-template-columns:minmax(140px,auto) 1fr;gap:5px 14px;align-items:center;
+ margin:18px 0;font-size:14px}
+.cmp .et{color:var(--tinta2);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cmp .tr{display:flex;align-items:center;gap:9px}
+.cmp .bar{height:14px;background:var(--barra);border-radius:0 4px 4px 0;min-width:2px}
+.cmp .v{font-variant-numeric:tabular-nums;color:var(--tinta2);font-size:13px}
+ol.olas{counter-reset:o;list-style:none;padding:0}
+ol.olas>li{counter-increment:o;background:var(--sup);border:1px solid var(--linea);
+ border-radius:12px;padding:18px 22px 18px 62px;margin:12px 0;position:relative}
+ol.olas>li::before{content:counter(o);position:absolute;left:20px;top:18px;width:28px;height:28px;
+ border-radius:50%;background:var(--acento);color:#fff;display:flex;align-items:center;
+ justify-content:center;font-weight:700;font-size:14px}
+ol.olas h3{margin:0 0 6px}
+dl.glo{display:grid;grid-template-columns:minmax(150px,auto) 1fr;gap:10px 20px;margin:0;font-size:15px}
+dl.glo dt{font-weight:650} dl.glo dd{margin:0;color:var(--tinta2)}
+footer{margin-top:64px;padding-top:22px;border-top:1px solid var(--linea);
+ font-size:13.5px;color:var(--tinta3)}
+@media print{body{background:#fff}.card,.tile,.tw,.h,ol.olas>li{break-inside:avoid}}
+@media (max-width:640px){h1{font-size:27px}.cmp{grid-template-columns:1fr}.cmp .et{text-align:left}
+dl.glo{grid-template-columns:1fr}}
+
+/* ── Clases heredadas del informe técnico, sobre los tokens de este documento ── */
+:root{--gris:var(--tinta3);--ok:var(--good);--mod:var(--warn);--grave:var(--ser);
+ --rojo:var(--acento);--menor:var(--tinta3);--crit:var(--crit)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:18px 0}
+.kpi{background:var(--sup);border:1px solid var(--linea);border-radius:10px;padding:16px 18px}
+.kpi .n{font-size:27px;font-weight:650;letter-spacing:-.02em;line-height:1.1}
+.kpi .l{font-size:12px;color:var(--tinta3);margin-top:4px;text-transform:uppercase;letter-spacing:.04em}
+.tabla-wrap{overflow-x:auto;border:1px solid var(--linea);border-radius:12px;margin:16px 0}
+.chip{display:inline-block;padding:2px 9px;border-radius:99px;font-size:12px;font-weight:600;
+ background:var(--sup2);color:var(--tinta2);white-space:nowrap;border:1px solid var(--linea)}
+.chip.crit,.chip.no{background:color-mix(in srgb,var(--crit) 12%,transparent);color:var(--crit);border-color:var(--crit)}
+.chip.grave{background:color-mix(in srgb,var(--ser) 14%,transparent);color:var(--ser);border-color:var(--ser)}
+.chip.mod{background:color-mix(in srgb,var(--warn) 18%,transparent);color:var(--tinta2);border-color:var(--warn)}
+.chip.ok{background:color-mix(in srgb,var(--good) 12%,transparent);color:var(--good);border-color:var(--good)}
+.chip.menor{background:var(--sup2);color:var(--tinta3)}
+.det{margin:10px 0;border:1px solid var(--linea);border-radius:8px;background:var(--sup)}
+.det summary{cursor:pointer;padding:11px 15px;font-weight:600;font-size:14.5px}
+.det .body{padding:0 15px 14px}
+.shots{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:10px}
+.shots figure{margin:0}.shots img{width:100%;border:1px solid var(--linea);border-radius:6px;display:block}
+.shots figcaption{font-size:12px;color:var(--tinta3);margin-top:5px}
+td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+h3{font-size:17px;margin:26px 0 10px}
+/* ── Evidencia técnica dentro de cada hallazgo ── */
+.tec{margin-top:12px;border-top:1px solid var(--linea);padding-top:8px}
+.tec summary{cursor:pointer;font-size:13.5px;color:var(--tinta3);font-weight:650;list-style:none}
+.tec summary::before{content:'▸ ';font-size:11px}
+.tec[open] summary::before{content:'▾ '}
+.tecbody{font-size:14.5px;color:var(--tinta2);padding:10px 0 2px}
+.tecbody dl{display:grid;grid-template-columns:118px 1fr;gap:8px 14px;margin:10px 0 0}
+.tecbody dt{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--tinta3);
+ font-weight:650;padding-top:3px}
+.tecbody dd{margin:0}
+@media (max-width:640px){.tecbody dl{grid-template-columns:1fr}}
+/* ── Hallazgos en acordeón ── */
+.hall{background:var(--sup);border:1px solid var(--linea);border-left:4px solid var(--linea);
+ border-radius:12px;margin:10px 0;scroll-margin-top:16px;overflow:hidden}
+.hall.alta{border-left-color:var(--crit)}.hall.media{border-left-color:var(--ser)}
+.hall.baja{border-left-color:var(--warn)}.hall.informativo{border-left-color:var(--linea)}
+.hall>summary{cursor:pointer;padding:15px 22px;display:flex;align-items:center;gap:10px;
+ flex-wrap:wrap;list-style:none;transition:background .12s}
+.hall>summary::-webkit-details-marker{display:none}
+.hall>summary:hover{background:var(--sup2)}
+.hall>summary::before{content:'▸';color:var(--tinta3);font-size:12px;flex:none}
+.hall[open]>summary::before{content:'▾'}
+.hall[open]>summary{border-bottom:1px solid var(--linea);background:var(--sup2)}
+.hall .cod{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:var(--tinta3);flex:none}
+.hall .hall-tit{font-weight:640;font-size:16px;flex:1 1 320px;min-width:0}
+.hall .hall-esf{font-size:12.5px;color:var(--tinta3);white-space:nowrap}
+.hallbody{padding:16px 22px 20px}
+.hallbody>p:first-child{margin-top:0}
+/* El ejecutivo acotaba estos estilos a .h; aquí el contenedor es .hall. */
+.hallbody .par{margin:0}
+.hallbody .neg{margin:14px 0 0;padding:13px 17px;background:var(--sup2);border-radius:8px;font-size:15px}
+.hallbody .neg b{display:block;margin-bottom:4px;font-size:12px;font-weight:650;
+ text-transform:uppercase;letter-spacing:.05em;color:var(--tinta3)}
+.hall:target{box-shadow:0 0 0 3px color-mix(in srgb,var(--acento) 22%,transparent)}
+.controles{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0 6px}
+.controles button{font:inherit;font-size:13.5px;padding:6px 14px;border-radius:8px;cursor:pointer;
+ border:1px solid var(--linea);background:var(--sup);color:var(--tinta2)}
+.controles button:hover{background:var(--sup2)}
+.controles .pista{font-size:13px;color:var(--tinta3)}
+a.ir{text-decoration:none}
+a.ir code{border-color:var(--acento);color:var(--acento)}
+/* ── Índice ── */
+.indice{background:var(--sup);border:1px solid var(--linea);border-radius:12px;padding:20px 24px;margin:22px 0}
+.indice ol{margin:10px 0 0;padding-left:22px;columns:2;column-gap:32px}
+.indice li{margin:5px 0;break-inside:avoid}
+.indice a{color:var(--acento);text-decoration:none;border-bottom:1px solid transparent}
+.indice a:hover{border-bottom-color:var(--acento)}
+@media (max-width:640px){.indice ol{columns:1}}
+h2{scroll-margin-top:16px}
+/* ── Enlace al plan de mejoras ── */
+.plan{display:flex;gap:16px;align-items:center;flex-wrap:wrap;background:var(--sup);
+ border:1px solid var(--linea);border-left:4px solid var(--acento);border-radius:0 12px 12px 0;
+ padding:18px 22px;margin:20px 0}
+.plan .txt{flex:1 1 340px}
+.plan a.btn{display:inline-block;background:var(--acento);color:#fff;text-decoration:none;
+ padding:10px 20px;border-radius:9px;font-weight:650;font-size:14.5px;white-space:nowrap}
+.plan a.btn:hover{filter:brightness(1.08)}
+</style></head><body>
+
+<header><div class="w">
+<div class="indice">
+<strong>Cómo leer este documento</strong>
+<p style="margin:8px 0 0;font-size:15px;color:var(--tinta2)">
+El informe tiene dos partes. Las secciones <strong>1 a 10</strong> responden qué se
+auditó, qué se encontró y qué conviene atender primero: es lo necesario para decidir. De la
+<strong>11 en adelante</strong> está la evidencia que sostiene cada afirmación,
+dirigida a quien vaya a ejecutar las correcciones.</p>
+<p style="margin:10px 0 0;font-size:15px;color:var(--tinta2)">
+Los 25 hallazgos, en la sección 6, se muestran plegados: al pulsar
+cualquiera se abre su detalle, y dentro de cada uno la evidencia técnica es un segundo nivel que
+también se despliega.</p>
+<ol><li><a href="#s1">En una página</a></li><li><a href="#s2">Qué se auditó exactamente</a></li><li><a href="#s3">Las direcciones de la plataforma</a></li><li><a href="#s4">La cobertura real del catálogo de reglas</a></li><li><a href="#s5">Qué se corrigió desde la auditoría anterior</a></li><li><a href="#s6">Los 25 hallazgos</a></li><li><a href="#s7">Qué recomendamos hacer, y en qué orden</a></li><li><a href="#s8">Qué queda pendiente y qué necesitamos</a></li><li><a href="#s9">Sobre el rigor de este informe</a></li><li><a href="#s10">Glosario</a></li><li><a href="#s11">Alcance y método</a></li><li><a href="#s12">Permisos por rol</a></li><li><a href="#s13">Accesibilidad · detalle por regla</a></li><li><a href="#s14">La API en detalle</a></li><li><a href="#s15">Operaciones de escritura</a></li><li><a href="#s16">Calidad interna del código</a></li><li><a href="#s17">Fiabilidad del dato</a></li><li><a href="#s18">Reconciliación con la auditoría previa</a></li><li><a href="#s19">Ciclo de vida de los datos</a></li><li><a href="#s20">El catálogo de reglas</a></li><li><a href="#s21">Rendimiento de carga</a></li><li><a href="#s22">Errores en ejecución</a></li><li><a href="#s23">Detalle por pantalla</a></li><li><a href="#s24">Correcciones a nuestra propia medición</a></li><li><a href="#s25">Qué NO cubren estas fases</a></li></ol>
+</div>
+<h2 id="s1">1. En una página</h2>
+<p class="dek">Lo esencial, antes del detalle.</p>
+
+<p>PAIN es la plataforma que audita la salud digital de <code>claro.com.pe</code>.
+Lo que hicimos fue <strong>auditar a la plataforma misma</strong>: comprobar que la herramienta
+que mide la calidad de otros cumple los criterios que ella exige.</p>
+
+<p>Revisamos tres frentes: sus <strong>19 pantallas</strong>, las
+<strong>66 operaciones</strong> con que su interfaz pide datos, y la coherencia entre
+las <strong>177 reglas</strong> de auditoría que declara y las que de verdad ejecuta.
+Todo en modo observación: <strong>no se modificó ni un dato ni una línea</strong> de la plataforma,
+y así quedó verificado al terminar.</p>
+
+<div class="tiles">
+<div class="tile"><div class="n" style="color:var(--good)">145<span style="font-size:19px;color:var(--tinta3)"> / 177</span></div>
+<div class="l">Reglas con motor detrás</div><div class="sub">94 confirmadas con hallazgos reales</div></div>
+<div class="tile"><div class="n">162</div><div class="l">Pruebas de pantalla</div>
+<div class="sub">18 pantallas × 3 dispositivos × 3 roles</div></div>
+<div class="tile"><div class="n" style="color:var(--crit)">932</div>
+<div class="l">Fallos de accesibilidad</div><div class="sub">7 criterios incumplidos</div></div>
+<div class="tile"><div class="n" style="color:var(--good)">0</div><div class="l">Fugas de datos</div>
+<div class="sub">de 9 intentos de acceso indebido</div></div>
+<div class="tile"><div class="n">2 + 13</div>
+<div class="l">Hallazgos altos y medios</div><div class="sub">25 en total</div></div>
+</div>
+
+<div class="nota ok"><strong>La buena noticia: los datos están seguros.</strong>
+Probamos con las cuentas de los tres roles si alguien puede ver o modificar información que no le
+corresponde. La respuesta es no. Al consultar, la plataforma rechazó
+8 de 9 intentos
+e impide que un usuario vea datos de un subdominio que no tiene asignado. Al modificar —lo más
+delicado— rechazó 32 de 32 intentos, incluidos los de crear usuarios, cambiar sus
+permisos y restablecer contraseñas: <strong>ninguna escalada de privilegios</strong>. Y resistió las
+44 peticiones deliberadamente malformadas <strong>sin caerse ni una vez</strong>.
+La protección está construida en el servidor, que es donde tiene que estar.</div>
+
+<div class="nota"><strong>La preocupación principal no es de seguridad, es de confianza en el dato.</strong>
+De las 177 reglas del catálogo, <strong>145 tienen motor detrás</strong> y
+94 están confirmadas con hallazgos reales. Pero cuando PAIN informa que una página no
+tiene problemas, hoy no se distingue entre «se revisó y está bien» y «esa regla nunca se ejecutó».
+Para una herramienta cuyo producto es la confianza en el diagnóstico, ese es el punto a resolver
+primero — y buena parte es señalización, no desarrollo.</div>
+
+
+<h2 id="s2">2. Qué se auditó exactamente</h2>
+<p class="dek">El perímetro, para que no quede duda de qué entró y qué no.</p>
+<div class="tw"><table>
+<tr><th>Frente</th><th>Tamaño</th><th>Qué se comprobó</th></tr>
+<tr><td><strong>Pantallas</strong></td><td class="n">19</td>
+<td>Accesibilidad, errores de programación visibles, tiempos de carga y aspecto en móvil, tablet y escritorio</td></tr>
+<tr><td><strong>Operaciones de datos</strong></td><td class="n">66</td>
+<td>Quién puede acceder a qué, si la respuesta es la esperada y qué hace ante peticiones inválidas</td></tr>
+<tr><td><strong>Operaciones que modifican datos</strong></td><td class="n">28</td>
+<td>Si un rol puede ejecutar lo que no le corresponde, y si la operación funciona bien cuando la ejecuta quien sí puede. Los permisos se probaron sin escribir nada; el funcionamiento, sobre una copia local aislada</td></tr>
+<tr><td><strong>Reglas de auditoría</strong></td><td class="n">177</td>
+<td>Si cada regla declarada existe en el código y si alguna vez ha producido un resultado real</td></tr>
+<tr><td><strong>Roles de usuario</strong></td><td class="n">3</td>
+<td>Usuario, Administrador y Superadmin, cada uno con su propia cuenta</td></tr>
+<tr><td><strong>Hallazgos históricos</strong></td><td class="n">167,375</td>
+<td>Se usaron como prueba de qué reglas funcionan de verdad</td></tr>
+</table></div>
+
+
+<h2 id="s3">3. Las direcciones de la plataforma</h2>
+<p class="dek">Las 19 pantallas que componen PAIN, con lo que encontramos en cada una.</p>
+
+<h3>Pantallas de gestión</h3>
+<div class="tw"><table>
+<tr><th>#</th><th>Pantalla</th><th>Dirección</th><th>Quién puede entrar</th>
+<th class="n">Fallos de accesibilidad</th><th class="n">Carga</th></tr>
+<tr><td class="n">1</td><td><strong>Inicio de sesión</strong></td>
+  <td><code>/login.html</code></td><td>Cualquiera</td>
+  <td class="n">—</td><td class="n">—</td></tr><tr><td class="n">2</td><td><strong>Subdominios</strong></td>
+  <td><code>/subdominios.html</code></td><td>Usuario</td>
+  <td class="n">9</td><td class="n">4.7 s</td></tr><tr><td class="n">3</td><td><strong>Colecciones</strong></td>
+  <td><code>/colecciones.html</code></td><td>Usuario</td>
+  <td class="n">32</td><td class="n">6.2 s</td></tr><tr><td class="n">4</td><td><strong>Bitácora de actividad</strong></td>
+  <td><code>/bitacora.html</code></td><td>Administrador</td>
+  <td class="n">2</td><td class="n">4.1 s</td></tr><tr><td class="n">5</td><td><strong>Salud de la plataforma</strong></td>
+  <td><code>/salud.html</code></td><td>Administrador</td>
+  <td class="n">14</td><td class="n">28.3 s</td></tr><tr><td class="n">6</td><td><strong>Gestión de usuarios</strong></td>
+  <td><code>/usuarios.html</code></td><td>Superadmin</td>
+  <td class="n">3</td><td class="n">4.1 s</td></tr><tr><td class="n">7</td><td><strong>Categorías de URL</strong></td>
+  <td><code>/categorias.html</code></td><td>Superadmin</td>
+  <td class="n">3</td><td class="n">3.4 s</td></tr><tr><td class="n">8</td><td><strong>Configuración de alertas</strong></td>
+  <td><code>/alertas-config.html</code></td><td>Superadmin</td>
+  <td class="n">3</td><td class="n">4.0 s</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--tinta3)">El inicio de sesión es la única pantalla pública;
+todas las demás exigen haber entrado. «Quién puede entrar» es el rol mínimo previsto por la
+interfaz — comprobamos aparte que el servidor lo respete.</p>
+
+<h3>El visor de resultados</h3>
+<p>La pantalla principal aloja los diez módulos de auditoría, y <strong>cada uno tiene su propia
+dirección</strong>: se puede compartir un enlace directo a la vista de SEO o de Enlaces, y el botón
+Atrás del navegador funciona como se espera. Es un buen detalle de diseño.</p>
+<div class="tw"><table>
+<tr><th>#</th><th>Vista</th><th>Dirección</th><th class="n">Fallos de accesibilidad</th><th class="n">Carga</th></tr>
+<tr><td class="n">9</td><td><strong>Resumen general</strong></td>
+  <td><code>/index.html#overview</code></td>
+  <td class="n">4</td><td class="n">5.8 s</td></tr><tr><td class="n">10</td><td><strong>M1 · Sitemap</strong></td>
+  <td><code>/index.html#sitemap</code></td>
+  <td class="n">4</td><td class="n">1.5 s</td></tr><tr><td class="n">11</td><td><strong>M2 · Técnico</strong></td>
+  <td><code>/index.html#technical</code></td>
+  <td class="n">6</td><td class="n">1.5 s</td></tr><tr><td class="n">12</td><td><strong>M3 · SEO</strong></td>
+  <td><code>/index.html#seo</code></td>
+  <td class="n">5</td><td class="n">1.5 s</td></tr><tr><td class="n">13</td><td><strong>M4 · Tagging</strong></td>
+  <td><code>/index.html#tagging</code></td>
+  <td class="n">6</td><td class="n">1.5 s</td></tr><tr><td class="n">14</td><td><strong>M5 · Enlaces</strong></td>
+  <td><code>/index.html#links</code></td>
+  <td class="n">4</td><td class="n">1.5 s</td></tr><tr><td class="n">15</td><td><strong>M6 · Contenido</strong></td>
+  <td><code>/index.html#content</code></td>
+  <td class="n">6</td><td class="n">1.5 s</td></tr><tr><td class="n">16</td><td><strong>M7 · Performance</strong></td>
+  <td><code>/index.html#performance</code></td>
+  <td class="n">4</td><td class="n">1.5 s</td></tr><tr><td class="n">17</td><td><strong>M8 · Historial</strong></td>
+  <td><code>/index.html#change-history</code></td>
+  <td class="n">4</td><td class="n">1.5 s</td></tr><tr><td class="n">18</td><td><strong>M9 · Alertas</strong></td>
+  <td><code>/index.html#alerts</code></td>
+  <td class="n">4</td><td class="n">1.5 s</td></tr><tr><td class="n">19</td><td><strong>M10 · Imágenes</strong></td>
+  <td><code>/index.html#image-audit</code></td>
+  <td class="n">4</td><td class="n">1.5 s</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--tinta3)">Existe además la dirección corta
+<code>/dashboard</code>, que redirige al visor. Total: 20 direcciones contando ese atajo.</p>
+
+<h3>Dónde se concentran los fallos de accesibilidad</h3>
+<p>Mismo dato de las tablas anteriores, ordenado. Sirve para decidir por dónde empezar:
+dos pantallas concentran el problema.</p>
+<div class="cmp">
+<div class="et">Colecciones</div>
+<div class="tr"><div class="bar" style="width:100%"></div>
+<div class="v">32</div></div><div class="et">Salud de la plataforma</div>
+<div class="tr"><div class="bar" style="width:43.75%"></div>
+<div class="v">14</div></div><div class="et">Subdominios</div>
+<div class="tr"><div class="bar" style="width:28.125%"></div>
+<div class="v">9</div></div><div class="et">M10 · Imágenes</div>
+<div class="tr"><div class="bar" style="width:25%"></div>
+<div class="v">8</div></div><div class="et">M2 · Técnico</div>
+<div class="tr"><div class="bar" style="width:21.875%"></div>
+<div class="v">7</div></div><div class="et">M3 · SEO</div>
+<div class="tr"><div class="bar" style="width:21.875%"></div>
+<div class="v">7</div></div><div class="et">M4 · Tagging</div>
+<div class="tr"><div class="bar" style="width:21.875%"></div>
+<div class="v">7</div></div><div class="et">M5 · Enlaces</div>
+<div class="tr"><div class="bar" style="width:21.875%"></div>
+<div class="v">7</div></div><div class="et">M1 · Sitemap</div>
+<div class="tr"><div class="bar" style="width:18.75%"></div>
+<div class="v">6</div></div><div class="et">M6 · Contenido</div>
+<div class="tr"><div class="bar" style="width:18.75%"></div>
+<div class="v">6</div></div><div class="et">Resumen general</div>
+<div class="tr"><div class="bar" style="width:12.5%"></div>
+<div class="v">4</div></div><div class="et">M7 · Performance</div>
+<div class="tr"><div class="bar" style="width:12.5%"></div>
+<div class="v">4</div></div><div class="et">M8 · Historial</div>
+<div class="tr"><div class="bar" style="width:12.5%"></div>
+<div class="v">4</div></div><div class="et">M9 · Alertas</div>
+<div class="tr"><div class="bar" style="width:12.5%"></div>
+<div class="v">4</div></div><div class="et">Gestión de usuarios</div>
+<div class="tr"><div class="bar" style="width:9.375%"></div>
+<div class="v">3</div></div><div class="et">Categorías de URL</div>
+<div class="tr"><div class="bar" style="width:9.375%"></div>
+<div class="v">3</div></div><div class="et">Configuración de alertas</div>
+<div class="tr"><div class="bar" style="width:9.375%"></div>
+<div class="v">3</div></div><div class="et">Bitácora de actividad</div>
+<div class="tr"><div class="bar" style="width:6.25%"></div>
+<div class="v">2</div></div>
+</div>
+<p style="font-size:14px;color:var(--tinta3)">Fallos detectados por pantalla (mediana de las nueve
+combinaciones de rol y dispositivo).</p>
+
+
+<h2 id="s4">4. La cobertura real del catálogo de reglas</h2>
+<p class="dek">El hallazgo central, explicado.</p>
+
+<p>PAIN funciona con un catálogo de 177 reglas: cada una describe un problema que la
+plataforma sabe detectar. Para comprobar cuántas existen de verdad no nos fiamos de una sola
+fuente: cruzamos el catálogo con <strong>el código de los diez módulos</strong> y con los
+<strong>167,375 hallazgos ya almacenados</strong> desde que la plataforma opera.</p>
+
+<div class="cob">
+<div class="s1" style="width:53.10734463276836%">94</div>
+<div class="s2" style="width:28.8135593220339%">51</div>
+<div class="s3" style="width:18.07909604519774%">32</div>
+</div>
+<div class="leg">
+<span><i class="sw" style="background:var(--good)"></i>Confirmadas — 94 (53 %)</span>
+<span><i class="sw" style="background:var(--warn)"></i>Sin confirmar — 51 (29 %)</span>
+<span><i class="sw" style="background:var(--crit)"></i>Sin evidencia — 32 (18 %)</span>
+</div>
+
+<div class="tw"><table>
+<tr><th>Estado</th><th class="n">Reglas</th><th>Qué quiere decir</th></tr>
+<tr><td><span class="tag good">✓ Confirmadas</span></td><td class="n">94</td>
+<td>Existen en el código <em>y</em> han producido resultados reales. Son las únicas demostradas.</td></tr>
+<tr><td><span class="tag warn">? Sin confirmar</span></td><td class="n">51</td>
+<td>Existen en el código pero nunca han detectado nada. Puede ser buena señal —el sitio las cumple— o que no lleguen a ejecutarse. No se distingue sin una página de prueba que las infrinja a propósito.</td></tr>
+<tr><td><span class="tag crit">▲ Sin evidencia</span></td><td class="n">32</td>
+<td>No aparecen en el código de ningún módulo ni han detectado nada nunca. 15 están marcadas como de severidad alta.</td></tr>
+</table></div>
+
+<div class="nota info"><strong>Un matiz que evita una conclusión exagerada.</strong>
+Treinta de esas 32 reglas salen de un mismo bloque duplicado: el catálogo declara las
+reglas de rendimiento dos veces, con nombres en español y en inglés. Las inglesas funcionan; las
+españolas son en buena parte la misma regla repetida. Descontando duplicados, <strong>el hueco real
+es de 14 capacidades ausentes</strong>, no de treinta. El problema sigue existiendo, pero
+conviene presentarlo con esta precisión.</div>
+
+<p>Y el reverso: hay <strong>14 tipos de hallazgo que la plataforma sí reporta pero
+que el catálogo no describe</strong>. Como la definición, la gravedad y la recomendación salen del
+catálogo, esos hallazgos llegan al usuario como un código técnico sin ninguna indicación de qué
+hacer con él.</p>
+
+
+<h2 id="s5">5. Qué se corrigió desde la auditoría anterior</h2>
+<p class="dek">Buenas noticias: el equipo atendió cuatro de los siete puntos que dejó la revisión previa.</p>
+
+<p>En agosto otro equipo revisó esta misma plataforma desde fuera, sin acceso al código
+—el proyecto <code>ux_audit</code>—. No repetimos su trabajo: comprobamos, uno a uno, qué sigue
+igual y qué se arregló. Dos informes sueltos valen menos que una serie.</p>
+
+<div class="tw"><table>
+<tr><th>Lo que señaló la revisión anterior</th><th>Estado hoy</th></tr>
+<tr><td>El servidor no enviaba ninguna cabecera de seguridad</td><td><span class="tag good">✓ Corregido</span></td></tr>
+<tr><td>Ningún archivo se guardaba en memoria del navegador, todo se descargaba en cada visita</td><td><span class="tag good">✓ Corregido</span></td></tr>
+<tr><td>No se podía enviar a un compañero el enlace a un módulo concreto</td><td><span class="tag good">✓ Corregido</span></td></tr>
+<tr><td>Los filtros no tenían nombre para lectores de pantalla <em>(era el fallo crítico)</em></td><td><span class="tag good">✓ Corregido</span></td></tr>
+<tr><td>Todos los botones eran más pequeños que el mínimo recomendable</td><td><span class="tag warn">~ Parcial</span></td></tr>
+<tr><td>Pantallas larguísimas y tablas de 21 columnas</td><td><span class="tag crit">▲ Sigue igual</span></td></tr>
+<tr><td>El menú de navegación desaparece al entrar a una sección</td><td><span class="tag crit">▲ Sigue igual</span></td></tr>
+</table></div>
+
+<div class="nota ok"><strong>Vale la pena decirlo en voz alta.</strong> Los cuatro puntos
+corregidos incluyen el único fallo <em>crítico</em> de accesibilidad y las dos correcciones de
+infraestructura que aquella revisión puso primero en su orden de trabajo. El equipo no ignoró el
+informe: lo aplicó.</div>
+
+<h3>Y lo más importante: la fiabilidad de las cifras</h3>
+<p>Aquella revisión calificó esta dimensión como <strong>deficiente</strong> y la llamó
+«la que decide si el producto sirve»: había cinco cifras que se contradecían entre pantallas de una
+misma auditoría, y la sospecha de que un módulo contaba cada problema dos veces. Lo verificamos
+contando directamente contra el sistema, no comparando pantallas.</p>
+
+<div class="tw"><table>
+<tr><th>Lo que se sospechaba</th><th>Qué encontramos</th></tr>
+<tr><td>Los totales no cuadran entre pantallas</td>
+<td><span class="tag good">✓ Cuadran</span> Los 7 módulos coinciden exactamente: 17,723 hallazgos, sin una sola discrepancia</td></tr>
+<tr><td>Un módulo cuenta cada problema dos veces</td>
+<td><span class="tag good">✓ Ya no</span> Cero duplicados sobre 500 registros analizados</td></tr>
+<tr><td>Las cifras de SEO y del sitemap se contradicen</td>
+<td><span class="tag warn">~ No es un error</span> Cuentan cosas distintas —páginas frente a ocurrencias— pero la pantalla no lo dice</td></tr>
+<tr><td>Las cifras de enlaces rotos no cuadran</td>
+<td><span class="tag crit">▲ Sigue igual</span> Cuatro indicadores que no reconcilian entre sí</td></tr>
+</table></div>
+
+<div class="nota ok"><strong>Esto cambia el diagnóstico de fondo.</strong> La dimensión que la
+revisión anterior consideraba el mayor obstáculo del producto está hoy en gran parte resuelta.
+Queda un arreglo real —las cifras de enlaces— y una corrección de etiquetado que se hace en horas.
+Es, con diferencia, la mejor noticia de esta auditoría.</div>
+
+
+<h2 id="s6">6. Los 25 hallazgos</h2>
+<p class="dek">Del más al menos importante. Cada ficha responde tres preguntas: qué pasa, por qué
+importa y con qué evidencia lo afirmamos.</p>
+<div class="tw"><table>
+<tr><th>Código</th><th>Gravedad</th><th>Hallazgo</th><th>Esfuerzo estimado</th></tr>
+<tr><td><a href="#H-10" class="ir"><code>H-10</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>32 de las 177 reglas del catálogo no tienen evidencia de estar implementadas</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo para señalizarlo; medio para cerrar el hueco real</td></tr><tr><td><a href="#H-25" class="ir"><code>H-25</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>El catálogo subestima lo que la plataforma sabe hacer</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — completar la tabla y añadir una comprobación automática</td></tr><tr><td><a href="#H-02" class="ir"><code>H-02</code></a></td>
+<td><span class="tag crit">▲ Alta</span></td>
+<td>932 incidencias de accesibilidad en la propia plataforma</td><td style="font-size:13.5px;color:var(--tinta2)">Medio — el contraste se corrige en pocas variables de estilo</td></tr><tr><td><a href="#H-22" class="ir"><code>H-22</code></a></td>
+<td><span class="tag crit">▲ Alta</span></td>
+<td>Tres librerías con vulnerabilidades conocidas, dos de gravedad alta</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — actualizar tres librerías y automatizar la revisión</td></tr><tr><td><a href="#H-23" class="ir"><code>H-23</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>No existe ninguna prueba automatizada</td><td style="font-size:13.5px;color:var(--tinta2)">Medio — no hace falta cubrirlo todo; empezar por lo que ya falló</td></tr><tr><td><a href="#H-24" class="ir"><code>H-24</code></a></td>
+<td><span class="tag warn">▪ Baja</span></td>
+<td>El módulo más complejo no fija las versiones de sus librerías</td><td style="font-size:13.5px;color:var(--tinta2)">Muy bajo — fijar las versiones que hoy funcionan</td></tr><tr><td><a href="#H-20" class="ir"><code>H-20</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>Nadie puede decir cuántos enlaces rotos hay</td><td style="font-size:13.5px;color:var(--tinta2)">Medio — hay que definir qué cuenta cada indicador y hacerlos cuadrar</td></tr><tr><td><a href="#H-21" class="ir"><code>H-21</code></a></td>
+<td><span class="tag warn">▪ Baja</span></td>
+<td>Los indicadores no dicen qué están contando</td><td style="font-size:13.5px;color:var(--tinta2)">Muy bajo — escribir la unidad junto a cada número</td></tr><tr><td><a href="#H-18" class="ir"><code>H-18</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>El 56 % de los botones y filtros es más pequeño que el mínimo recomendable</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — basta ampliar la zona de pulsación, sin agrandar lo que se ve</td></tr><tr><td><a href="#H-19" class="ir"><code>H-19</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>Las pantallas de resultados son desmesuradamente largas y anchas</td><td style="font-size:13.5px;color:var(--tinta2)">Medio — paginar, plegar por defecto y ocultar columnas que no varían</td></tr><tr><td><a href="#H-09" class="ir"><code>H-09</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>La plataforma responde «correcto» a peticiones de datos que no existen</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — es el mismo patrón repetido en varios sitios</td></tr><tr><td><a href="#H-11" class="ir"><code>H-11</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>Un bloque de reglas está duplicado con dos nombres distintos</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — es limpieza del catálogo</td></tr><tr><td><a href="#H-12" class="ir"><code>H-12</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>14 tipos de hallazgo llegan al usuario sin explicación</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — dar de alta los códigos que ya se emiten</td></tr><tr><td><a href="#H-16" class="ir"><code>H-16</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>Se pueden crear colecciones colgando de un subdominio inexistente</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — la comprobación ya está escrita en otro endpoint</td></tr><tr><td><a href="#H-17" class="ir"><code>H-17</code></a></td>
+<td><span class="tag warn">▪ Baja</span></td>
+<td>No se puede eliminar un subdominio ni una colección</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — decidir entre borrado real o archivado</td></tr><tr><td><a href="#H-14" class="ir"><code>H-14</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>Una operación de mantenimiento no comprueba permisos</td><td style="font-size:13.5px;color:var(--tinta2)">Muy bajo</td></tr><tr><td><a href="#H-15" class="ir"><code>H-15</code></a></td>
+<td><span class="tag warn">▪ Baja</span></td>
+<td>Un administrador puede ampliar los accesos de cualquier usuario</td><td style="font-size:13.5px;color:var(--tinta2)">Muy bajo — es una decisión, no un desarrollo</td></tr><tr><td><a href="#H-04" class="ir"><code>H-04</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>Una pantalla sin permiso se queda en blanco en vez de avisar</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo</td></tr><tr><td><a href="#H-03" class="ir"><code>H-03</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>Las pantallas no están preparadas para lectores de pantalla</td><td style="font-size:13.5px;color:var(--tinta2)">Medio — cambios de estructura, no de funcionamiento</td></tr><tr><td><a href="#H-06" class="ir"><code>H-06</code></a></td>
+<td><span class="tag warn">▪ Baja</span></td>
+<td>La pantalla de acceso podría exponer una contraseña en casos límite</td><td style="font-size:13.5px;color:var(--tinta2)">Muy bajo</td></tr><tr><td><a href="#H-05" class="ir"><code>H-05</code></a></td>
+<td><span class="tag warn">▪ Baja</span></td>
+<td>Un permiso de la interfaz no coincide con el del servidor</td><td style="font-size:13.5px;color:var(--tinta2)">Muy bajo</td></tr><tr><td><a href="#H-13" class="ir"><code>H-13</code></a></td>
+<td><span class="tag warn">▪ Baja</span></td>
+<td>La numeración de los módulos del catálogo es ambigua</td><td style="font-size:13.5px;color:var(--tinta2)">Muy bajo</td></tr><tr><td><a href="#H-01" class="ir"><code>H-01</code></a></td>
+<td><span class="tag warn">▪ Baja</span></td>
+<td>La pantalla de diagnóstico no acota su propia espera</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo</td></tr><tr><td><a href="#H-07" class="ir"><code>H-07</code></a></td>
+<td><span class="tag neu">· Informativo</span></td>
+<td>Las pantallas administrativas se sirven a cualquier usuario</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo</td></tr><tr><td><a href="#H-08" class="ir"><code>H-08</code></a></td>
+<td><span class="tag neu">· Informativo</span></td>
+<td>Las contraseñas de las cuentas de prueba son débiles y compartidas</td><td style="font-size:13.5px;color:var(--tinta2)">Muy bajo</td></tr>
+</table></div>
+<div class="controles">
+  <button type="button" onclick="plegarTodo(false)">Desplegar todos</button>
+  <button type="button" onclick="plegarTodo(true)">Plegar todos</button>
+  <span class="pista">Pulsa cualquier hallazgo para ver el detalle</span>
+</div>
+<details class="hall media" id="H-10">
+<summary>
+  <span class="cod">H-10</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">32 de las 177 reglas del catálogo no tienen evidencia de estar implementadas</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Cruzamos las 177 reglas contra el código, contra los 167,375 hallazgos guardados y contra la tabla de equivalencias interna de la plataforma. <strong>145 tienen motor detrás</strong>: 94 confirmadas con hallazgos reales y 51 que existen en el código pero nunca detectaron nada. Quedan 32 sin rastro, 15 de severidad alta, y 25 de ellas salen del bloque duplicado de rendimiento.</p>
+<div class="neg"><b>Por qué importa</b>Si un informe de PAIN dice que una página está limpia, hoy no se distingue entre «se revisó y está bien» y «esa regla nunca se ejecutó». La mayor parte del catálogo sí funciona, pero mientras no se declare cuál es cuál, la duda contamina también a las que sí.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> 32 de las 177 reglas del catálogo (18 %) no tienen evidencia de estar implementadas</p>
+<dl>
+<dt>Evidencia</dt><dd>Se cruzó cada regla declarada contra tres fuentes: el código de los 10 módulos, los 167,375 hallazgos registrados en BigQuery y la <strong>tabla de equivalencias del propio BFF</strong> (<code>FINDING_CODE_ALIASES</code>, 45 entradas), que traduce el código operativo de cada módulo al del catálogo. Resultado: <strong>94 confirmadas</strong> (53 %) con hallazgos reales, <strong>51 implementadas que nunca dispararon</strong> —lo que puede ser buena señal: el sitio las cumple— y <strong>32 sin rastro</strong> (18 %), de las que 15 son de severidad Alta. En total, <strong>145 de las 177 reglas tienen código detrás</strong>.</dd>
+<dt>Impacto</dt><dd>Quien lea un informe de PAIN puede concluir que una página cumple una regla que en realidad nunca se comprobó: un falso negativo silencioso, que en auditoría es peor que un falso positivo. La severidad es media y no alta porque la mayor parte del catálogo <em>sí</em> tiene motor detrás y porque 25 de las 32 salen de un único bloque duplicado (<code>H-11</code>).</dd>
+<dt>Recomendación</dt><dd>Marcar en el catálogo el estado real de cada regla (implementada / planificada) y que la interfaz distinga «cumple» de «no evaluada». Es un cambio de honestidad del dato, no de motor.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-25">
+<summary>
+  <span class="cod">H-25</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">El catálogo subestima lo que la plataforma sabe hacer</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">La plataforma tiene una tabla interna que traduce el nombre técnico de cada hallazgo al nombre del catálogo —por ejemplo, lo que el motor llama «falta texto alternativo» aparece en el catálogo con otro código—. Esa tabla está incompleta, así que reglas que funcionan perfectamente figuran como no implementadas.</p>
+<div class="neg"><b>Por qué importa</b>Es un problema de trazabilidad, no de capacidad: <strong>la herramienta se está juzgando peor de lo que es</strong>. Al aplicar la tabla completa, las reglas sin evidencia bajaron de 53 a 32. Completarla evita que el propio equipo, o un cliente, saquen conclusiones injustas sobre la cobertura.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> La tabla de equivalencias entre el motor y el catálogo está incompleta</p>
+<dl>
+<dt>Evidencia</dt><dd>El BFF mantiene <code>FINDING_CODE_ALIASES</code> (app/service.py:27) con 45 entradas que traducen el código que emite cada módulo al del catálogo —por ejemplo <code>SEO_ALT_MISSING</code> → <code>SEO_ALT_EN_IMAGENES</code>—. Pero deja fuera pares evidentes: <code>PERF_PAGE_HEAVY</code> (1,973 hallazgos) no se traduce a <code>PERF_PESO_DE_PAGINA_ALTO</code>, ni <code>PERF_IMAGES_HEAVY</code> (297) a <code>PERF_IMAGENES_PESADAS</code>. Y 14 códigos emitidos siguen sin figurar en el catálogo tras normalizar.</dd>
+<dt>Impacto</dt><dd>Es la causa de que el propio catálogo <strong>subestime la cobertura de la plataforma</strong>: reglas que funcionan aparecen como no implementadas solo porque el motor las nombra de otra forma. Aplicando la tabla, las reglas sin evidencia bajan de 53 a 32. La plataforma se está juzgando peor de lo que es.</dd>
+<dt>Recomendación</dt><dd>Completar la tabla con los pares que faltan y convertirla en la fuente única de verdad, con una comprobación automática que detecte cualquier código emitido que no traduzca a una regla del catálogo.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall alta" id="H-02">
+<summary>
+  <span class="cod">H-02</span>
+  <span class="tag crit">▲ Alta</span>
+  <span class="hall-tit">932 incidencias de accesibilidad en la propia plataforma</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Medidas en 96 recorridos de pantalla: 740 en las pantallas de gestión y 192 en el visor. Lo más extendido es el contraste de color insuficiente y la falta de estructura para lectores de pantalla; hay además una regla de severidad crítica.</p>
+<div class="neg"><b>Por qué importa</b>Dificulta el uso a personas con baja visión o que navegan con teclado. Y tiene un filo incómodo: PAIN audita accesibilidad en claro.com.pe, así que incumplirla en su propia interfaz debilita el argumento de la herramienta ante el equipo al que le señala esos mismos fallos.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> 932 incidencias de accesibilidad sobre 96 recorridos válidos</p>
+<dl>
+<dt>Evidencia</dt><dd><strong>740</strong> incidencias en las 63 combinaciones de las pantallas de gestión y <strong>192</strong> en las 33 del visor medidas con datos reales. Por recorrido: 11.7 en gestión frente a 5.8 en el visor. Las reglas dominantes son de estructura de página —<code>region</code> (88 nodos en el visor) y contraste de color (81)— más una crítica, <code>aria-required-children</code> (9).</dd>
+<dt>Impacto</dt><dd>Afecta a quien usa lector de pantalla, navega solo con teclado o tiene baja visión. Y tiene un filo incómodo: PAIN audita accesibilidad en claro.com.pe, así que incumplirla en su propia interfaz debilita el argumento de la herramienta ante el equipo al que señala esos mismos fallos.</dd>
+<dt>Recomendación</dt><dd>Priorizar por severidad, no por cantidad: primero la regla crítica, después el contraste de color —el más numeroso y el más barato, normalmente unas pocas variables de estilo— y por último la estructura semántica, que arrastra el resto.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall alta" id="H-22">
+<summary>
+  <span class="cod">H-22</span>
+  <span class="tag crit">▲ Alta</span>
+  <span class="hall-tit">Tres librerías con vulnerabilidades conocidas, dos de gravedad alta</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Contrastamos las versiones que usa la plataforma contra la base pública de vulnerabilidades. Tres tienen avisos publicados: una que procesa XML —presente en cuatro módulos—, la de inteligencia artificial de Google —en tres— y la que hace peticiones web, presente en <strong>nueve de los once servicios</strong>. Todas tienen versión corregida disponible.</p>
+<div class="neg"><b>Por qué importa</b>Lo que eleva la gravedad no es el aviso, sino qué hace esta plataforma: <strong>descargar y procesar contenido no confiable de internet</strong>. Lee sitemaps de sitios externos y sigue enlaces arbitrarios, que es exactamente el escenario que describen dos de los avisos. Para el sistema, no es un riesgo teórico: es su modo normal de trabajo.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> 3 librerías con vulnerabilidades conocidas, dos de severidad alta</p>
+<dl>
+<dt>Evidencia</dt><dd>Consultadas las 16 versiones fijadas contra la base pública OSV:
+      <br>• <code>lxml 5.3.0</code> — <strong>HIGH</strong> (GHSA-vfmq-68hx-4jfw): la configuración por defecto de <code>iterparse()</code> permite resolver entidades externas al procesar XML. Corregido en 6.1.0. Presente en <code>content-validator</code>, <code>link-validator</code>, <code>seo-validator</code> y <code>tagging-validator</code>.
+      <br>• <code>google-cloud-aiplatform 1.71.1</code> — <strong>HIGH</strong> (GHSA-wh2j-26j7-9728): nombres de bucket predecibles en Vertex AI. Corregido en 1.133.0. Presente en el BFF, <code>content-validator</code> e <code>image_typography_audit</code>.
+      <br>• <code>requests 2.32.3</code> — dos avisos MODERATE: fuga de credenciales de <code>.netrc</code> ante URLs maliciosas (corregido en 2.32.4) y reutilización insegura de ficheros temporales (2.33.0). Presente en <strong>nueve</strong> de los once servicios.</dd>
+<dt>Impacto</dt><dd>Lo que eleva la severidad no es el aviso en sí, sino qué hace esta plataforma: <strong>descargar y procesar contenido no confiable de internet</strong>. El módulo de sitemaps interpreta XML de sitios externos —justo el vector de <code>lxml</code>— y el validador de enlaces sigue URLs arbitrarias, que es el escenario del aviso de <code>requests</code>. No son riesgos teóricos para este sistema: son su modo normal de funcionamiento.</dd>
+<dt>Recomendación</dt><dd>Actualizar las tres librerías a las versiones corregidas y establecer una revisión periódica de avisos. La comprobación es un comando y puede automatizarse en el despliegue.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-23">
+<summary>
+  <span class="cod">H-23</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">No existe ninguna prueba automatizada</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Ni una sola prueba en todo el repositorio, y ninguna verificación automática antes de desplegar. Once servicios en producción donde cada cambio sale sin comprobar que lo anterior sigue funcionando.</p>
+<div class="neg"><b>Por qué importa</b>Explica en parte por qué no se puede demostrar que las 177 reglas funcionan: no hay nada que lo compruebe. Y encarece todas las correcciones de este informe, porque no hay red que avise si al arreglar algo se rompe otra cosa.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> No existe ninguna prueba automatizada ni integración continua</p>
+<dl>
+<dt>Evidencia</dt><dd>Búsqueda exhaustiva en el repositorio: <strong>cero</strong> archivos de prueba (<code>test_*.py</code>, <code>*_test.py</code>, <code>conftest.py</code>, <code>*.spec.*</code>), cero directorios <code>tests/</code> y ninguna configuración de integración continua (<code>.github/workflows</code>, <code>cloudbuild.yaml</code>, <code>Makefile</code>, <code>tox.ini</code>).</dd>
+<dt>Impacto</dt><dd>Once servicios en producción donde cada cambio se despliega sin ninguna verificación automática. Enlaza con <code>H-10</code>: parte de la razón por la que no se puede demostrar que las 177 reglas funcionan es que no existe nada que lo compruebe. También encarece cualquier corrección de este informe, porque no hay red que avise si algo se rompe al arreglar otra cosa.</dd>
+<dt>Recomendación</dt><dd>No hace falta cobertura completa. Empezar por las reglas de mayor severidad y por los endpoints que ya fallaron en esta auditoría —el <code>404</code> de <code>H-09</code>, la validación de <code>H-16</code>— convierte cada hallazgo corregido en una prueba que impide su regreso.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall baja" id="H-24">
+<summary>
+  <span class="cod">H-24</span>
+  <span class="tag warn">▪ Baja</span>
+  <span class="hall-tit">El módulo más complejo no fija las versiones de sus librerías</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">El módulo de análisis de imágenes declara sus diez dependencias sin indicar versión. Los otros nueve servicios sí las fijan.</p>
+<div class="neg"><b>Por qué importa</b>Cada reconstrucción de ese servicio puede traer versiones distintas y comportarse de otra forma sin que nadie lo note. Es justo el módulo donde más cuesta detectarlo, porque su resultado lo genera un modelo de inteligencia artificial y la variación se confunde con la del propio modelo.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> El módulo más complejo declara sus dependencias sin fijar versión</p>
+<dl>
+<dt>Evidencia</dt><dd><code>image_typography_audit</code> declara sus 10 dependencias sin versión, incluidas <code>playwright</code>, <code>Pillow</code> y las de Google Cloud. <code>content-validator</code> deja una sin fijar. Los otros nueve servicios las fijan todas, y no hay ningún paquete con versiones en conflicto entre módulos.</dd>
+<dt>Impacto</dt><dd>Cada reconstrucción de ese contenedor puede traer versiones distintas y comportarse de otra forma, sin que nada lo declare. Es el módulo donde más cuesta detectarlo, porque su salida la genera un modelo de lenguaje y la variación se confunde con la variación propia del modelo.</dd>
+<dt>Recomendación</dt><dd>Fijar las versiones y regenerar el archivo desde el entorno que hoy funciona en producción.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-20">
+<summary>
+  <span class="cod">H-20</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">Nadie puede decir cuántos enlaces rotos hay</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">En una misma pantalla conviven cuatro cifras que dicen contar enlaces rotos: 6.399, 45 internos, 554 externos y 779. La lista de hallazgos suma 6.497. Internos más externos dan 599, que no coincide con ninguna de las otras.</p>
+<div class="neg"><b>Por qué importa</b>Es el único hallazgo que impide citar un número. Si alguien tiene que informar cuántos enlaces rotos tiene claro.com.pe, hoy hay cinco respuestas posibles y ninguna se puede defender frente a las demás. La revisión anterior encontró lo mismo con cifras más pequeñas: es lo que sigue sin resolverse.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> El panel de enlaces muestra cuatro cifras que dicen contar lo mismo y no se reconcilian</p>
+<dl>
+<dt>Evidencia</dt><dd>En una misma corrida: <code>broken_links = 6 399</code>, <code>broken_internal_links = 45</code>, <code>broken_external_links = 554</code>, <code>broken_links_findings = 779</code>, y la suma de su propia lista de hallazgos es <strong>6 497</strong>. Internos más externos dan 599, que no es ninguno de los otros cuatro valores. <code>ux_audit</code> reportó la misma clase de contradicción con «42 enlaces rotos» frente a 43 filas; persiste, con cifras mayores.</dd>
+<dt>Impacto</dt><dd>Es el único hallazgo que impide citar un número. Quien tenga que informar «cuántos enlaces rotos hay en claro.com.pe» no puede responder con la plataforma en la mano: hay cinco respuestas posibles y ninguna se puede defender frente a las otras.</dd>
+<dt>Recomendación</dt><dd>Definir qué cuenta cada indicador —enlaces distintos, ocurrencias, páginas afectadas— y hacer que reconcilien, o renombrarlos para que no parezcan la misma magnitud.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall baja" id="H-21">
+<summary>
+  <span class="cod">H-21</span>
+  <span class="tag warn">▪ Baja</span>
+  <span class="hall-tit">Los indicadores no dicen qué están contando</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">El panel de SEO muestra 121 defectos —que son páginas afectadas— y su lista muestra 1.453 —que son ocurrencias—. Las dos cifras son correctas y miden cosas distintas, pero nada en la pantalla lo indica.</p>
+<div class="neg"><b>Por qué importa</b>Se lee como una contradicción aunque no lo sea. Es justamente lo que llevó a la revisión anterior a calificar la fiabilidad del dato como deficiente. <strong>No hay error de cálculo: falta la etiqueta.</strong> Es la corrección más barata de todo el informe y desactiva la objeción más dañina.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> Los paneles no declaran qué unidad están contando</p>
+<dl>
+<dt>Evidencia</dt><dd>El panel de SEO suma 121 defectos <em>de página</em> sobre 200 páginas, mientras su propia lista de hallazgos suma 1 453 <em>ocurrencias</em>. Ambas cifras son correctas y miden cosas distintas, pero nada en la pantalla lo indica. Lo mismo ocurre con el sitemap: 2 893 URLs encontradas frente a 8 listas para auditar, que provienen de rastreos distintos.</dd>
+<dt>Impacto</dt><dd>Se lee como una contradicción aunque no lo sea. Es exactamente lo que llevó a la auditoría previa a calificar la fiabilidad del dato como deficiente: no había error de cálculo, había ausencia de etiqueta.</dd>
+<dt>Recomendación</dt><dd>Rotular la unidad en cada indicador («121 páginas con defectos», «1 453 ocurrencias»). Es la corrección más barata de todo el informe y desactiva la objeción más dañina.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-18">
+<summary>
+  <span class="cod">H-18</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">El 56 % de los botones y filtros es más pequeño que el mínimo recomendable</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">De 5,205 elementos con los que se interactúa en el visor, 2,934 miden menos de 44 × 44 píxeles. La auditoría anterior midió el 100 %: mejoró, pero sigue afectando a más de la mitad.</p>
+<div class="neg"><b>Por qué importa</b>En móvil y tableta hay que apuntar con precisión para pulsar un filtro o una acción de fila. La tableta es precisamente el formato en que se revisa una auditoría en una reunión.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> El 56 % de los controles del visor mide menos de 44 × 44 píxeles</p>
+<dl>
+<dt>Evidencia</dt><dd>2,934 de 5,205 elementos interactivos medidos en las 33 combinaciones del visor quedan por debajo del mínimo recomendado. La auditoría previa <code>ux_audit</code> midió 1 190 de 1 190, es decir el 100 %: <strong>hay mejora, pero el problema persiste en más de la mitad de los controles</strong>.</dd>
+<dt>Impacto</dt><dd>En móvil y tableta obliga a apuntar con precisión para pulsar filtros, paginación y acciones de fila. La tableta es justamente el formato en que se revisa una auditoría en una reunión.</dd>
+<dt>Recomendación</dt><dd>Subir el área de pulsación de los controles de tabla y filtro. No exige agrandar el elemento visible: basta con ampliar su zona activa.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-19">
+<summary>
+  <span class="cod">H-19</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">Las pantallas de resultados son desmesuradamente largas y anchas</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">La vista de imágenes alcanza 15,437 píxeles de alto en móvil —unas dieciocho pantallas de recorrido— y las tablas llegan a 21 columnas.</p>
+<div class="neg"><b>Por qué importa</b>La información está, pero encontrarla cuesta. Es lo que desincentiva usar la herramienta fuera del escritorio. La auditoría anterior ya lo señaló y apenas ha cambiado.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> Las vistas del visor siguen siendo desmesuradamente largas y anchas</p>
+<dl>
+<dt>Evidencia</dt><dd>Medido con datos reales: la vista de imágenes alcanza <strong>15,437 px de alto en móvil</strong> y las tablas llegan a <strong>21 columnas</strong>. <code>ux_audit</code> reportó 16 792 px y 21 columnas: la longitud bajó poco y la anchura no bajó nada. A favor: no se detectó desbordamiento horizontal en ninguna de las 33 combinaciones.</dd>
+<dt>Impacto</dt><dd>Una pantalla de quince mil píxeles son unas dieciocho pantallas de recorrido en móvil. La información existe, pero encontrarla exige un esfuerzo que desincentiva usar la herramienta fuera del escritorio.</dd>
+<dt>Recomendación</dt><dd>Paginar o plegar por defecto, y reducir las columnas visibles a las que cambian entre filas. <code>ux_audit</code> observó que en un módulo nueve de diecisiete columnas repiten el mismo valor en todas las filas.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-09">
+<summary>
+  <span class="cod">H-09</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">La plataforma responde «correcto» a peticiones de datos que no existen</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Pedimos 38 veces información con identificadores inventados. En 31 casos respondió «todo bien, no hay resultados» en vez de «eso no existe».</p>
+<div class="neg"><b>Por qué importa</b>Un enlace roto o un identificador mal copiado se ve exactamente igual que una auditoría sin hallazgos. Alguien puede concluir que una sección está impecable cuando en realidad nunca se consultó.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> 31 operaciones responden «200 OK» ante identificadores que no existen</p>
+<dl>
+<dt>Evidencia</dt><dd>Se pidieron 38 rutas sustituyendo el identificador por <code>no-existe-999</code>. 31 devolvieron 200 con una respuesta vacía en lugar de 404; solo 7 respondieron correctamente. Afecta a casi todas las rutas <code>/api/modules/{módulo}/runs/{run_id}/…</code>. Confirmado también con datos: un subdominio inexistente devuelve 200 con 0 registros a los roles admin y superadmin.</dd>
+<dt>Impacto</dt><dd>La interfaz no puede distinguir «esta corrida no existe» de «esta corrida no tiene hallazgos». Un enlace roto o un identificador mal copiado se presenta al usuario como un resultado legítimamente vacío, y el problema pasa inadvertido. También dificulta el diagnóstico cuando algo falla.</dd>
+<dt>Recomendación</dt><dd>Comprobar la existencia del identificador antes de consultar y devolver 404 cuando no exista. Es un cambio acotado y del mismo patrón en todos los endpoints afectados.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-11">
+<summary>
+  <span class="cod">H-11</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">Un bloque de reglas está duplicado con dos nombres distintos</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">El catálogo declara 30 reglas de rendimiento con nombres en español y otras 15 con nombres en inglés. Las 15 inglesas funcionan; ninguna de las 30 españolas existe en el código. Al menos once son la misma regla escrita dos veces.</p>
+<div class="neg"><b>Por qué importa</b>Infla la cifra de reglas del catálogo y es la causa de buena parte del hallazgo anterior. Al desglosarlo, de esas treinta solo <strong>14 son capacidades que de verdad faltan</strong>; el resto son la misma regla con otro nombre o variantes de una que ya existe. Conviene corregir el catálogo antes de que alguien lo señale desde fuera.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> Un bloque entero de reglas de performance está duplicado bajo dos nomenclaturas</p>
+<dl>
+<dt>Evidencia</dt><dd>El catálogo declara 30 reglas bajo «M6 Performance Validator», con nombres en español (<code>PERF_LCP_ALTO</code>, <code>PERF_IMAGENES_PESADAS</code>…), y otras 15 bajo «M7 Performance Validator», con nombres en inglés (<code>PERF_LCP_HIGH</code>, <code>PERF_IMAGES_HEAVY</code>…). <strong>Las 15 inglesas están implementadas; ninguna de las 30 españolas lo está.</strong> Al menos once son la misma regla escrita dos veces: <code>PERF_LCP_ALTO</code>↔<code>PERF_LCP_HIGH</code>, <code>PERF_CLS_ALTO</code>↔<code>PERF_CLS_HIGH</code>, <code>PERF_PESO_DE_PAGINA_ALTO</code>↔<code>PERF_PAGE_HEAVY</code>, entre otras.</dd>
+<dt>Impacto</dt><dd>Infla artificialmente el catálogo y explica la mayor parte del hallazgo anterior: 25 de las 32 reglas sin evidencia salen de este único bloque. Desglosado: 5 ya estaban implementadas bajo su nombre en inglés, 11 son variantes de umbral o de tendencia de reglas que ya existen —«LCP crítico» frente a «LCP alto», «LCP empeoró» frente a «LCP»— y solo <strong>14 son capacidades realmente ausentes</strong>: minificación de JS y CSS, recursos que bloquean el dibujado, caché de navegador, número de peticiones, fuentes web y formatos modernos de imagen.</dd>
+<dt>Recomendación</dt><dd>Consolidar en una sola nomenclatura, eliminar los duplicados y dejar como pendientes solo las capacidades que de verdad faltan.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-12">
+<summary>
+  <span class="cod">H-12</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">14 tipos de hallazgo llegan al usuario sin explicación</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">La plataforma reporta 14 clases de problema que su propio catálogo no describe. Algunas con mucho volumen: falta de texto alternativo en imágenes (4,139 casos), datos estructurados ausentes (3,873).</p>
+<div class="neg"><b>Por qué importa</b>El catálogo es de donde salen la definición, la gravedad y la recomendación. Sin entrada en el catálogo, el usuario ve un código técnico y ninguna indicación de qué hacer. Es trabajo que la plataforma hace pero no sabe comunicar.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> 14 tipos de hallazgo se reportan a los usuarios sin figurar en el catálogo</p>
+<dl>
+<dt>Evidencia</dt><dd>BigQuery contiene 108 códigos distintos; 14 no están declarados en el catálogo. Entre ellos, algunos de alto volumen: <code>SEO_ALT_MISSING</code> (0 hallazgos), <code>SEO_TWITTER_MISSING</code> (3,879), <code>SEO_SCHEMA_MISSING</code> (3,873) y <code>TECH_CSP_ERROR</code> (3,330).</dd>
+<dt>Impacto</dt><dd>Estos hallazgos llegan al usuario sin definición, sin severidad normalizada y sin recomendación asociada, porque el catálogo es la fuente de esos tres campos. El usuario ve un código críptico y ninguna orientación sobre qué hacer.</dd>
+<dt>Recomendación</dt><dd>Incorporar los 14 códigos al catálogo, o —si son variantes internas— mapearlos al <code>rule_id</code> que les corresponde, como ya hace <code>FINDING_TO_RULE_ID</code> en el módulo técnico para un puñado de casos.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-16">
+<summary>
+  <span class="cod">H-16</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">Se pueden crear colecciones colgando de un subdominio inexistente</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Pedimos crear una colección dentro de un subdominio inventado. La plataforma respondió «creado» y la guardó. Verificamos en la base: el registro existe y su subdominio no. En otra operación equivalente —programar una auditoría sobre una colección inexistente— sí rechaza correctamente.</p>
+<div class="neg"><b>Por qué importa</b>Ese dato queda invisible en la interfaz pero permanente en la base, ocupando espacio y contaminando cualquier consulta que recorra todas las colecciones. Y como no hay forma de borrar colecciones, es irreversible. La validación ya existe en otra parte del sistema: se trata de aplicarla también aquí.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> Se pueden crear colecciones colgando de un subdominio que no existe</p>
+<dl>
+<dt>Evidencia</dt><dd><code>POST /api/subdomains/no-existe-999/collections</code> devolvió <strong>201 Created</strong> y guardó la colección con <code>subdomain_id: "no-existe-999"</code>. Verificado directamente en la base: el documento existe y su subdominio no. La misma comprobación sí funciona en otro endpoint —<code>POST /api/schedules</code> con una colección inexistente devuelve 404—, así que la validación existe en un sitio y falta en el otro.</dd>
+<dt>Impacto</dt><dd>El dato queda inalcanzable desde la interfaz, que solo lista colecciones de subdominios existentes, pero permanece en la base ocupando espacio y contaminando cualquier consulta que recorra todas las colecciones. Y como no hay ninguna operación para borrar colecciones (ver <code>H-17</code>), <strong>una huérfana creada así es permanente</strong>.</dd>
+<dt>Recomendación</dt><dd>Comprobar que el subdominio existe antes de crear la colección y devolver 404 si no, replicando lo que ya hace el endpoint de programaciones.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall baja" id="H-17">
+<summary>
+  <span class="cod">H-17</span>
+  <span class="tag warn">▪ Baja</span>
+  <span class="hall-tit">No se puede eliminar un subdominio ni una colección</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">En toda la plataforma solo hay dos operaciones de borrado —programaciones y categorías—. Los subdominios y las colecciones se crean y quedan para siempre, ni por interfaz ni por API.</p>
+<div class="neg"><b>Por qué importa</b>Un subdominio dado de alta por error o una colección de prueba se quedan a la vista de todos los usuarios de forma permanente. Con el uso, la lista solo puede crecer. Existe un campo para desactivarlos, pero no se usa para ocultarlos.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> No existe forma de eliminar subdominios ni colecciones</p>
+<dl>
+<dt>Evidencia</dt><dd>En toda la API hay únicamente dos operaciones de borrado: <code>DELETE /api/schedules/{id}</code> y <code>DELETE /api/url-categories/{cid}</code>. No hay ninguna para subdominios ni colecciones, y la interfaz tampoco la ofrece. Ambos admiten <code>is_active</code> en su edición, pero ese campo no se usa para ocultarlos del listado.</dd>
+<dt>Impacto</dt><dd>Todo lo que se crea permanece. Un subdominio dado de alta por error, una colección de prueba o una huérfana como la del hallazgo anterior se quedan para siempre en la interfaz de todos los usuarios. A medida que la plataforma se use, la lista solo puede crecer.</dd>
+<dt>Recomendación</dt><dd>Decidir la política: o un borrado real, o un archivado que respete <code>is_active</code> y lo filtre en los listados. Hoy el campo existe pero no hace nada.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-14">
+<summary>
+  <span class="cod">H-14</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">Una operación de mantenimiento no comprueba permisos</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">De las 28 operaciones que modifican datos, 32 rechazaron correctamente a quien no debía ejecutarlas. Una no comprueba nada: cualquier usuario con sesión puede vaciar la memoria intermedia del servidor.</p>
+<div class="neg"><b>Por qué importa</b>No borra ni expone información. Pero esa memoria es lo que evita repetir consultas a la base de datos, que se factura por consulta. Alguien que la vacíe repetidamente vuelve la plataforma lenta para todos y genera coste. Se corrige añadiendo una línea.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> Una operación de escritura no comprueba ningún permiso</p>
+<dl>
+<dt>Evidencia</dt><dd><code>POST /api/cache/invalidate</code> se declara sin ninguna dependencia de rol (<code>def cache_invalidate():</code>, main.py:790). Verificado en ejecución: el rol más bajo obtiene <strong>200 OK</strong> y la caché se vacía. Es la única de las 28 operaciones de escritura sin guardia; las otras 32 comprobaciones fueron rechazadas correctamente.</dd>
+<dt>Impacto</dt><dd>No destruye datos ni expone información, pero cualquier usuario con sesión puede vaciar la caché del servidor. Como la caché es lo que evita repetir consultas a BigQuery, invocarlo de forma repetida obliga a la plataforma a reconsultar todo: degrada el tiempo de respuesta para todos y genera coste de BigQuery, que se factura por consulta.</dd>
+<dt>Recomendación</dt><dd>Exigir rol <code>admin</code>, igual que el resto de operaciones de mantenimiento.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall baja" id="H-15">
+<summary>
+  <span class="cod">H-15</span>
+  <span class="tag warn">▪ Baja</span>
+  <span class="hall-tit">Un administrador puede ampliar los accesos de cualquier usuario</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Cambiar el rol de una persona exige ser superadmin, pero cambiar a qué subdominios accede solo exige ser administrador.</p>
+<div class="neg"><b>Por qué importa</b>Puede ser intencional —los administradores gestionan accesos— pero conviene confirmarlo: hoy el permiso para cambiar <em>quién eres</em> y el permiso para cambiar <em>qué ves</em> están en niveles distintos.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> Un administrador puede ampliar los accesos de cualquier usuario</p>
+<dl>
+<dt>Evidencia</dt><dd><code>PUT /api/users/{uid}/subdomains</code> —que decide a qué subdominios accede una persona— exige rol <code>admin</code> (main.py:448), mientras que modificar el usuario (<code>PATCH /api/users/{uid}</code>) y crearlo exigen <code>superadmin</code>. Ambas fueron correctamente denegadas al rol <code>usuario</code>; la observación es sobre el nivel exigido, no sobre su cumplimiento.</dd>
+<dt>Impacto</dt><dd>Un administrador puede conceder a cualquier cuenta acceso a cualquier subdominio sin intervención de un superadmin. Puede ser la intención del diseño —los administradores gestionan accesos—, pero conviene que sea una decisión consciente: hoy el permiso para cambiar <em>quién eres</em> y el permiso para cambiar <em>qué ves</em> están en niveles distintos.</dd>
+<dt>Recomendación</dt><dd>Confirmar si es intencional. Si lo es, documentarlo; si no, subir el requisito a <code>superadmin</code>.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-04">
+<summary>
+  <span class="cod">H-04</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">Una pantalla sin permiso se queda en blanco en vez de avisar</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Un usuario del rol básico puede abrir pantallas que no le corresponden. Los datos están bien protegidos —el servidor los deniega—, pero la pantalla no le dice nada: queda vacía.</p>
+<div class="neg"><b>Por qué importa</b>Parece una avería. Genera desconfianza en la herramienta y consultas al equipo de soporte que podrían evitarse con un mensaje.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> Una pantalla sin permiso queda rota en vez de explicar el motivo</p>
+<dl>
+<dt>Evidencia</dt><dd>Con el rol más bajo, «Bitácora» se sirve, llama a la API, recibe 403 y deja errores en consola (6 ocurrencias) sin mostrar un mensaje comprensible.</dd>
+<dt>Impacto</dt><dd>El usuario ve una pantalla vacía sin saber si es un fallo del sistema, de su conexión o de sus permisos. Genera tickets de soporte evitables.</dd>
+<dt>Recomendación</dt><dd>Distinguir 403 de otros errores y mostrar «No tienes permiso para ver esta sección», o directamente no ofrecer la pantalla a quien no puede usarla.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-03">
+<summary>
+  <span class="cod">H-03</span>
+  <span class="tag ser">● Media</span>
+  <span class="hall-tit">Las pantallas no están preparadas para lectores de pantalla</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Falta la estructura que permite a un lector de pantalla saltar directamente al contenido o recorrer la página por secciones.</p>
+<div class="neg"><b>Por qué importa</b>Un usuario ciego debe escuchar la página completa cada vez que entra. Es la parte de la accesibilidad que más afecta al uso diario.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> Las páginas carecen de estructura semántica de navegación</p>
+<dl>
+<dt>Evidencia</dt><dd>Las reglas «region» (654 elementos), «landmark-one-main» (63) y «page-has-heading-one» (53) fallan de forma sistemática en casi todas las pantallas.</dd>
+<dt>Impacto</dt><dd>Un lector de pantalla no puede saltar al contenido principal ni recorrer la página por secciones: obliga a leerla entera, de arriba abajo, en cada visita.</dd>
+<dt>Recomendación</dt><dd>Envolver el contenido en <main>, <nav> y <header>, y garantizar un único <h1> por pantalla. Es un cambio de marcado, no de lógica.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall baja" id="H-06">
+<summary>
+  <span class="cod">H-06</span>
+  <span class="tag warn">▪ Baja</span>
+  <span class="hall-tit">La pantalla de acceso podría exponer una contraseña en casos límite</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Si falla la carga de un componente externo de Google, el formulario de acceso enviaría el correo y la contraseña en la dirección web, donde quedarían registrados.</p>
+<div class="neg"><b>Por qué importa</b>Probabilidad baja, consecuencia alta si ocurre. La corrección es una línea de código.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> El formulario de login puede exponer la contraseña en la URL</p>
+<dl>
+<dt>Evidencia</dt><dd><code>&lt;form id="loginForm"&gt;</code> no declara <code>action</code> ni <code>method</code>. El envío se intercepta por JavaScript, pero si el SDK de Firebase —que se carga desde gstatic.com— no llega a ejecutarse, el navegador hace el envío nativo: un GET a la misma URL con el correo y la contraseña como parámetros.</dd>
+<dt>Impacto</dt><dd>Requiere que falle la carga del SDK, así que la probabilidad es baja. Si ocurre, la contraseña queda en el historial del navegador, en el Referer y en los registros del servidor.</dd>
+<dt>Recomendación</dt><dd>Añadir <code>method="post"</code> al formulario, o deshabilitar el botón hasta que el SDK esté listo. Es una línea.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall baja" id="H-05">
+<summary>
+  <span class="cod">H-05</span>
+  <span class="tag warn">▪ Baja</span>
+  <span class="hall-tit">Un permiso de la interfaz no coincide con el del servidor</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">La pantalla de categorías está reservada a superadmin, pero el servidor permite consultar esos datos también a un administrador.</p>
+<div class="neg"><b>Por qué importa</b>No expone información sensible. Importa porque revela que las reglas de permisos se definen en dos sitios y ya empezaron a divergir.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> La API concede un permiso que la interfaz niega</p>
+<dl>
+<dt>Evidencia</dt><dd><code>GET /api/url-categories</code> exige rol <code>admin</code> (main.py:733), mientras que todas sus operaciones de escritura exigen <code>superadmin</code> y el frontend oculta la pantalla «Categorías» a cualquiera que no sea superadmin. Verificado: un admin obtiene 200 en ese endpoint.</dd>
+<dt>Impacto</dt><dd>Bajo. No expone datos sensibles y la escritura sigue protegida. Pero la política real difiere de la declarada en la interfaz, y esas divergencias tienden a crecer.</dd>
+<dt>Recomendación</dt><dd>Decidir cuál es la política correcta y alinear ambos lados. Si un admin debe poder consultar la taxonomía, mostrarle la pantalla en modo lectura; si no, subir el requisito del endpoint a superadmin.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall baja" id="H-13">
+<summary>
+  <span class="cod">H-13</span>
+  <span class="tag warn">▪ Baja</span>
+  <span class="hall-tit">La numeración de los módulos del catálogo es ambigua</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Tres números identifican dos módulos distintos cada uno. Nos obligó a resolverlo a mano para poder analizar el catálogo.</p>
+<div class="neg"><b>Por qué importa</b>Impide automatizar cualquier informe de cobertura por módulo, y es probablemente la razón por la que el bloque duplicado pasó desapercibido.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> La numeración de módulos del catálogo es ambigua</p>
+<dl>
+<dt>Evidencia</dt><dd>Tres identificadores designan dos módulos distintos cada uno: <code>M3</code> es a la vez «Link Validator» y «SEO Validator»; <code>M6</code>, «Content Validator» y «Performance Validator»; <code>M8</code>, «Tagging Validator» e «Indexation / Crawlability Advanced».</dd>
+<dt>Impacto</dt><dd>Impide asignar una regla a un módulo de forma automática y obliga a resolver la ambigüedad a mano en cualquier análisis —incluido este—. Es también la causa probable de que el bloque duplicado de performance pasara inadvertido.</dd>
+<dt>Recomendación</dt><dd>Un identificador por módulo, y que coincida con el nombre de su carpeta en el repositorio.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall baja" id="H-01">
+<summary>
+  <span class="cod">H-01</span>
+  <span class="tag warn">▪ Baja</span>
+  <span class="hall-tit">La pantalla de diagnóstico no acota su propia espera</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Medimos 28 segundos en nuestro entorno, pero investigamos hasta la causa y <strong>no es un defecto de producción</strong>: fuera de la nube de Google, obtener credenciales tarda 12 segundos en fallar. En producción no ocurre.</p>
+<div class="neg"><b>Por qué importa</b>Sin impacto hoy. Lo dejamos anotado porque si ese servicio de credenciales se degradara, la pantalla de diagnóstico sería la primera en dejar de responder, justo cuando hace falta.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> La comprobación de salud no acota el tiempo de obtención de credenciales</p>
+<dl>
+<dt>Evidencia</dt><dd>La pantalla «Salud de la plataforma» tardó 28 s de mediana en nuestro entorno. <strong>Investigado hasta la causa raíz: no es un defecto de producción.</strong> El endpoint <code>/api/health/modules</code> pide un token OIDC por cada módulo con <code>fetch_id_token()</code>; en una máquina fuera de Google Cloud esa llamada busca el servidor de metadatos, no lo encuentra y <strong>falla tras 12,14 s medidos</strong>. La comprobación real de cada módulo tarda 0,61 s. En Cloud Run el servidor de metadatos responde en milisegundos y este coste desaparece.</dd>
+<dt>Impacto</dt><dd>Nulo en operación normal. El riesgo real es de diseño: <code>fetch_id_token()</code> se invoca sin timeout explícito y sin caché, una vez por módulo y en cada petición. Si el servidor de metadatos se degradara, la pantalla de salud heredaría esa latencia multiplicada por nueve, justo cuando más se necesita para diagnosticar.</dd>
+<dt>Recomendación</dt><dd>Acotar la obtención del token con un timeout corto y cachearlo por audiencia mientras siga vigente. Es defensa en profundidad, no una corrección urgente.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall informativo" id="H-07">
+<summary>
+  <span class="cod">H-07</span>
+  <span class="tag neu">· Informativo</span>
+  <span class="hall-tit">Las pantallas administrativas se sirven a cualquier usuario</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Cualquiera con sesión puede abrir la dirección de una pantalla administrativa. Los datos sí están protegidos: comprobamos 8 denegaciones correctas de 9.</p>
+<div class="neg"><b>Por qué importa</b>No es una filtración. Revela qué funciones existen y provoca las pantallas en blanco ya descritas.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> Las pantallas restringidas se sirven a cualquier usuario, pero los datos están protegidos</p>
+<dl>
+<dt>Evidencia</dt><dd>Ninguna de las pantallas de admin o superadmin redirige al login cuando la pide un rol inferior: el HTML se entrega igual. Sin embargo, la API sí protege: 8 de 9 peticiones a endpoints restringidos fueron denegadas con 403.</dd>
+<dt>Impacto</dt><dd>No es una fuga de datos: es una carcasa vacía. Revela la existencia y estructura de funciones administrativas, y produce las pantallas rotas del hallazgo H-04.</dd>
+<dt>Recomendación</dt><dd>No es urgente. La defensa está donde debe estar —en el servidor—. Conviene igualmente que el frontend redirija según el rol, por claridad para el usuario.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall informativo" id="H-08">
+<summary>
+  <span class="cod">H-08</span>
+  <span class="tag neu">· Informativo</span>
+  <span class="hall-tit">Las contraseñas de las cuentas de prueba son débiles y compartidas</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">De las tres cuentas facilitadas para esta auditoría, dos comparten la misma contraseña. Las tres son cortas y previsibles, y no observamos segundo factor.</p>
+<div class="neg"><b>Por qué importa</b>Estas cuentas acceden a datos de producción. Con una contraseña compartida, la bitácora deja de servir para saber quién hizo qué — y la bitácora es precisamente una función de la plataforma.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> Contraseñas débiles y compartidas entre cuentas</p>
+<dl>
+<dt>Evidencia</dt><dd>De las tres cuentas facilitadas para la auditoría, dos comparten exactamente la misma contraseña, y las tres son cortas y predecibles. No se observó segundo factor.</dd>
+<dt>Impacto</dt><dd>Estas cuentas acceden a datos de producción. Una contraseña compartida elimina la trazabilidad: la bitácora no permite saber quién hizo qué.</dd>
+<dt>Recomendación</dt><dd>Rotar las tres al cerrar la auditoría, exigir contraseñas únicas por persona y evaluar segundo factor para los roles admin y superadmin.</dd>
+</dl></div></details>
+</div></details>
+<h2 id="s7">7. Qué recomendamos hacer, y en qué orden</h2>
+<p class="dek">Tres olas. La primera cuesta poco y arregla mucho.</p>
+
+<ol class="olas">
+<li><h3>Ola 1 · Honestidad del dato y arreglos de una línea</h3>
+<p>Marcar en el catálogo qué reglas están implementadas y qué reglas están planificadas, y que la
+interfaz distinga «cumple» de «no evaluada». Limpiar el bloque duplicado de rendimiento. Dar de alta
+los 14 códigos que ya se emiten. Añadir el atributo que falta al formulario de acceso.
+Alinear el permiso de la pantalla de categorías.</p>
+<p><strong>Por qué primero:</strong> es lo más barato y lo que más protege la credibilidad de la
+herramienta. Nada de esto exige tocar el motor de auditoría.</p></li>
+
+<li><h3>Ola 2 · Que la plataforma se pueda usar</h3>
+<p>Corregir el contraste de color —son pocas variables de estilo y resuelve el fallo más numeroso—,
+añadir la estructura que necesitan los lectores de pantalla, mostrar un mensaje claro cuando alguien
+abre una pantalla sin permiso, y devolver «no existe» en lugar de «sin resultados» cuando se pide un
+dato inexistente.</p>
+<p><strong>Por qué después:</strong> requiere trabajo de desarrollo real, pero ninguna decisión de
+arquitectura ni presupuesto adicional.</p></li>
+
+<li><h3>Ola 3 · Cerrar el hueco de capacidades</h3>
+<p>Implementar las capacidades de rendimiento que faltan de verdad —minificación, recursos que
+bloquean el dibujado, caché de navegador, número de peticiones— y las reglas pendientes de
+indexación, etiquetado y SEO.</p>
+<p><strong>Por qué al final:</strong> es la más costosa y la única que amplía lo que la plataforma
+sabe hacer. Mientras no esté, la Ola 1 garantiza que nadie confunda una regla ausente con una
+página limpia.</p></li>
+</ol>
+
+<div class="plan">
+<div class="txt"><strong>Los trabajos que se desprenden de este informe</strong><br>
+<span style="color:var(--tinta2);font-size:14.5px">Cada hallazgo tiene su trabajo correspondiente
+en el plan de mejoras, ordenado por impacto y coste, con el esfuerzo estimado de cada uno.</span></div>
+<a class="btn" href="plan-de-mejoras.html">Abrir el plan de mejoras →</a>
+</div>
+<h2 id="s8">8. Qué queda pendiente y qué necesitamos</h2>
+<p class="dek">Los límites de esta auditoría, dichos por nosotros.</p>
+<div class="card">
+<p><strong>La gestión de usuarios, el lanzamiento de auditorías y el envío de correo no se probaron en funcionamiento.</strong> Actúan sobre el sistema de cuentas de Google, sobre los servidores de auditoría y sobre correo real, que la copia local no reproduce. Para cubrirlos hace falta un entorno de pruebas separado, porque
+el entorno de pruebas comparte la base de datos con producción y cualquier prueba habría alterado
+información real. Para cubrirlo hace falta <strong>un entorno de pruebas separado</strong>. Es la
+única petición con coste que hacemos.</p>
+<p><strong>Las 51 reglas «sin confirmar» no se pudieron resolver.</strong> Para saber si
+funcionan hay que enfrentarlas a una página que las infrinja a propósito. Es la continuación natural
+del trabajo.</p>
+<p><strong>Queda disponible una revisión de experiencia de usuario asistida por inteligencia
+artificial</strong> sobre las capturas que ya tomamos, aprovechando el mismo servicio de IA que la
+plataforma ya usa. Detectaría problemas de claridad y jerarquía visual que ninguna herramienta
+automática puede ver.</p>
+<p style="margin-bottom:0"><strong>No se hizo una prueba de intrusión</strong> —exige un alcance autorizado por escrito— ni se midió el comportamiento con varias auditorías simultáneas. Ambas cosas quedan fuera por decisión, no por olvido.</p>
+</div>
+
+
+<h2 id="s9">9. Sobre el rigor de este informe</h2>
+<p class="dek">Cuatro veces estuvimos a punto de reportar un dato falso. Lo contamos.</p>
+<div class="card">
+<p><strong>Primera.</strong> La medición inicial señalaba una pantalla que tardaba 28 segundos como
+el problema más grave de la plataforma. Al investigar la causa resultó ser un efecto de
+<em>nuestro</em> entorno de pruebas, no un defecto del producto: fuera de la nube de Google, obtener
+credenciales tarda 12 segundos en fallar. Se reclasificó a gravedad baja.</p>
+<p><strong>Tercera.</strong> Medimos las once pantallas de resultados entrando por su dirección directa y salían casi vacías, sin que nuestro instrumento lo advirtiera: esas pantallas necesitan que se elija antes una auditoría concreta. Al repetir la medición correctamente, el dato de botones demasiado pequeños pasó de 43 elementos a 2,934. Las cifras de este informe son las de la medición corregida.</p>
+<p><strong>Cuarta, y la más importante.</strong> Nuestra primera cifra de cobertura decía que
+53 reglas no estaban implementadas. Faltaba aplicar una tabla interna de la plataforma que traduce
+el nombre técnico de cada hallazgo al del catálogo: 45 equivalencias. Al usarla,
+21 de esas reglas resultaron estar funcionando bajo otro nombre. <strong>El error
+iba en contra de la plataforma</strong>: la presentaba con menos cobertura de la que tiene.</p>
+<p><strong>Segunda.</strong> El primer análisis del catálogo dio «100 % de reglas implementadas».
+Era falso: la búsqueda encontraba los nombres de las reglas en una copia del propio catálogo. Al
+corregirlo, la cifra real bajó a 94 confirmadas de 177.</p>
+<p style="margin-bottom:0">Lo incluimos porque un informe de auditoría vale por lo que descarta
+tanto como por lo que denuncia. Si estos dos datos hubieran llegado al equipo de desarrollo sin
+verificar, habrían desarmado la credibilidad de todo lo demás.</p>
+</div>
+
+
+<h2 id="s10">10. Glosario</h2>
+<div class="card"><dl class="glo">
+<dt>Accesibilidad</dt><dd>Que la plataforma se pueda usar con lector de pantalla, solo con teclado o con baja visión. Se mide contra un estándar internacional (WCAG).</dd>
+<dt>Contraste de color</dt><dd>Diferencia entre el color del texto y el del fondo. Si es insuficiente, el texto resulta ilegible para muchas personas.</dd>
+<dt>Rol</dt><dd>Nivel de permisos de una cuenta. PAIN tiene tres: Usuario, Administrador y Superadmin.</dd>
+<dt>Operación de datos</dt><dd>Cada petición con la que la pantalla pide o envía información al servidor. La plataforma tiene 66 de lectura.</dd>
+<dt>Catálogo de reglas</dt><dd>La lista de los 177 problemas que PAIN dice saber detectar, con su gravedad y su recomendación.</dd>
+<dt>Entorno de pruebas</dt><dd>Copia del sistema con datos de mentira, donde se puede romper cosas sin consecuencias. Hoy no existe.</dd>
+<dt>Hallazgo</dt><dd>Un problema concreto detectado en una página concreta. La plataforma acumula 167,375.</dd>
+</dl></div>
+
+
+<h2 id="s11">11. Alcance y método</h2>
+<div class="card"><table>
+<tr><th>Aplicación</th><td><code>http://localhost:8081</code> (instancia local, mismo código que producción)</td></tr>
+<tr><th>Modo</th><td><strong>Solo lectura.</strong> Se bloquearon a nivel de red todas las peticiones de escritura. Intentos interceptados: 0 — la navegación normal no intentó escribir en ningún momento.</td></tr>
+<tr><th>Dispositivos</th><td>Móvil 390×844 · Tablet 820×1180 · Escritorio 1440×900</td></tr>
+<tr><th>Roles</th><td><span class="chip ">usuario</span> <span class="chip ">admin</span> <span class="chip ">superadmin</span></td></tr>
+<tr><th>Sesiones</th><td>9 de 9 iniciadas correctamente</td></tr>
+<tr><th>Herramientas</th><td>Playwright (navegador Chromium real) + axe-core (criterios WCAG)</td></tr>
+</table></div>
+<div class="nota info"><strong>Única desviación respecto al sistema original.</strong>
+El archivo <code>assets/config.js</code> se sustituye <em>en memoria</em> al servirlo, para que
+el frontend consulte la API local en vez de la de producción. El repositorio de la plataforma
+no se modificó: quedó idéntico al original.</div>
+
+
+<h2 id="s12">12. Permisos por rol</h2>
+<p>Se solicitó cada endpoint sensible con un token real de cada rol. Es la prueba que distingue
+una protección efectiva de una simple ocultación del enlace en el menú.</p>
+<div class="tabla-wrap"><table>
+<tr><th>Endpoint</th><th>Qué expone</th><th>Rol mínimo</th><th>usuario</th><th>admin</th><th>superadmin</th></tr>
+<tr><td><code>/api/users</code></td><td>Lista de usuarios de la plataforma</td><td><span class="chip ">superadmin</span></td>
+  <td><span class="chip ">403 denegado</span></td><td><span class="chip ">403 denegado</span></td><td><span class="chip ok">200 · 8 reg.</span></td></tr><tr><td><code>/api/url-categories</code></td><td>Categorías de URL</td><td><span class="chip ">superadmin</span></td>
+  <td><span class="chip ">403 denegado</span></td><td><span class="chip no">200 · acceso indebido</span></td><td><span class="chip ok">200 · 0 reg.</span></td></tr><tr><td><code>/api/alert-recipients</code></td><td>Destinatarios de alertas (correos)</td><td><span class="chip ">superadmin</span></td>
+  <td><span class="chip ">403 denegado</span></td><td><span class="chip ">403 denegado</span></td><td><span class="chip ok">200 · 4 reg.</span></td></tr><tr><td><code>/api/activity</code></td><td>Bitácora de actividad</td><td><span class="chip ">admin</span></td>
+  <td><span class="chip ">403 denegado</span></td><td><span class="chip ok">200 · 62 reg.</span></td><td><span class="chip ok">200 · 62 reg.</span></td></tr><tr><td><code>/api/health/modules</code></td><td>Salud de los módulos</td><td><span class="chip ">admin</span></td>
+  <td><span class="chip ">403 denegado</span></td><td><span class="chip ok">200 · 9 reg.</span></td><td><span class="chip ok">200 · 9 reg.</span></td></tr><tr><td><code>/api/health/runs</code></td><td>Salud de las corridas</td><td><span class="chip ">admin</span></td>
+  <td><span class="chip ">403 denegado</span></td><td><span class="chip ok">200 · 2 reg.</span></td><td><span class="chip ok">200 · 2 reg.</span></td></tr><tr><td><code>/api/subdomains</code></td><td>Subdominios (línea base: debe funcionar)</td><td><span class="chip ">usuario</span></td>
+  <td><span class="chip ok">200 · 1 reg.</span></td><td><span class="chip ok">200 · 1 reg.</span></td><td><span class="chip ok">200 · 1 reg.</span></td></tr>
+</table></div>
+
+
+<h2 id="s13">13. Accesibilidad · detalle por regla</h2>
+<p>axe-core comprueba automáticamente parte de las pautas WCAG. Detecta solo lo verificable por
+máquina, así que <strong>la ausencia de fallos no probaría accesibilidad</strong>; los fallos
+encontrados, en cambio, son reales.</p>
+<div class="tabla-wrap"><table>
+<tr><th>Impacto</th><th>Regla</th><th>Qué exige</th><th class="num">Elementos</th><th class="num">Pantallas</th></tr>
+<tr>
+<td><span class="chip crit">Crítico</span></td>
+<td><code>aria-required-children</code></td><td>Certain ARIA roles must contain particular children</td>
+<td class="num">12</td><td class="num">3 / 18</td></tr><tr>
+<td><span class="chip grave">Grave</span></td>
+<td><code>color-contrast</code></td><td>Elements must meet minimum color contrast ratio thresholds</td>
+<td class="num">395</td><td class="num">15 / 18</td></tr><tr>
+<td><span class="chip grave">Grave</span></td>
+<td><code>scrollable-region-focusable</code></td><td>Scrollable region must have keyboard access</td>
+<td class="num">24</td><td class="num">9 / 18</td></tr><tr>
+<td><span class="chip mod">Moderado</span></td>
+<td><code>region</code></td><td>All page content should be contained by landmarks</td>
+<td class="num">654</td><td class="num">18 / 18</td></tr><tr>
+<td><span class="chip mod">Moderado</span></td>
+<td><code>landmark-one-main</code></td><td>Document should have one main landmark</td>
+<td class="num">63</td><td class="num">7 / 18</td></tr><tr>
+<td><span class="chip mod">Moderado</span></td>
+<td><code>page-has-heading-one</code></td><td>Page should contain a level-one heading</td>
+<td class="num">53</td><td class="num">14 / 18</td></tr><tr>
+<td><span class="chip mod">Moderado</span></td>
+<td><code>heading-order</code></td><td>Heading levels should only increase by one</td>
+<td class="num">18</td><td class="num">2 / 18</td></tr>
+</table></div>
+
+
+<h2 id="s14">14. La API en detalle <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 1</span></h2>
+<p>Se auditaron las operaciones de solo lectura de la API: 66 operaciones GET
+declaradas, de las que 29 pudieron ejercitarse con datos reales. Sobre
+ellas se comprobó autorización por rol, cumplimiento del contrato y comportamiento ante entradas
+inválidas. <strong>No se invocó ninguna operación de escritura.</strong></p>
+
+<div class="kpis">
+<div class="kpi"><div class="n" style="color:var(--ok)">0</div><div class="l">Respuestas 5xx</div></div>
+<div class="kpi"><div class="n" style="color:var(--ok)">0 / 44</div><div class="l">Sondas que rompieron la API</div></div>
+<div class="kpi"><div class="n" style="color:var(--grave)">31</div><div class="l">IDs falsos con 200 OK</div></div>
+<div class="kpi"><div class="n">2</div><div class="l">Operaciones > 3 s</div></div>
+</div>
+
+<h3>Matriz de autorización</h3>
+<p>Cada operación solicitada con un token real de cada rol. Es la prueba que separa una
+protección efectiva de esconder el enlace en el menú.</p>
+<div class="tabla-wrap"><table>
+<tr><th>Operación</th><th>usuario</th><th>admin</th><th>superadmin</th><th class="num">Tiempo</th></tr>
+<tr><td><code>/health</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/auth/me</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.7 s</td></tr><tr><td><code>/api/subdomains</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.9 s</td></tr><tr><td><code>/api/subdomains/{subdomain_id}/collections</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.8 s</td></tr><tr><td><code>/api/runs</code></td>
+<td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td>
+<td class="num">0.3 s</td></tr><tr><td><code>/api/report/excel</code></td>
+<td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td>
+<td class="num">0.6 s</td></tr><tr><td><code>/api/report/html</code></td>
+<td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td>
+<td class="num">0.5 s</td></tr><tr><td><code>/api/users</code></td>
+<td><span class="chip ">403</span></td><td><span class="chip ">403</span></td><td><span class="chip ok">200</span></td>
+<td class="num">6.3 s</td></tr><tr><td><code>/api/notifications</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.9 s</td></tr><tr><td><code>/api/health/modules</code></td>
+<td><span class="chip ">403</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">25.2 s</td></tr><tr><td><code>/api/health/runs</code></td>
+<td><span class="chip ">403</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.7 s</td></tr><tr><td><code>/api/activity</code></td>
+<td><span class="chip ">403</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.9 s</td></tr><tr><td><code>/api/schedules</code></td>
+<td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td>
+<td class="num">0.4 s</td></tr><tr><td><code>/api/alert-recipients</code></td>
+<td><span class="chip ">403</span></td><td><span class="chip ">403</span></td><td><span class="chip ok">200</span></td>
+<td class="num">1.3 s</td></tr><tr><td><code>/api/url-categories</code></td>
+<td><span class="chip ">403</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.6 s</td></tr><tr><td><code>/api/navigation</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/overview/latest</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/modules/links/latest</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/modules/performance/latest</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/modules/content/latest</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/modules/image-audit/latest</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/modules/change-history/latest</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/rules/catalog</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/rules/traceability/latest</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/url-detail</code></td>
+<td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/runs/compare</code></td>
+<td><span class="chip mod">404</span></td><td><span class="chip mod">404</span></td><td><span class="chip mod">404</span></td>
+<td class="num">0.8 s</td></tr><tr><td><code>/api/findings/summary/latest</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/findings/by-url</code></td>
+<td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td><td><span class="chip mod">422</span></td>
+<td class="num">0.0 s</td></tr><tr><td><code>/api/modules/alerts/latest</code></td>
+<td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td><td><span class="chip ok">200</span></td>
+<td class="num">0.0 s</td></tr>
+</table></div>
+<p style="font-size:13.5px;color:var(--gris)">Las operaciones que exigen un
+<code>subdomain_id</code> obligatorio devuelven 422 sin él; se comprobaron aparte con un
+subdominio real y confirmaron el aislamiento por subdominio.</p>
+
+<h3>Comportamiento ante entradas inválidas</h3>
+<p>Se enviaron 44 peticiones deliberadamente malformadas: identificadores
+inexistentes, límites negativos, límites desmedidos y valores no numéricos donde se espera un
+número.</p>
+<div class="tabla-wrap"><table>
+<tr><th>Resultado</th><th class="num">Sondas</th><th>Lectura</th></tr>
+<tr><td><span class="chip ok">Ningún error 500</span></td><td class="num">44</td>
+<td>La API no se rompió con ninguna entrada inválida. Es el resultado que se busca.</td></tr>
+<tr><td><span class="chip no">200 con ID inexistente</span></td><td class="num">31</td>
+<td>Deberían ser 404. Ver hallazgo <code>H-09</code>.</td></tr>
+<tr><td><span class="chip ok">404 correcto</span></td><td class="num">7</td>
+<td>Rechazaron el identificador inexistente como corresponde.</td></tr>
+</table></div>
+
+
+<h2 id="s15">15. Operaciones de escritura <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 3a</span></h2>
+<p>Las 28 operaciones que crean, editan o borran son donde un fallo de permisos
+deja de exponer información y pasa a permitir destruirla o escalar privilegios. Se comprobó si cada
+guardia se cumple de verdad.</p>
+
+<div class="nota info"><strong>Por qué esta prueba no modificó nada.</strong> Tres barreras
+simultáneas, cada una suficiente por sí sola: <strong>(1)</strong> solo se enviaron peticiones que
+<em>deben</em> ser rechazadas —nunca se probó una operación con un rol autorizado a ejecutarla—;
+<strong>(2)</strong> todos los identificadores de ruta eran inexistentes; <strong>(3)</strong> todos
+los cuerpos iban vacíos, y por tanto inválidos para el esquema.</div>
+
+<div class="kpis">
+<div class="kpi"><div class="n" style="color:var(--ok)">0</div><div class="l">Escaladas de privilegios</div></div>
+<div class="kpi"><div class="n" style="color:var(--ok)">32</div><div class="l">Rechazos correctos</div></div>
+<div class="kpi"><div class="n" style="color:var(--grave)">1</div><div class="l">Sin guardia</div></div>
+<div class="kpi"><div class="n">6</div><div class="l">No probadas</div></div>
+</div>
+
+<div class="nota ok"><strong>Ninguna escalada de privilegios.</strong>
+Las 32 peticiones enviadas con un rol insuficiente fueron rechazadas, incluidas las más
+sensibles: crear usuarios, modificarlos, restablecer contraseñas y asignar accesos. Los endpoints
+internos (<code>/tasks/*</code>, <code>/scheduler/tick</code>) también rechazaron tanto a un usuario
+autenticado como a una petición sin credencial alguna. Un detalle a favor del diseño: el guardia se
+evalúa <em>antes</em> que la validación del cuerpo, de modo que una petición no autorizada nunca
+llega a interpretarse.</div>
+
+<div class="tabla-wrap"><table>
+<tr><th>Operación</th><th>Rol exigido</th><th>Probado como</th><th>Respuesta</th><th>Veredicto</th></tr>
+<tr><td><code>POST /api/subdomains</code></td>
+<td><span class="chip ">admin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>PATCH /api/subdomains/{subdomain_id}</code></td>
+<td><span class="chip ">admin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/subdomains/{subdomain_id}/collections</code></td>
+<td><span class="chip ">admin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>PATCH /api/collections/{collection_id}</code></td>
+<td><span class="chip ">admin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/sitemap/inspect</code></td>
+<td><span class="chip ">admin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/sitemap/extract</code></td>
+<td><span class="chip ">admin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/run</code></td>
+<td><span class="chip ">admin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/users</code></td>
+<td><span class="chip ">superadmin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/users</code></td>
+<td><span class="chip ">superadmin</span></td><td>admin</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>PATCH /api/users/{uid}</code></td>
+<td><span class="chip ">superadmin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>PATCH /api/users/{uid}</code></td>
+<td><span class="chip ">superadmin</span></td><td>admin</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>PUT /api/users/{uid}/subdomains</code></td>
+<td><span class="chip ">admin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/users/{uid}/reset-password</code></td>
+<td><span class="chip ">superadmin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/users/{uid}/reset-password</code></td>
+<td><span class="chip ">superadmin</span></td><td>admin</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/schedules</code></td>
+<td><span class="chip ">admin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>DELETE /api/schedules/{schedule_id}</code></td>
+<td><span class="chip ">admin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /tasks/run-module</code></td>
+<td><span class="chip ">token de servicio</span></td><td>usuario</td><td><span class="chip ok">401</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /tasks/run-module</code></td>
+<td><span class="chip ">token de servicio</span></td><td>sin-token</td><td><span class="chip ok">401</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /tasks/module-done</code></td>
+<td><span class="chip ">token de servicio</span></td><td>usuario</td><td><span class="chip ok">401</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /tasks/module-done</code></td>
+<td><span class="chip ">token de servicio</span></td><td>sin-token</td><td><span class="chip ok">401</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /scheduler/tick</code></td>
+<td><span class="chip ">token de servicio</span></td><td>usuario</td><td><span class="chip ok">401</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /scheduler/tick</code></td>
+<td><span class="chip ">token de servicio</span></td><td>sin-token</td><td><span class="chip ok">401</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>PUT /api/alert-recipients/{module}</code></td>
+<td><span class="chip ">superadmin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>PUT /api/alert-recipients/{module}</code></td>
+<td><span class="chip ">superadmin</span></td><td>admin</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/url-categories</code></td>
+<td><span class="chip ">superadmin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/url-categories</code></td>
+<td><span class="chip ">superadmin</span></td><td>admin</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>PUT /api/url-categories/{cid}</code></td>
+<td><span class="chip ">superadmin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>PUT /api/url-categories/{cid}</code></td>
+<td><span class="chip ">superadmin</span></td><td>admin</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>DELETE /api/url-categories/{cid}</code></td>
+<td><span class="chip ">superadmin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>DELETE /api/url-categories/{cid}</code></td>
+<td><span class="chip ">superadmin</span></td><td>admin</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/url-categories/seed</code></td>
+<td><span class="chip ">superadmin</span></td><td>usuario</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/url-categories/seed</code></td>
+<td><span class="chip ">superadmin</span></td><td>admin</td><td><span class="chip ok">403</span></td>
+<td><span class="chip ok">rechazada correctamente</span></td></tr><tr><td><code>POST /api/cache/invalidate</code></td>
+<td><span class="chip ">SIN GUARDA</span></td><td>usuario</td><td><span class="chip no">200</span></td>
+<td><span class="chip no">SIN PROTECCIÓN (confirmado)</span></td></tr>
+</table></div>
+
+<h3>Operaciones no probadas, y por qué</h3>
+<div class="tabla-wrap"><table>
+<tr><th>Operación</th><th>Motivo</th></tr>
+<tr><td><code>POST /auth/session</code></td><td>cualquier usuario autenticado puede ejecutarla por diseño</td></tr><tr><td><code>POST /api/notifications/{notification_id}/read</code></td><td>cualquier usuario autenticado puede ejecutarla por diseño</td></tr><tr><td><code>POST /api/notifications/read-all</code></td><td>cualquier usuario autenticado puede ejecutarla por diseño</td></tr><tr><td><code>POST /api/alert-recipients/test</code></td><td>enviaría un correo de prueba a destinatarios reales</td></tr><tr><td><code>POST /scheduler/weekly-alerts</code></td><td>enviaría el resumen semanal de alertas por correo a destinatarios reales</td></tr><tr><td><code>POST /api/ai/recommendation</code></td><td>cualquier usuario autenticado puede ejecutarla por diseño</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--gris)">Las 2 operaciones de
+envío de correo se excluyeron por criterio: las tres barreras protegen la base de datos, pero un
+correo enviado a personas reales no se puede deshacer. Quedan pendientes para un entorno de pruebas.</p>
+
+
+<h2 id="s16">16. Calidad interna del código</h2>
+<p>La auditoría previa declaró expresamente no poder cubrir esta dimensión: <em>«requiere acceso al
+repositorio»</em>. Es el hueco que justificaba pedir el código, así que se cierra aquí. Todo es
+análisis estático.</p>
+
+<div class="tabla-wrap"><table>
+<tr><th>Comprobación</th><th>Resultado</th><th>Lectura</th></tr>
+<tr><td>Vulnerabilidades conocidas en dependencias</td><td><span class="chip no">3 librerías</span></td>
+<td>Dos de severidad alta. Ver <code>H-22</code>.</td></tr>
+<tr><td>Pruebas automatizadas</td><td><span class="chip no">ninguna</span></td><td>Cero archivos y cero directorios de prueba en todo el repositorio.</td></tr>
+<tr><td>Integración continua</td><td><span class="chip no">ninguna</span></td><td>Sin <code>.github/workflows</code>, <code>cloudbuild.yaml</code> ni equivalente.</td></tr>
+<tr><td>Dependencias sin fijar</td><td><span class="chip mod">2 módulos</span></td><td>Ver <code>H-24</code>.</td></tr>
+<tr><td>Conflictos de versión entre módulos</td><td><span class="chip ok">ninguno</span></td><td>Los 18 paquetes distintos usan la misma versión allí donde coinciden.</td></tr>
+<tr><td>Imagen base de los contenedores</td><td><span class="chip ok">consistente</span></td><td>Los 11 contenedores usan <code>python:3.11-slim</code>.</td></tr>
+<tr><td>Código duplicado entre módulos</td><td><span class="chip ok">ninguno</span></td><td>Ningún archivo <code>.py</code> idéntico en más de un servicio, pese a compartir patrón de repositorio.</td></tr>
+<tr><td>Secretos en el código</td><td><span class="chip ok">ninguno</span></td><td>Ver la nota siguiente.</td></tr>
+</table></div>
+
+<div class="nota info"><strong>Un falso positivo que conviene explicar.</strong>
+El rastreo automático marcó una clave de API de Google en
+<code>assets/firebase-config.js</code>. <strong>No es un hallazgo:</strong> es la clave pública de
+configuración web de Firebase, que por diseño viaja al navegador, y el propio archivo lo advierte
+en su cabecera. Se documenta porque cualquier herramienta de análisis la señalará igual, y conviene
+que la respuesta esté escrita antes de que alguien la plantee como incidencia.</div>
+
+<div class="nota"><strong>Sobre el archivo más grande.</strong>
+<code>assets/app.js</code> concentra 192 KB de lógica en un solo
+archivo. <code>ux_audit</code> lo midió en 178 KB: ha crecido desde entonces. No es un defecto por
+sí mismo, pero sin pruebas automatizadas (<code>H-23</code>) cada cambio ahí se hace sin red.</div>
+
+
+<h2 id="s17">17. Fiabilidad del dato</h2>
+<p>La auditoría previa calificó esta dimensión como <strong>deficiente</strong> y la describió como
+«la que decide si el producto sirve»: documentó cinco cifras que se contradecían entre pantallas de
+una misma corrida y un doble conteo en el módulo técnico. Ellos lo dedujeron comparando pantallas;
+aquí se cuenta directamente contra la API, sobre la corrida <code>a645a395e78f4c</code>.</p>
+
+<div class="kpis">
+<div class="kpi"><div class="n" style="color:var(--ok)">2</div><div class="l">Corregidas</div></div>
+<div class="kpi"><div class="n" style="color:var(--mod)">2</div><div class="l">No son error, pero inducen a error</div></div>
+<div class="kpi"><div class="n" style="color:var(--crit)">1</div><div class="l">Persisten</div></div>
+</div>
+
+<div class="tabla-wrap"><table>
+<tr><th>Comprobación</th><th>Veredicto</th><th>Evidencia</th></tr>
+<tr><td>¿El resumen de la corrida cuadra con el detalle de cada módulo?</td>
+<td><span class="chip ok">corregida</span></td>
+<td style="font-size:13.5px">Los 7 módulos coinciden. Total de la corrida: 17,723 hallazgos.</td></tr><tr><td>¿El panel de indicadores de SEO cuadra con su lista de hallazgos?</td>
+<td><span class="chip mod">induce a error</span></td>
+<td style="font-size:13.5px">El panel suma 121 defectos de página (12 sin H1, 12 con H1 múltiple, 13 títulos cortos, 50 largos, 25 metas cortas, 9 largas) sobre 200 páginas. La lista de hallazgos del mismo módulo suma 1,453. Son cifras distintas porque cuentan cosas distintas —el panel cuenta páginas afectadas, la lista cuenta ocurrencias—, pero nada en la pantalla lo advierte: es la raíz de la contradicción que reportó ux_audit.</td></tr><tr><td>¿Cada problema del módulo técnico se cuenta una sola vez?</td>
+<td><span class="chip ok">corregida</span></td>
+<td style="font-size:13.5px">500 filas analizadas. Duplicados exactos (misma URL, mismo código, mismo elemento): 0. Repeticiones de URL+código sin distinguir elemento: 0 (0 % de las filas). ux_audit sospechaba que «22 hallazgos» de una URL eran en realidad 11.</td></tr><tr><td>¿El indicador de enlaces rotos coincide con su tabla de hallazgos?</td>
+<td><span class="chip no">persiste</span></td>
+<td style="font-size:13.5px">Indicadores del panel: broken_links=6399 · broken_internal_links=45 · broken_external_links=554 · broken_links_findings=779. Suma de su lista de hallazgos: 6,497 en 9 códigos. ux_audit reportó «42 enlaces rotos» frente a 43 filas sin combinación que sumara 42.</td></tr><tr><td>¿El recuento del sitemap y las URLs auditables salen de la misma corrida?</td>
+<td><span class="chip mod">induce a error</span></td>
+<td style="font-size:13.5px">Indicadores del sitemap en esta corrida: total_sitemaps_found=1 · total_sitemaps_read_ok=1 · total_sitemaps_failed=0 · total_urls_found=2893 · total_urls_unique=2893 · total_urls_excluded=0 · total_urls_ready_for_audit=8 · duration_seconds=1819.902. ux_audit reportó «2 886 URLs leídas · 8 auditables» mezclando la fecha del sitemap con corridas de otra fecha. El sitemap se rastrea por separado y la propia interfaz ya lo advierte con un aviso de «foto del sitemap del …», así que el dato es correcto pero su lectura conjunta sigue induciendo a error.</td></tr>
+</table></div>
+
+<div class="nota ok"><strong>Los totales cuadran.</strong> Los 7 módulos
+de la corrida coinciden exactamente entre el resumen y el detalle —17,723
+hallazgos, sin una sola discrepancia— y el doble conteo del módulo técnico ha desaparecido: sobre
+500 filas analizadas hay <strong>cero duplicados</strong>, con criterio estricto y con criterio laxo.
+Era la sospecha más grave de la auditoría previa y ya no se sostiene.</div>
+
+<div class="nota"><strong>La distinción que cambia el coste del arreglo.</strong>
+De los cinco puntos, uno es un error real de reconciliación (<code>H-20</code>, los indicadores de
+enlaces) y dos son cifras correctas presentadas sin decir qué miden (<code>H-21</code>). Lo primero
+exige revisar cómo se calcula; lo segundo, escribir la unidad al lado del número. Tratarlos como el
+mismo problema multiplicaría por diez el esfuerzo estimado.</div>
+
+
+<h2 id="s18">18. Reconciliación con la auditoría previa <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 4a</span></h2>
+<p>En agosto de 2026 otro equipo auditó esta plataforma —proyecto <code>ux_audit</code>— desde
+fuera, sin acceso al código, y dejó 60 hallazgos de usabilidad y 1 016 incidencias de
+accesibilidad. Aquí no se repite esa medición: se comprueba, uno a uno, <strong>cuáles de sus
+hallazgos siguen vigentes y cuáles se corrigieron</strong>. Dos informes sueltos valen menos que
+una serie.</p>
+
+<div class="tabla-wrap"><table>
+<tr><th>Hallazgo de <code>ux_audit</code></th><th>Estado hoy</th><th>Evidencia</th></tr>
+<tr><td>Las cinco cabeceras de seguridad no se envían</td><td><span class="chip ok">corregido</span></td>
+<td>Las seis están presentes en producción, incluida una política de contenido.</td></tr>
+<tr><td>Ningún activo declara caché</td><td><span class="chip ok">corregido</span></td>
+<td><code>cache-control: max-age=86400</code> en <code>app.js</code> y <code>styles.css</code>.</td></tr>
+<tr><td>Ningún módulo del visor tiene dirección propia</td><td><span class="chip ok">corregido</span></td>
+<td>Al abrir SEO la dirección pasa a <code>#seo</code>, recargar la mantiene y el botón Atrás vuelve dentro de la herramienta. Los 11 módulos son enlazables.</td></tr>
+<tr><td><code>select-name</code> (crítica): 105 desplegables sin nombre accesible</td><td><span class="chip ok">corregido</span></td>
+<td>35 desplegables medidos en las 11 vistas con datos: <strong>todos</strong> tienen nombre accesible.</td></tr>
+<tr><td>El 100 % de los controles mide menos de 44 px</td><td><span class="chip mod">parcial</span></td>
+<td>Bajó al 56 % (2,934 de 5,205). Ver <code>H-18</code>.</td></tr>
+<tr><td>Páginas de hasta 16 792 px y tablas de 21 columnas</td><td><span class="chip no">vigente</span></td>
+<td>15,437 px en móvil y 21 columnas. Ver <code>H-19</code>.</td></tr>
+<tr><td>La navegación global desaparece al entrar a trabajar</td><td><span class="chip no">vigente</span></td>
+<td>Media de 0,7 enlaces de navegación visibles por pantalla; en Subdominios y Colecciones, ninguno.</td></tr>
+</table></div>
+<p><strong>Cuatro de siete corregidos.</strong> Corresponden a los puntos 1, 4 y 5 de su propio
+orden de trabajo, más la regla crítica de accesibilidad del punto 2.</p>
+
+<div class="nota"><strong>Corrección de nuestra propia medición.</strong>
+La línea base (§1) recorrió las 11 vistas del visor navegando directamente a
+<code>/index.html#módulo</code>. El visor toma su contexto de <code>sessionStorage</code>, que
+escribe la pantalla de colecciones al elegir una corrida: sin ese contexto la vista carga vacía.
+<strong>99 de las 162 combinaciones de la línea base se midieron
+sobre pantallas sin datos</strong> y sus 479 incidencias quedan anuladas.
+Se sustituyen por 33 combinaciones medidas con una corrida real
+(<code>a645a395e78f4c</code>) en los tres dispositivos, que arrojan 192 incidencias.
+El efecto sobre el total es menor de lo que cabía temer —4.8
+incidencias por recorrido en vacío frente a 5.8 con datos— porque
+las reglas dominantes son de estructura de página y no dependen del número de filas. En cambio el
+tamaño de los controles sí cambió por completo: 43 elementos por debajo de 44 px sobre pantallas
+vacías, 2,934 con datos.</div>
+
+
+<h2 id="s19">19. Ciclo de vida de los datos <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 3b</span></h2>
+<p>La fase anterior probó que nadie ejecuta lo que no le toca. Esta prueba lo contrario: que la
+operación <em>funcione bien</em> cuando la ejecuta quien sí puede. Se recorrió el ciclo completo
+—alta, edición, borrado— y se comprobó la persistencia de los campos, la validación de referencias
+y el registro en la bitácora.</p>
+
+<div class="nota info"><strong>Dónde se escribió.</strong> En un <strong>emulador local de
+Firestore</strong> sembrado con una copia de los datos operativos reales, servido por una segunda
+instancia del BFF en otro puerto. La instancia de producción siguió intacta y en marcha. El
+aislamiento no se dio por supuesto: antes de escribir nada, el script crea un registro marcado y
+comprueba que <em>no</em> aparece en producción; si apareciera, aborta. Al terminar vuelve a
+comprobarlo. Resultado: <strong>ningún dato de prueba llegó a producción</strong>.</div>
+
+<div class="kpis">
+<div class="kpi"><div class="n" style="color:var(--ok)">15</div><div class="l">Comprobaciones correctas</div></div>
+<div class="kpi"><div class="n" style="color:var(--grave)">1</div><div class="l">Fallos</div></div>
+<div class="kpi"><div class="n">16</div><div class="l">Total</div></div>
+</div>
+
+<div class="tabla-wrap"><table>
+<tr><th>Comprobación</th><th>Resultado</th><th>Detalle</th></tr>
+<tr><td>alta de subdominio persiste</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">nombre &quot;AISLAMIENTO-AUD-MSQMFUJI&quot;</td></tr><tr><td>campos de trazabilidad al crear</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">created_by y created_at presentes</td></tr><tr><td>la edición persiste</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">200</td></tr><tr><td>trazabilidad al editar</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">updated_by presente</td></tr><tr><td>rechaza colección sobre subdominio inexistente</td>
+<td><span class="chip no">fallo</span></td>
+<td style="font-size:13.5px;color:var(--gris)">devolvió 201: se creó una colección huérfana</td></tr><tr><td>alta de colección</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">b0846f9d9bda</td></tr><tr><td>la edición de colección persiste</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)"></td></tr><tr><td>alta de categoría</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">9b5fa9a86683</td></tr><tr><td>el borrado elimina de verdad</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">DELETE 200</td></tr><tr><td>borrar dos veces devuelve 404</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)"></td></tr><tr><td>alta de programación</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">03442e241275</td></tr><tr><td>rechaza programación sobre colección inexistente</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">404</td></tr><tr><td>el borrado de programación elimina</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">DELETE 200</td></tr><tr><td>destinatarios de alertas persisten</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">PUT 200</td></tr><tr><td>la asignación de subdominios persiste</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">PUT 200</td></tr><tr><td>la bitácora registra los cambios</td>
+<td><span class="chip ok">correcto</span></td>
+<td style="font-size:13.5px;color:var(--gris)">4 acciones presentes</td></tr>
+</table></div>
+
+<h3>Qué quedó fuera de esta fase</h3>
+<div class="tabla-wrap"><table>
+<tr><th>Operación</th><th>Motivo</th></tr>
+<tr><td><code>POST /api/users</code></td><td>Crea una cuenta real en Firebase Authentication, que <strong>no está emulado</strong></td></tr>
+<tr><td><code>PATCH /api/users/{uid}</code> con <code>is_active</code></td><td>Desactiva una cuenta real de Firebase Authentication</td></tr>
+<tr><td><code>POST /api/users/{uid}/reset-password</code></td><td>Cambia la contraseña real de una cuenta</td></tr>
+<tr><td><code>POST /api/run</code></td><td>Lanza auditorías reales en Cloud Run y escribe en BigQuery</td></tr>
+<tr><td>Envío de correo</td><td>Un correo enviado no se puede deshacer</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--gris)">El emulador cubre Firestore, no Firebase Authentication
+ni BigQuery. Cerrar estas cinco exige un proyecto de pruebas separado en Google Cloud.</p>
+
+
+<h2 id="s20">20. El catálogo de reglas <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 2</span></h2>
+<div class="nota info"><strong>Esta cifra se corrigió durante la auditoría.</strong>
+La primera medición comparó los códigos del catálogo contra los de BigQuery y contra el texto del
+código fuente, y concluyó que 53 reglas no tenían evidencia. Faltaba una pieza: el BFF mantiene una
+<strong>tabla de equivalencias</strong> (<code>FINDING_CODE_ALIASES</code>, 45
+entradas) que traduce el código operativo de cada módulo al del catálogo. Aplicándola,
+21 reglas que parecían ausentes resultaron estar funcionando bajo otro nombre:
+<code>SEO_ALT_MISSING</code>, con 4,139
+hallazgos, es <code>SEO_ALT_EN_IMAGENES</code> en el catálogo. Las cifras de esta sección son las
+corregidas.</div>
+
+<p>PAIN declara un catálogo de <strong>177 reglas</strong> de auditoría. Aquí se
+comprueba cuántas existen de verdad, cruzando el catálogo con dos fuentes independientes: el
+código de los 10 módulos y los 167,375 hallazgos ya registrados
+en BigQuery. Ninguna regla se da por buena solo porque esté escrita.</p>
+
+<div class="kpis">
+<div class="kpi"><div class="n" style="color:var(--ok)">94</div><div class="l">Confirmadas</div></div>
+<div class="kpi"><div class="n">51</div><div class="l">Implementadas sin disparar</div></div>
+<div class="kpi"><div class="n" style="color:var(--crit)">32</div><div class="l">Sin evidencia</div></div>
+<div class="kpi"><div class="n" style="color:var(--grave)">14</div><div class="l">Emitidas sin declarar</div></div>
+</div>
+
+<div class="tabla-wrap"><table>
+<tr><th>Estado</th><th class="num">Reglas</th><th class="num">%</th><th>Qué significa</th></tr>
+<tr><td><span class="chip ok">Confirmada</span></td><td class="num">94</td><td class="num">53.1%</td>
+<td>El código del módulo la nombra <em>y</em> ha producido hallazgos reales. Es la única categoría demostrada.</td></tr>
+<tr><td><span class="chip ">Implementada, sin disparar</span></td><td class="num">51</td><td class="num">28.8%</td>
+<td>El código la nombra pero nunca ha generado un hallazgo. Puede ser buena señal —el sitio la cumple— o una regla que no llega a ejecutarse. No se distingue sin probarla contra un caso que la infrinja.</td></tr>
+<tr><td><span class="chip no">Sin evidencia</span></td><td class="num">32</td><td class="num">18.1%</td>
+<td>No aparece en el código de ningún módulo ni ha emitido nunca un hallazgo. 15 de ellas son de severidad Alta.</td></tr>
+</table></div>
+
+<h3>Las 32 reglas sin evidencia, por módulo</h3>
+<div class="tabla-wrap"><table>
+<tr><th>Módulo declarado</th><th class="num">Sin evidencia</th><th class="num">Total declaradas</th></tr>
+<tr><td>M6 Performance Validator</td>
+<td class="num">25</td><td class="num">30</td></tr><tr><td>M8 Indexation / Crawlability Advanced</td>
+<td class="num">3</td><td class="num">4</td></tr><tr><td>M8 Tagging Validator</td>
+<td class="num">2</td><td class="num">13</td></tr><tr><td>M2 Technical Crawler</td>
+<td class="num">1</td><td class="num">33</td></tr><tr><td>M4 SEO Validator</td>
+<td class="num">1</td><td class="num">11</td></tr>
+</table></div>
+<p style="font-size:14px;color:var(--gris)">El grueso procede de un solo bloque duplicado; ver
+<code>H-11</code> antes de interpretar esta tabla como treinta capacidades ausentes.</p>
+
+<h3>Hallazgos emitidos que el catálogo no declara</h3>
+<div class="tabla-wrap"><table>
+<tr><th>Código emitido</th><th class="num">Hallazgos registrados</th></tr>
+<tr><td><code>SEO_TWITTER_MISSING</code></td><td class="num">3,879</td></tr><tr><td><code>SEO_SCHEMA_MISSING</code></td><td class="num">3,873</td></tr><tr><td><code>TECH_CSP_ERROR</code></td><td class="num">3,330</td></tr><tr><td><code>TECH_FAILED_JS_RESOURCE</code></td><td class="num">1,430</td></tr><tr><td><code>TECH_FAILED_IMAGE_RESOURCE</code></td><td class="num">853</td></tr><tr><td><code>TECH_JS_CONFLICT</code></td><td class="num">721</td></tr><tr><td><code>PDF_RESUMEN_IA</code></td><td class="num">113</td></tr><tr><td><code>TAG_INTERACTION_NOT_TAGGED</code></td><td class="num">62</td></tr><tr><td><code>TECH_FAILED_CSS_RESOURCE</code></td><td class="num">25</td></tr><tr><td><code>TECH_FAILED_FONT_RESOURCE</code></td><td class="num">16</td></tr><tr><td><code>SEO_OG_MISSING</code></td><td class="num">12</td></tr><tr><td><code>TECH_CORS_ERROR</code></td><td class="num">8</td></tr><tr><td><code>SEO_TITLE_LENGTH</code></td><td class="num">4</td></tr><tr><td><code>SEO_META_LENGTH</code></td><td class="num">1</td></tr>
+</table></div>
+
+
+<h2 id="s21">21. Rendimiento de carga</h2>
+<div class="nota info"><strong>Cómo leer estos números.</strong> Se midieron desde una máquina
+en Lima contra servicios alojados en <code>us-central1</code>. En producción, aplicación y datos
+conviven en la misma región, así que <strong>los tiempos reales son menores</strong>. Sirven para
+comparar pantallas entre sí, no como cifra de la experiencia del usuario final. El caso extremo
+—«Salud de la plataforma»— está explicado y descartado en <code>H-01</code>.</div>
+<div class="tabla-wrap"><table>
+<tr><th>Pantalla</th><th class="num">Mediana</th><th class="num">Máximo</th><th class="num">Mediciones</th></tr>
+<tr><td>Salud de la plataforma</td>
+<td class="num"><strong style="color:var(--crit)">28.3 s</strong></td>
+<td class="num">33.2 s</td><td class="num">9</td></tr><tr><td>Colecciones</td>
+<td class="num">6.2 s</td>
+<td class="num">12.3 s</td><td class="num">9</td></tr><tr><td>Visor · Resumen</td>
+<td class="num">5.8 s</td>
+<td class="num">17.0 s</td><td class="num">9</td></tr><tr><td>Subdominios</td>
+<td class="num">4.7 s</td>
+<td class="num">5.9 s</td><td class="num">9</td></tr><tr><td>Bitácora</td>
+<td class="num">4.1 s</td>
+<td class="num">6.2 s</td><td class="num">9</td></tr><tr><td>Usuarios</td>
+<td class="num">4.1 s</td>
+<td class="num">5.5 s</td><td class="num">9</td></tr><tr><td>Configuración de alertas</td>
+<td class="num">4.0 s</td>
+<td class="num">5.3 s</td><td class="num">9</td></tr><tr><td>Categorías</td>
+<td class="num">3.4 s</td>
+<td class="num">4.8 s</td><td class="num">9</td></tr><tr><td>Visor · M4 Tagging</td>
+<td class="num">1.5 s</td>
+<td class="num">1.5 s</td><td class="num">9</td></tr><tr><td>Visor · M2 Técnico</td>
+<td class="num">1.5 s</td>
+<td class="num">1.5 s</td><td class="num">9</td></tr><tr><td>Visor · M3 SEO</td>
+<td class="num">1.5 s</td>
+<td class="num">1.7 s</td><td class="num">9</td></tr><tr><td>Visor · M1 Sitemap</td>
+<td class="num">1.5 s</td>
+<td class="num">1.5 s</td><td class="num">9</td></tr><tr><td>Visor · M6 Contenido</td>
+<td class="num">1.5 s</td>
+<td class="num">1.5 s</td><td class="num">9</td></tr><tr><td>Visor · M7 Performance</td>
+<td class="num">1.5 s</td>
+<td class="num">1.5 s</td><td class="num">9</td></tr><tr><td>Visor · M10 Imágenes</td>
+<td class="num">1.5 s</td>
+<td class="num">1.6 s</td><td class="num">9</td></tr><tr><td>Visor · M5 Enlaces</td>
+<td class="num">1.5 s</td>
+<td class="num">1.6 s</td><td class="num">9</td></tr><tr><td>Visor · M8 Historial</td>
+<td class="num">1.5 s</td>
+<td class="num">1.6 s</td><td class="num">9</td></tr><tr><td>Visor · M9 Alertas</td>
+<td class="num">1.5 s</td>
+<td class="num">1.7 s</td><td class="num">9</td></tr>
+</table></div>
+
+
+<h2 id="s22">22. Errores en ejecución</h2>
+<div class="tabla-wrap"><table>
+<tr><th class="num">Veces</th><th>Error de consola</th></tr>
+<tr><td class="num">3</td><td><code>Failed to load resource: the server responded with a status of 403 (Forbidden)</code></td></tr><tr><td class="num">3</td><td><code>API ERROR: /api/activity HTTP 403</code></td></tr><tr><td class="num">1</td><td><code>Failed to load resource: net::ERR_CONNECTION_CLOSED</code></td></tr>
+</table></div>
+
+
+<h2 id="s23">23. Detalle por pantalla</h2>
+<details class="det"><summary>Subdominios — 72 fallo(s) de accesibilidad · 4.7 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/subdominios.html</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">5.8 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">4.5 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">4.9 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">4.7 s</td><td class="num">9</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">5.9 s</td><td class="num">9</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">4.3 s</td><td class="num">9</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">4.7 s</td><td class="num">9</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">4.3 s</td><td class="num">9</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">4.1 s</td><td class="num">9</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/02-subdominios__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/02-subdominios__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/02-subdominios__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Colecciones — 312 fallo(s) de accesibilidad · 6.2 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/colecciones.html</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">7.9 s</td><td class="num">32</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">6.3 s</td><td class="num">32</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">6.1 s</td><td class="num">32</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">6.2 s</td><td class="num">32</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">12.3 s</td><td class="num">32</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">6.5 s</td><td class="num">32</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">6.0 s</td><td class="num">40</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">6.0 s</td><td class="num">40</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">6.1 s</td><td class="num">40</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/03-colecciones__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/03-colecciones__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/03-colecciones__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Bitácora — 20 fallo(s) de accesibilidad · 4.1 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/bitacora.html</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">4.0 s</td><td class="num">2</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">3.9 s</td><td class="num">2</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">3.8 s</td><td class="num">2</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">4.1 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">6.2 s</td><td class="num">2</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">4.1 s</td><td class="num">2</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">4.1 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">4.2 s</td><td class="num">2</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">4.2 s</td><td class="num">2</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/04-bitacora__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/04-bitacora__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/04-bitacora__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Salud de la plataforma — 95 fallo(s) de accesibilidad · 28.3 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/salud.html</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">2.9 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">3.0 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">3.1 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">33.2 s</td><td class="num">15</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">30.1 s</td><td class="num">14</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">28.6 s</td><td class="num">14</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">28.1 s</td><td class="num">15</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">28.3 s</td><td class="num">14</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">29.0 s</td><td class="num">14</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/05-salud__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/05-salud__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/05-salud__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Usuarios — 181 fallo(s) de accesibilidad · 4.1 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/usuarios.html</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">3.0 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">3.0 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">3.1 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">5.5 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">4.1 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">3.4 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">5.3 s</td><td class="num">49</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">5.5 s</td><td class="num">57</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">5.5 s</td><td class="num">57</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/06-usuarios__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/06-usuarios__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/06-usuarios__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Categorías — 30 fallo(s) de accesibilidad · 3.4 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/categorias.html</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">3.3 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">3.1 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">3.3 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">4.8 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">4.5 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">3.9 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">3.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">3.4 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">3.3 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/07-categorias__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/07-categorias__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/07-categorias__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Configuración de alertas — 30 fallo(s) de accesibilidad · 4.0 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/alertas-config.html</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">3.3 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">3.5 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">3.2 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">5.3 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">4.7 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">2.9 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">4.9 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">4.0 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">4.1 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/08-alertas-config__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/08-alertas-config__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/08-alertas-config__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Visor · Resumen — 33 fallo(s) de accesibilidad · 5.8 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/index.html#overview</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">16.1 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">5.8 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">4.8 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">17.0 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">5.7 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">15.1 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">3.0 s</td><td class="num">3</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">3.0 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">14.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/09-visor-overview__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/09-visor-overview__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/09-visor-overview__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Visor · M1 Sitemap — 41 fallo(s) de accesibilidad · 1.5 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/index.html#sitemap</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/10-visor-sitemap__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/10-visor-sitemap__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/10-visor-sitemap__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Visor · M2 Técnico — 53 fallo(s) de accesibilidad · 1.5 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/index.html#technical</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/11-visor-technical__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/11-visor-technical__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/11-visor-technical__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Visor · M3 SEO — 46 fallo(s) de accesibilidad · 1.5 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/index.html#seo</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">1.7 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">1.7 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">1.6 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/12-visor-seo__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/12-visor-seo__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/12-visor-seo__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Visor · M4 Tagging — 50 fallo(s) de accesibilidad · 1.5 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/index.html#tagging</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/13-visor-tagging__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/13-visor-tagging__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/13-visor-tagging__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Visor · M5 Enlaces — 44 fallo(s) de accesibilidad · 1.5 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/index.html#links</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">1.6 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">8</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/14-visor-links__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/14-visor-links__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/14-visor-links__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Visor · M6 Contenido — 53 fallo(s) de accesibilidad · 1.5 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/index.html#content</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">8</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">7</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">6</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/15-visor-content__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/15-visor-content__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/15-visor-content__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Visor · M7 Performance — 38 fallo(s) de accesibilidad · 1.5 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/index.html#performance</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/16-visor-performance__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/16-visor-performance__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/16-visor-performance__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Visor · M8 Historial — 39 fallo(s) de accesibilidad · 1.5 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/index.html#change-history</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">1.6 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/17-visor-change-history__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/17-visor-change-history__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/17-visor-change-history__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Visor · M9 Alertas — 39 fallo(s) de accesibilidad · 1.5 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/index.html#alerts</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">1.7 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/18-visor-alerts__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/18-visor-alerts__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/18-visor-alerts__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details><details class="det"><summary>Visor · M10 Imágenes — 43 fallo(s) de accesibilidad · 1.5 s</summary>
+  <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/index.html#image-audit</code></p>
+  <div class="tabla-wrap"><table>
+  <tr><th>Rol</th><th>Dispositivo</th><th class="num">Carga</th><th class="num">A11y</th><th>Resultado</th></tr>
+  <tr><td>usuario</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>tablet</td>
+  <td class="num">1.6 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>usuario</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">5</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>admin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>mobile</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>tablet</td>
+  <td class="num">1.5 s</td><td class="num">9</td>
+  <td><span class="chip ok">cargó</span></td></tr><tr><td>superadmin</td><td>desktop</td>
+  <td class="num">1.5 s</td><td class="num">4</td>
+  <td><span class="chip ok">cargó</span></td></tr>
+  </table></div>
+  <div class="shots"><figure>
+  <img loading="lazy" src="out/capturas/19-visor-image-audit__superadmin__mobile.jpg" alt="">
+  <figcaption>superadmin · mobile</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/19-visor-image-audit__superadmin__tablet.jpg" alt="">
+  <figcaption>superadmin · tablet</figcaption></figure><figure>
+  <img loading="lazy" src="out/capturas/19-visor-image-audit__superadmin__desktop.jpg" alt="">
+  <figcaption>superadmin · desktop</figcaption></figure></div>
+  </div></details>
+
+
+<h2 id="s24">24. Correcciones a nuestra propia medición</h2>
+<p>Seis veces, a lo largo de la auditoría, una medición nuestra iba a producir un resultado
+equivocado. Se detectaron antes de publicarlas y se documentan aquí porque un instrumento sin
+declarar sus fallos no es un instrumento auditable.</p>
+<div class="tabla-wrap"><table>
+<tr><th>Qué medimos mal</th><th>Efecto</th><th>Cómo se corrigió</th></tr>
+<tr><td>Las 11 vistas del visor, recorridas sin contexto</td><td>99 recorridos sobre pantallas vacías; los controles bajo 44 px salían 43 en lugar de 2,934</td><td>Sembrar la corrida en <code>sessionStorage</code> y exigir filas de tabla renderizadas antes de medir</td></tr>
+<tr><td>Cobertura del catálogo, sin la tabla de equivalencias</td><td>53 reglas «sin evidencia» en lugar de 32; 21 funcionaban bajo otro nombre</td><td>Leer <code>FINDING_CODE_ALIASES</code> del código del BFF y aplicarla en ambos sentidos</td></tr>
+<tr><td>Cobertura del catálogo, contando el propio catálogo</td><td>«100 % implementado»: la copia del CSV en el BFF contenía los 177 códigos</td><td>Excluir los <code>.csv</code> de la búsqueda de código</td></tr>
+<tr><td>Pantalla de salud de 28 segundos</td><td>Se iba a reportar como el defecto más grave</td><td>Medir la causa: 12 s de espera por credenciales fuera de Google Cloud, propio de nuestro entorno</td></tr>
+<tr><td>Módulo de imágenes «sin cuadrar»</td><td>Falsa contradicción de datos</td><td>El resumen lo nombra <code>image-audit</code> y el detalle <code>image</code>: era nuestra comparación</td></tr>
+<tr><td>Señal de contenido demasiado permisiva</td><td>Aceptaba tarjetas de la carcasa vacía como si fueran datos</td><td>Restringirla a filas de tabla</td></tr>
+</table></div>
+<div class="nota"><strong>La más incómoda es la segunda</strong>, porque afectaba al titular del
+informe y lo hacía en contra de la plataforma: la presentaba con menos cobertura de la que tiene.
+Es también la que mejor ilustra por qué esta auditoría necesitaba el código fuente y no solo el
+navegador: la tabla de equivalencias no es observable desde fuera.</div>
+
+
+<h2 id="s25">25. Qué NO cubren estas fases</h2>
+<div class="card">
+<p>Para que nadie lea de más en este informe:</p>
+<ul>
+<li><strong>No se probaron operaciones de escritura</strong> (altas, ediciones, borrados): el entorno comparte datos con producción.</li>
+<li><strong>La gestión de usuarios, el lanzamiento de auditorías y el envío de correo no se probaron en funcionamiento</strong>: actúan sobre Firebase Authentication, Cloud Run y correo real, que el emulador no cubre. Requieren un proyecto de pruebas separado.</li>
+<li><strong>Las 37 reglas «implementadas sin disparar» no se probaron contra un caso que las infrinja</strong>: para confirmarlas haría falta una página de prueba que viole cada regla a propósito.</li>
+<li><strong>La accesibilidad automatizada no sustituye la revisión manual</strong>, ni la prueba con usuarios reales.</li>
+<li><strong>No se hizo una prueba de penetración</strong>: lo revisado es configuración y permisos observables. Una prueba de intrusión exige un alcance autorizado por escrito.</li>
+<li><strong>No se midió el comportamiento bajo carga</strong>: todas las mediciones son de un solo usuario.</li>
+</ul>
+<p style="margin-bottom:0"><strong>Reproducible.</strong>
+<code>node fase0-baseline.mjs && node test-autorizacion.mjs && node fase1-api.mjs && node fase2-reglas.mjs && node fase3a-escrituras.mjs && node fase3b-flujos.mjs && node fase4a-visor-3d.mjs && node consistencia-datos.mjs && python calidad-codigo.py && node build-informe.mjs</code>.
+Evidencia cruda en <code>out/</code>.</p>
+</div>
+
+
+<footer>Informe de auditoría · Plataforma PAIN<br>
+Los trabajos que se desprenden de este informe están en
+<a href="plan-de-mejoras.html" style="color:var(--acento)">plan-de-mejoras.html</a>.
+Documento interno: contiene estructura del sistema y resultados de pruebas de permisos.
+</footer>
+</div><script>
+// Al llegar por un enlace (#H-10, #s6) se abre el acordeón de destino.
+function abrirDestino(){
+  const h = decodeURIComponent(location.hash || '');
+  if (!h || h.length < 2) return;
+  const el = document.querySelector(h);
+  if (!el) return;
+  let p = el;
+  while (p) { if (p.tagName === 'DETAILS') p.open = true; p = p.parentElement; }
+  el.scrollIntoView({ block:'start' });
+}
+function plegarTodo(cerrar){
+  document.querySelectorAll('details.hall').forEach(d => d.open = !cerrar);
+}
+addEventListener('hashchange', abrirDestino);
+addEventListener('DOMContentLoaded', abrirDestino);
+</script></body></html>
