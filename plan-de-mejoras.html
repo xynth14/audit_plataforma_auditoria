@@ -27,6 +27,10 @@ p{max-width:74ch}
 .bh .lema{color:var(--tinta3);font-size:14.5px;margin:2px 0 0}
 .bh .razon{margin:12px 0 0;font-size:15px;color:var(--tinta2)}
 .item{padding:18px 26px;border-bottom:1px solid var(--linea)}
+.item.es-nuevo{background:color-mix(in srgb,var(--acento) 4%,transparent);
+ box-shadow:inset 3px 0 0 var(--acento)}
+.nuevo{font-size:11.5px;font-weight:700;color:var(--acento);border:1px solid var(--acento);
+ border-radius:99px;padding:1px 9px;white-space:nowrap}
 .item:last-child{border-bottom:0}
 .item .top{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:5px}
 .item h3{margin:0;font-size:16.5px;font-weight:640;flex:1;min-width:260px}
@@ -52,8 +56,8 @@ footer{margin-top:56px;padding-top:20px;border-top:1px solid var(--linea);font-s
 <header><div class="w">
 <p class="eyebrow">Documento interno · Plan de trabajo</p>
 <h1>Plan de mejoras — Plataforma PAIN</h1>
-<p class="lede">Los 29 trabajos que se desprenden de las dos revisiones hechas a la plataforma,
-ordenados por relación entre impacto y coste. 13 de agosto de 2026.</p>
+<p class="lede">Los 32 trabajos que se desprenden de las dos revisiones hechas a la plataforma,
+ordenados por relación entre impacto y coste. 14 de agosto de 2026.</p>
 </div></header>
 
 <div class="w">
@@ -90,15 +94,30 @@ que ya existe, y por eso se pueden acotar.</p>
 PAIN no permita distinguir «esta página se revisó y está bien» de «esta regla nunca se ejecutó»,
 mejorar lo demás no resuelve el problema de fondo: que las cifras se puedan citar.</p></div>
 
+<div class="nota" style="border-left-color:var(--acento)">
+<strong>Este plan se actualizó el 14 de agosto.</strong> Después de cerrarse la auditoría, el equipo
+entregó el <strong>diccionario de datos</strong> de la plataforma, que resultó ser el plano con el
+que se migrará la base de datos a PostgreSQL. Auditarlo añadió <strong>tres trabajos</strong>,
+marcados con <span class="nuevo">✦ Nuevo</span> allí donde aparecen. Uno de ellos —el último bloque—
+<strong>abarata</strong> lo que antes no se podía ni estimar: doce reglas que figuraban como no
+implementadas ya recogen el dato, así que solo les falta el umbral. Los 29 trabajos anteriores no
+cambiaron ni de contenido ni de esfuerzo.</div>
+
 <div class="tw"><table>
 <tr><th>Bloque</th><th>Qué resuelve</th><th class="n">Trabajos</th><th>Esfuerzo total estimado</th></tr>
-<tr><td><strong>0</strong></td><td>Que las cifras se puedan citar</td>
-<td class="n">7</td><td>8 a 11 jornadas</td></tr><tr><td><strong>1</strong></td><td>Arreglos de una línea</td>
-<td class="n">8</td><td>1½ jornadas</td></tr><tr><td><strong>2</strong></td><td>Que la plataforma se pueda usar</td>
-<td class="n">5</td><td>6 a 9 jornadas</td></tr><tr><td><strong>3</strong></td><td>Los dos hallazgos estructurales que siguen abiertos</td>
-<td class="n">2</td><td>5 a 8 jornadas</td></tr><tr><td><strong>4</strong></td><td>Ciclo de vida y robustez</td>
-<td class="n">3</td><td>3½ a 4½ jornadas</td></tr><tr><td><strong>5</strong></td><td>Ampliar lo que la plataforma sabe hacer</td>
-<td class="n">4</td><td>Requiere definición previa</td></tr>
+<tr style="background:color-mix(in srgb,var(--acento) 4%,transparent)"><td><strong>0</strong></td>
+  <td>Que las cifras se puedan citar <span class="nuevo">✦ 2 nuevos</span></td>
+<td class="n">9</td><td>10 a 13 jornadas</td></tr><tr><td><strong>1</strong></td>
+  <td>Arreglos de una línea</td>
+<td class="n">8</td><td>1½ jornadas</td></tr><tr><td><strong>2</strong></td>
+  <td>Que la plataforma se pueda usar</td>
+<td class="n">5</td><td>6 a 9 jornadas</td></tr><tr><td><strong>3</strong></td>
+  <td>Los dos hallazgos estructurales que siguen abiertos</td>
+<td class="n">2</td><td>5 a 8 jornadas</td></tr><tr><td><strong>4</strong></td>
+  <td>Ciclo de vida y robustez</td>
+<td class="n">3</td><td>3½ a 4½ jornadas</td></tr><tr style="background:color-mix(in srgb,var(--acento) 4%,transparent)"><td><strong>5</strong></td>
+  <td>Ampliar lo que la plataforma sabe hacer <span class="nuevo">✦ 1 nuevo</span></td>
+<td class="n">5</td><td>3 a 5 jornadas + 4 por definir</td></tr>
 </table></div>
 <p style="font-size:14px;color:var(--tinta3)">Una <strong>jornada</strong> es un día de trabajo de
 una persona. Los rangos suman el esfuerzo de todos los trabajos del bloque y no suponen que se
@@ -115,6 +134,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Declarar el estado real de cada regla</h3>
 <span class="pill" style="background:#4a3aa7">producto</span>
+
 <span class="dias">2–3 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -128,6 +148,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Reconciliar las cifras de enlaces rotos</h3>
 <span class="pill" style="background:#1baf7a">back</span>
+
 <span class="dias">2–3 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -141,6 +162,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Completar la tabla de equivalencias entre motor y catálogo</h3>
 <span class="pill" style="background:#1baf7a">back</span>
+
 <span class="dias">1 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -154,6 +176,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Rotular qué unidad cuenta cada indicador</h3>
 <span class="pill" style="background:#2a78d6">front</span>
+
 <span class="dias">½ d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -167,6 +190,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Dar de alta los 14 códigos que ya se emiten</h3>
 <span class="pill" style="background:#eda100">catálogo</span>
+
 <span class="dias">1–2 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -180,6 +204,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Consolidar el bloque duplicado de rendimiento</h3>
 <span class="pill" style="background:#eda100">catálogo</span>
+
 <span class="dias">1 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -189,10 +214,39 @@ hagan en paralelo.</p>
 
 </div>
 <p class="det">El catálogo declara el bloque de rendimiento dos veces: treinta reglas con nombres en español y quince con nombres en inglés, que describen en parte lo mismo. Al depurarlo queda a la vista el hueco real: 5 ya funcionaban bajo el nombre en inglés, 11 son variantes de umbral de reglas existentes y solo 14 son capacidades que faltan de verdad.</p>
+</div><div class="item es-nuevo">
+<div class="top">
+<h3>Completar el plano de la nueva base de datos</h3>
+<span class="pill" style="background:#e87ba4">datos</span>
+<span class="nuevo">✦ Nuevo</span>
+<span class="dias">1 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-26</span>
+
+
+
+</div>
+<p class="det">El diccionario entregado es el plano para migrar de BigQuery a PostgreSQL, y omite 3 tablas —entre ellas <code>rules_catalog</code>, la del catálogo de reglas— y 85 columnas, alrededor del 12 % de lo que la plataforma guarda. Lo que no esté en el plano no se creará en destino. Se resuelve regenerándolo desde el esquema real y conservando las 713 descripciones ya escritas.</p>
+</div><div class="item es-nuevo">
+<div class="top">
+<h3>Corregir los tipos de dato del plano de migración</h3>
+<span class="pill" style="background:#e87ba4">datos</span>
+<span class="nuevo">✦ Nuevo</span>
+<span class="dias">1 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-27</span>
+
+
+<span class="cod">depende de: H-26</span>
+</div>
+<p class="det">Seis columnas de estructura declaradas como texto, un puntaje con decimales declarado como entero y una lista declarada como cadena. Además 38 columnas admitirían quedar vacías cuando hoy es imposible, entre ellas la dirección de página y la fecha de auditoría. Revisarlo antes de generar el esquema de destino evita una migración con pérdida.</p>
 </div><div class="item">
 <div class="top">
 <h3>Impedir colecciones colgando de un subdominio inexistente</h3>
 <span class="pill" style="background:#1baf7a">back</span>
+
 <span class="dias">½ d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -214,6 +268,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Actualizar las tres librerías con vulnerabilidades conocidas</h3>
 <span class="pill" style="background:#eb6834">infra</span>
+
 <span class="dias">2 h</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -227,6 +282,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Fijar las versiones del módulo de imágenes</h3>
 <span class="pill" style="background:#eb6834">infra</span>
+
 <span class="dias">1 h</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -240,6 +296,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Exigir rol en la operación de vaciado de caché</h3>
 <span class="pill" style="background:#1baf7a">back</span>
+
 <span class="dias">1 h</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -253,6 +310,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Añadir <code>method="post"</code> al formulario de acceso</h3>
 <span class="pill" style="background:#2a78d6">front</span>
+
 <span class="dias">1 h</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -266,6 +324,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Alinear el permiso de categorías de URL</h3>
 <span class="pill" style="background:#1baf7a">back</span>
+
 <span class="dias">1 h</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -279,6 +338,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Confirmar quién puede ampliar los accesos de un usuario</h3>
 <span class="pill" style="background:#5b6270">decisión</span>
+
 <span class="dias">1 h</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -292,6 +352,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Rotar las contraseñas de las cuentas de prueba</h3>
 <span class="pill" style="background:#5b6270">operación</span>
+
 <span class="dias">1 h</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -305,6 +366,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Un identificador por módulo</h3>
 <span class="pill" style="background:#eda100">catálogo</span>
+
 <span class="dias">½ d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -326,6 +388,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Corregir el contraste de color</h3>
 <span class="pill" style="background:#2a78d6">front</span>
+
 <span class="dias">1 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -339,6 +402,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Ampliar la zona de pulsación de los controles</h3>
 <span class="pill" style="background:#2a78d6">front</span>
+
 <span class="dias">1–2 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -352,6 +416,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Añadir estructura semántica a las páginas</h3>
 <span class="pill" style="background:#2a78d6">front</span>
+
 <span class="dias">2–3 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -365,6 +430,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Explicar por qué una pantalla está vacía</h3>
 <span class="pill" style="background:#2a78d6">front</span>
+
 <span class="dias">1 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -378,6 +444,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Devolver «no existe» en lugar de «sin resultados»</h3>
 <span class="pill" style="background:#1baf7a">back</span>
+
 <span class="dias">1–2 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -399,6 +466,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Navegación persistente entre secciones</h3>
 <span class="pill" style="background:#2a78d6">front</span>
+
 <span class="dias">2–3 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -412,6 +480,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Reducir la densidad de las vistas de resultados</h3>
 <span class="pill" style="background:#2a78d6">front</span>
+
 <span class="dias">3–5 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -433,6 +502,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Poder eliminar o archivar subdominios y colecciones</h3>
 <span class="pill" style="background:#1baf7a">back+front</span>
+
 <span class="dias">2–3 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -446,6 +516,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Redirigir según el rol en lugar de servir la pantalla vacía</h3>
 <span class="pill" style="background:#2a78d6">front</span>
+
 <span class="dias">1 d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -459,6 +530,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Acotar y cachear la obtención de credenciales internas</h3>
 <span class="pill" style="background:#1baf7a">back</span>
+
 <span class="dias">½ d</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -480,6 +552,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Conjunto de páginas de referencia con defectos conocidos</h3>
 <span class="pill" style="background:#4a3aa7">producto</span>
+
 <span class="dias">a planificar</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -489,10 +562,25 @@ hagan en paralelo.</p>
 
 </div>
 <p class="det">Un puñado de páginas con fallos intencionados contra los que contrastar lo que la plataforma detecta. Es lo que permitiría demostrar que las reglas aciertan y convertir PAIN en algo certificable ante un cliente. Es lo único que permitiría demostrar, con evidencia, que cada regla detecta lo que dice detectar. También resolvería las 51 reglas que hoy existen en el código pero nunca han producido un hallazgo: sin páginas de prueba no se puede saber si es que el sitio las cumple o es que no llegan a ejecutarse.</p>
+</div><div class="item es-nuevo">
+<div class="top">
+<h3>Emitir hallazgo para las 12 reglas cuyo dato ya se recoge</h3>
+<span class="pill" style="background:#1baf7a">back</span>
+<span class="nuevo">✦ Nuevo</span>
+<span class="dias">3–5 d</span>
+</div>
+<div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+<span class="cod">H-28</span>
+
+
+
+</div>
+<p class="det">De las reglas que el catálogo da por no implementadas, 12 tienen una columna que ya mide exactamente lo que describen —JS y CSS rotos, imágenes sin optimizar, fuentes sin precarga, seguimiento en WhatsApp, cadenas de redirección—. Las columnas existen y se rellenan en cada auditoría. <strong>No hay que construir la medición: falta el umbral y la emisión del hallazgo.</strong> Es lo más rentable de este bloque y por eso va primero.</p>
 </div><div class="item">
 <div class="top">
-<h3>Implementar las capacidades de rendimiento ausentes</h3>
+<h3>Implementar las capacidades de rendimiento que faltan de verdad</h3>
 <span class="pill" style="background:#1baf7a">back</span>
+
 <span class="dias">a planificar</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -501,11 +589,12 @@ hagan en paralelo.</p>
 
 <span class="cod">depende de: H-11</span>
 </div>
-<p class="det">Minificación, recursos que bloquean el dibujado, caché de navegador, número de peticiones, fuentes web. Unas veinte reglas reales, una vez descontados los duplicados del bloque 0.</p>
+<p class="det">Minificación, recursos que bloquean el dibujado, caché de navegador, número de peticiones, fuentes web. Las que quedan una vez descontados los duplicados del bloque 0 y las 12 que ya tienen el dato recogido.</p>
 </div><div class="item">
 <div class="top">
 <h3>Primeras pruebas automatizadas y verificación antes de desplegar</h3>
 <span class="pill" style="background:#1baf7a">back+front</span>
+
 <span class="dias">a planificar</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -519,6 +608,7 @@ hagan en paralelo.</p>
 <div class="top">
 <h3>Entorno de pruebas separado</h3>
 <span class="pill" style="background:#eb6834">infra</span>
+
 <span class="dias">a planificar</span>
 </div>
 <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
@@ -576,7 +666,7 @@ El resultado es mucho mejor:</p>
 cinco jornadas quedan dos trabajos, y uno de ellos es de media jornada. La fiabilidad de las cifras
 dejó de ser el mayor obstáculo del producto.</div>
 
-<footer>Plan de mejoras · Auditoría de la Plataforma PAIN · 13 de agosto de 2026<br>
+<footer>Plan de mejoras · Auditoría de la Plataforma PAIN · 14 de agosto de 2026<br>
 El detalle de cada hallazgo está en <code>informe-fase0.html</code>; la versión para dirección,
 en <code>resumen-ejecutivo.html</code>.</footer>
 </div></body></html>

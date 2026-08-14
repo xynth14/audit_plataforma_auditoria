@@ -10,12 +10,17 @@ material de la revisión anterior.
 
 ---
 
+> **Actualizado el 14 de agosto.** Tras cerrarse la auditoría, el equipo entregó
+> el diccionario de datos de la plataforma —el plano con el que se migrará la base
+> de datos a PostgreSQL—. Auditarlo añadió tres hallazgos y tres trabajos, marcados
+> con **✦ Nuevo** en ambos documentos. Lo anterior no cambió.
+
 ## Los dos entregables
 
 | Documento | Para qué sirve | Quién lo lee |
 |-----------|----------------|--------------|
-| **[informe-auditoria.html](informe-auditoria.html)** | Los 25 hallazgos con su evidencia | Dirección y equipo de desarrollo |
-| **[plan-de-mejoras.html](plan-de-mejoras.html)** | Los 29 trabajos priorizados, con esfuerzo estimado | Quien planifica |
+| **[informe-auditoria.html](informe-auditoria.html)** | Los 28 hallazgos con su evidencia | Dirección y equipo de desarrollo |
+| **[plan-de-mejoras.html](plan-de-mejoras.html)** | Los 32 trabajos priorizados, con esfuerzo estimado | Quien planifica |
 
 Se abren con doble clic, no necesitan servidor ni conexión.
 
@@ -27,7 +32,7 @@ reordena conforme avanza. Mezclarlos obligaría a editar la evidencia.
 
 Las secciones **1 a 10** responden qué se auditó, qué se encontró y qué conviene
 atender primero. De la **11 en adelante** está la evidencia que sostiene cada
-afirmación. Los 25 hallazgos van plegados: se despliegan al pulsarlos, y dentro
+afirmación. Los 28 hallazgos van plegados: se despliegan al pulsarlos, y dentro
 de cada uno la evidencia técnica es un segundo nivel.
 
 ---
@@ -41,6 +46,7 @@ de cada uno la evidencia técnica es un segundo nivel.
 | Permisos | 28 operaciones de escritura contra los 3 roles |
 | Datos | Ciclo completo de alta, edición y borrado sobre una copia aislada |
 | Catálogo | Las 177 reglas cruzadas contra el código y contra 167 375 hallazgos |
+| Diccionario de datos | Las 34 tablas y 713 columnas del plano de migración, contrastadas contra el esquema real |
 | Código | Dependencias, vulnerabilidades conocidas, pruebas automatizadas |
 
 **No se modificó la plataforma.** Todas las pruebas fueron de solo lectura,

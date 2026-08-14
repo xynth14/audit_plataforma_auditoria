@@ -60,6 +60,9 @@ code{background:var(--sup2);border:1px solid var(--linea);padding:1px 6px;border
 .tag.warn{color:var(--tinta2);border-color:var(--warn);background:color-mix(in srgb,var(--warn) 16%,transparent)}
 .tag.neu{color:var(--tinta3);border-color:var(--linea);background:var(--sup2)}
 .tag.good{color:var(--good);border-color:var(--good);background:color-mix(in srgb,var(--good) 10%,transparent)}
+.tag.nuevo{color:var(--acento);border-color:var(--acento);font-weight:700;
+ background:color-mix(in srgb,var(--acento) 12%,transparent)}
+tr.fila-nueva td{background:color-mix(in srgb,var(--acento) 5%,transparent)}
 .nota{border-left:4px solid var(--acento);background:var(--sup);padding:16px 20px;margin:18px 0;
  border-radius:0 10px 10px 0}
 .nota.ok{border-left-color:var(--good)} .nota.info{border-left-color:var(--barra)}
@@ -167,6 +170,11 @@ h3{font-size:17px;margin:26px 0 10px}
 .controles .pista{font-size:13px;color:var(--tinta3)}
 a.ir{text-decoration:none}
 a.ir code{border-color:var(--acento);color:var(--acento)}
+.tag.nuevo{color:var(--acento);border-color:var(--acento);font-weight:700;
+ background:color-mix(in srgb,var(--acento) 12%,transparent)}
+tr.fila-nueva td{background:color-mix(in srgb,var(--acento) 5%,transparent)}
+.indice a .nuevo-mini{font-size:11px;font-weight:700;color:var(--acento);
+ border:1px solid var(--acento);border-radius:99px;padding:0 6px;margin-left:6px}
 /* ── Índice ── */
 .indice{background:var(--sup);border:1px solid var(--linea);border-radius:12px;padding:20px 24px;margin:22px 0}
 .indice ol{margin:10px 0 0;padding-left:22px;columns:2;column-gap:32px}
@@ -194,10 +202,10 @@ auditó, qué se encontró y qué conviene atender primero: es lo necesario para
 <strong>11 en adelante</strong> está la evidencia que sostiene cada afirmación,
 dirigida a quien vaya a ejecutar las correcciones.</p>
 <p style="margin:10px 0 0;font-size:15px;color:var(--tinta2)">
-Los 25 hallazgos, en la sección 6, se muestran plegados: al pulsar
+Los 28 hallazgos, en la sección 6, se muestran plegados: al pulsar
 cualquiera se abre su detalle, y dentro de cada uno la evidencia técnica es un segundo nivel que
 también se despliega.</p>
-<ol><li><a href="#s1">En una página</a></li><li><a href="#s2">Qué se auditó exactamente</a></li><li><a href="#s3">Las direcciones de la plataforma</a></li><li><a href="#s4">La cobertura real del catálogo de reglas</a></li><li><a href="#s5">Qué se corrigió desde la auditoría anterior</a></li><li><a href="#s6">Los 25 hallazgos</a></li><li><a href="#s7">Qué recomendamos hacer, y en qué orden</a></li><li><a href="#s8">Qué queda pendiente y qué necesitamos</a></li><li><a href="#s9">Sobre el rigor de este informe</a></li><li><a href="#s10">Glosario</a></li><li><a href="#s11">Alcance y método</a></li><li><a href="#s12">Permisos por rol</a></li><li><a href="#s13">Accesibilidad · detalle por regla</a></li><li><a href="#s14">La API en detalle</a></li><li><a href="#s15">Operaciones de escritura</a></li><li><a href="#s16">Calidad interna del código</a></li><li><a href="#s17">Fiabilidad del dato</a></li><li><a href="#s18">Reconciliación con la auditoría previa</a></li><li><a href="#s19">Ciclo de vida de los datos</a></li><li><a href="#s20">El catálogo de reglas</a></li><li><a href="#s21">Rendimiento de carga</a></li><li><a href="#s22">Errores en ejecución</a></li><li><a href="#s23">Detalle por pantalla</a></li><li><a href="#s24">Correcciones a nuestra propia medición</a></li><li><a href="#s25">Qué NO cubren estas fases</a></li></ol>
+<ol><li><a href="#s1">En una página</a></li><li><a href="#s2">Qué se auditó exactamente</a></li><li><a href="#s3">Las direcciones de la plataforma</a></li><li><a href="#s4">La cobertura real del catálogo de reglas</a></li><li><a href="#s5">Qué se corrigió desde la auditoría anterior</a></li><li><a href="#s6">Los 28 hallazgos</a></li><li><a href="#s7">Qué recomendamos hacer, y en qué orden</a></li><li><a href="#s8">Qué queda pendiente y qué necesitamos</a></li><li><a href="#s9">Sobre el rigor de este informe</a></li><li><a href="#s10">Glosario</a></li><li><a href="#s11">Alcance y método</a></li><li><a href="#s12">Permisos por rol</a></li><li><a href="#s13">Accesibilidad · detalle por regla</a></li><li><a href="#s14">La API en detalle</a></li><li><a href="#s15">Operaciones de escritura</a></li><li><a href="#s16">Calidad interna del código</a></li><li><a href="#s17">El diccionario de datos<span class="nuevo-mini">nuevo</span></a></li><li><a href="#s18">Fiabilidad del dato</a></li><li><a href="#s19">Reconciliación con la auditoría previa</a></li><li><a href="#s20">Ciclo de vida de los datos</a></li><li><a href="#s21">El catálogo de reglas</a></li><li><a href="#s22">Rendimiento de carga</a></li><li><a href="#s23">Errores en ejecución</a></li><li><a href="#s24">Detalle por pantalla</a></li><li><a href="#s25">Correcciones a nuestra propia medición</a></li><li><a href="#s26">Qué NO cubren estas fases</a></li></ol>
 </div>
 <h2 id="s1">1. En una página</h2>
 <p class="dek">Lo esencial, antes del detalle.</p>
@@ -221,9 +229,18 @@ y así quedó verificado al terminar.</p>
 <div class="l">Fallos de accesibilidad</div><div class="sub">7 criterios incumplidos</div></div>
 <div class="tile"><div class="n" style="color:var(--good)">0</div><div class="l">Fugas de datos</div>
 <div class="sub">de 9 intentos de acceso indebido</div></div>
-<div class="tile"><div class="n">2 + 13</div>
-<div class="l">Hallazgos altos y medios</div><div class="sub">25 en total</div></div>
+<div class="tile"><div class="n">3 + 15</div>
+<div class="l">Hallazgos altos y medios</div><div class="sub">28 en total</div></div>
 </div>
+
+<div class="nota info"><strong>Este informe se actualizó el 14 de agosto.</strong>
+Después de cerrar la auditoría, el equipo entregó el <strong>diccionario de datos</strong> de la
+plataforma —un documento que no existía cuando se hizo el trabajo inicial y que resultó ser algo más
+que documentación: es el plano con el que se migrará la base de datos a PostgreSQL—. Se auditó
+también, y de ahí salieron <strong>tres hallazgos nuevos</strong>, marcados con la etiqueta
+<span class="tag nuevo">✦ Nuevo</span> a lo largo del documento. Uno de ellos, <code>H-28</code>,
+mejora el diagnóstico anterior: parte del hueco de cobertura era menor de lo que parecía. Los
+25 hallazgos anteriores no cambiaron.</div>
 
 <div class="nota ok"><strong>La buena noticia: los datos están seguros.</strong>
 Probamos con las cuentas de los tres roles si alguien puede ver o modificar información que no le
@@ -459,7 +476,7 @@ Queda un arreglo real —las cifras de enlaces— y una corrección de etiquetad
 Es, con diferencia, la mejor noticia de esta auditoría.</div>
 
 
-<h2 id="s6">6. Los 25 hallazgos</h2>
+<h2 id="s6">6. Los 28 hallazgos</h2>
 <p class="dek">Del más al menos importante. Cada ficha responde tres preguntas: qué pasa, por qué
 importa y con qué evidencia lo afirmamos.</p>
 <div class="tw"><table>
@@ -470,7 +487,13 @@ importa y con qué evidencia lo afirmamos.</p>
 <td><span class="tag ser">● Media</span></td>
 <td>El catálogo subestima lo que la plataforma sabe hacer</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — completar la tabla y añadir una comprobación automática</td></tr><tr><td><a href="#H-02" class="ir"><code>H-02</code></a></td>
 <td><span class="tag crit">▲ Alta</span></td>
-<td>932 incidencias de accesibilidad en la propia plataforma</td><td style="font-size:13.5px;color:var(--tinta2)">Medio — el contraste se corrige en pocas variables de estilo</td></tr><tr><td><a href="#H-22" class="ir"><code>H-22</code></a></td>
+<td>932 incidencias de accesibilidad en la propia plataforma</td><td style="font-size:13.5px;color:var(--tinta2)">Medio — el contraste se corrige en pocas variables de estilo</td></tr><tr class="fila-nueva"><td><a href="#H-26" class="ir"><code>H-26</code></a></td>
+<td><span class="tag crit">▲ Alta</span></td>
+<td>El plano de la nueva base de datos dejaría fuera 3 tablas y 85 columnas <span class="tag nuevo">✦ Nuevo</span></td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — regenerar el diccionario desde la base de datos y conservar las descripciones</td></tr><tr class="fila-nueva"><td><a href="#H-27" class="ir"><code>H-27</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>Nueve tipos de dato mal declarados en ese mismo plano <span class="tag nuevo">✦ Nuevo</span></td><td style="font-size:13.5px;color:var(--tinta2)">Muy bajo — una jornada de revisión antes de generar la base nueva</td></tr><tr class="fila-nueva"><td><a href="#H-28" class="ir"><code>H-28</code></a></td>
+<td><span class="tag ser">● Media</span></td>
+<td>12 reglas dadas por no implementadas ya tienen el dato recogido <span class="tag nuevo">✦ Nuevo</span></td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — definir el umbral de cada una sobre datos que ya se guardan</td></tr><tr><td><a href="#H-22" class="ir"><code>H-22</code></a></td>
 <td><span class="tag crit">▲ Alta</span></td>
 <td>Tres librerías con vulnerabilidades conocidas, dos de gravedad alta</td><td style="font-size:13.5px;color:var(--tinta2)">Bajo — actualizar tres librerías y automatizar la revisión</td></tr><tr><td><a href="#H-23" class="ir"><code>H-23</code></a></td>
 <td><span class="tag ser">● Media</span></td>
@@ -535,7 +558,7 @@ importa y con qué evidencia lo afirmamos.</p>
 <div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> 32 de las 177 reglas del catálogo (18 %) no tienen evidencia de estar implementadas</p>
 <dl>
 <dt>Evidencia</dt><dd>Se cruzó cada regla declarada contra tres fuentes: el código de los 10 módulos, los 167,375 hallazgos registrados en BigQuery y la <strong>tabla de equivalencias del propio BFF</strong> (<code>FINDING_CODE_ALIASES</code>, 45 entradas), que traduce el código operativo de cada módulo al del catálogo. Resultado: <strong>94 confirmadas</strong> (53 %) con hallazgos reales, <strong>51 implementadas que nunca dispararon</strong> —lo que puede ser buena señal: el sitio las cumple— y <strong>32 sin rastro</strong> (18 %), de las que 15 son de severidad Alta. En total, <strong>145 de las 177 reglas tienen código detrás</strong>.</dd>
-<dt>Impacto</dt><dd>Quien lea un informe de PAIN puede concluir que una página cumple una regla que en realidad nunca se comprobó: un falso negativo silencioso, que en auditoría es peor que un falso positivo. La severidad es media y no alta porque la mayor parte del catálogo <em>sí</em> tiene motor detrás y porque 25 de las 32 salen de un único bloque duplicado (<code>H-11</code>).</dd>
+<dt>Impacto</dt><dd>Quien lea un informe de PAIN puede concluir que una página cumple una regla que en realidad nunca se comprobó: un falso negativo silencioso, que en auditoría es peor que un falso positivo. La severidad es media y no alta porque la mayor parte del catálogo <em>sí</em> tiene motor detrás y porque 25 de las 32 salen de un único bloque duplicado (<code>H-11</code>) y porque 12 de ellas ya tienen el dato recogido en una columna (<code>H-28</code>).</dd>
 <dt>Recomendación</dt><dd>Marcar en el catálogo el estado real de cada regla (implementada / planificada) y que la interfaz distinga «cumple» de «no evaluada». Es un cambio de honestidad del dato, no de motor.</dd>
 </dl></div></details>
 </div></details>
@@ -573,6 +596,60 @@ importa y con qué evidencia lo afirmamos.</p>
 <dt>Evidencia</dt><dd><strong>740</strong> incidencias en las 63 combinaciones de las pantallas de gestión y <strong>192</strong> en las 33 del visor medidas con datos reales. Por recorrido: 11.7 en gestión frente a 5.8 en el visor. Las reglas dominantes son de estructura de página —<code>region</code> (88 nodos en el visor) y contraste de color (81)— más una crítica, <code>aria-required-children</code> (9).</dd>
 <dt>Impacto</dt><dd>Afecta a quien usa lector de pantalla, navega solo con teclado o tiene baja visión. Y tiene un filo incómodo: PAIN audita accesibilidad en claro.com.pe, así que incumplirla en su propia interfaz debilita el argumento de la herramienta ante el equipo al que señala esos mismos fallos.</dd>
 <dt>Recomendación</dt><dd>Priorizar por severidad, no por cantidad: primero la regla crítica, después el contraste de color —el más numeroso y el más barato, normalmente unas pocas variables de estilo— y por último la estructura semántica, que arrastra el resto.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall alta" id="H-26">
+<summary>
+  <span class="cod">H-26</span>
+  <span class="tag crit">▲ Alta</span> <span class="tag nuevo">✦ Nuevo · añadido el 14 de agosto</span>
+  <span class="hall-tit">El plano de la nueva base de datos dejaría fuera 3 tablas y 85 columnas</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">El equipo entregó un diccionario de datos que no es solo documentación: es el plano para mover la plataforma de BigQuery a una base de datos PostgreSQL. Lo contrastamos con lo que existe hoy. No inventa nada —todo lo que declara existe de verdad— pero se deja 3 tablas y 85 columnas sin recoger.</p>
+<div class="neg"><b>Por qué importa</b>Lo que no está en el plano no se construye en la base nueva. Entre las tablas olvidadas está la del <strong>catálogo de reglas</strong>, la que da nombre, gravedad y recomendación a cada hallazgo: sin ella los informes quedarían sin texto. Y las 85 columnas son alrededor del 12 % de lo que la plataforma guarda hoy.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> El plano de migración a PostgreSQL dejaría fuera 3 tablas y 85 columnas</p>
+<dl>
+<dt>Evidencia</dt><dd>El diccionario entregado (<code>config/diccionario_datos_140826.xlsx</code>) es el plano para migrar de BigQuery a PostgreSQL: declara 34 tablas y 713 columnas con su tipo de origen y de destino. Contrastado contra el esquema real: <strong>no inventa nada</strong> —cero tablas y cero columnas documentadas que no existan— pero omite <strong>3 tablas</strong> (<code>alert_notification_log</code>, <code>rules_catalog</code>, <code>sitemap_url_type_rules</code>) y <strong>85 columnas</strong> repartidas en 15 tablas, con los mayores huecos en <code>technical_crawl_results</code> (21 de 60) y <code>tagging_validation_results</code> (16 de 65).</dd>
+<dt>Impacto</dt><dd>Si la migración se ejecuta con este plano, lo omitido no se crea en destino. La más grave es <code>rules_catalog</code>: es la tabla del catálogo de reglas, la que da nombre, severidad y recomendación a cada hallazgo. Y las 85 columnas son un 12 % de lo que la plataforma guarda hoy.</dd>
+<dt>Recomendación</dt><dd>Regenerar el diccionario desde <code>INFORMATION_SCHEMA</code> en vez de mantenerlo a mano, y conservar las descripciones ya escritas —que están completas, las 713— cruzándolas por nombre de columna.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-27">
+<summary>
+  <span class="cod">H-27</span>
+  <span class="tag ser">● Media</span> <span class="tag nuevo">✦ Nuevo · añadido el 14 de agosto</span>
+  <span class="hall-tit">Nueve tipos de dato mal declarados en ese mismo plano</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Seis columnas que guardan estructuras se declaran como texto plano, un puntaje con decimales se declara como número entero y una lista se declara como texto. Además, 38 columnas admitirían quedar vacías cuando hoy es imposible que lo estén.</p>
+<div class="neg"><b>Por qué importa</b>Al migrar, un puntaje con decimales pasaría a entero: se pierde precisión sin aviso. Y entre las 38 columnas que perderían su garantía están la dirección de la página y la fecha de la auditoría, que son por las que se consulta todo.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> 9 tipos de dato mal declarados y 38 restricciones que se perderían al migrar</p>
+<dl>
+<dt>Evidencia</dt><dd>Seis columnas <code>*_json</code> se declaran <code>STRING</code> cuando en BigQuery son <code>JSON</code>; <code>eeat_score</code> se declara <code>INT64</code> siendo <code>FLOAT64</code>, y <code>duplicate_urls</code> como <code>ARRAY&lt;STRING&gt;</code> siendo <code>STRING</code>. Aparte, de las 258 diferencias de obligatoriedad, <strong>220 no son un error</strong> —el diccionario declara la restricción que la columna <em>debe</em> tener en PostgreSQL, y BigQuery no la impone— pero <strong>38 van al revés</strong>: el diccionario admite vacío donde BigQuery hoy lo prohíbe, entre ellas <code>page_url</code> y <code>audit_date</code> en SEO y Tagging.</dd>
+<dt>Impacto</dt><dd>Los tipos mal declarados degradan el dato al migrar: un <code>FLOAT64</code> a <code>INT64</code> pierde los decimales, y un JSON tratado como texto deja de ser consultable como estructura. Las 38 restricciones perdidas afectan justo a las columnas por las que se consulta todo: si <code>page_url</code> admite vacío, se pueden guardar hallazgos sin página asociada.</dd>
+<dt>Recomendación</dt><dd>Corregir los 9 tipos y revisar esas 38 columnas antes de generar el esquema de destino. Es trabajo de una jornada y evita una migración con pérdida.</dd>
+</dl></div></details>
+</div></details>
+<details class="hall media" id="H-28">
+<summary>
+  <span class="cod">H-28</span>
+  <span class="tag ser">● Media</span> <span class="tag nuevo">✦ Nuevo · añadido el 14 de agosto</span>
+  <span class="hall-tit">12 reglas dadas por no implementadas ya tienen el dato recogido</span>
+  
+</summary>
+<div class="hallbody">
+<p class="par">Al revisar las columnas que la plataforma guarda, 12 de las reglas que figuran como no implementadas tienen una columna que <strong>ya mide exactamente lo que la regla describe</strong>: JS y CSS rotos, imágenes sin optimizar, fuentes sin precarga, seguimiento en WhatsApp, cadenas de redirección. Las columnas existen y se rellenan en cada auditoría.</p>
+<div class="neg"><b>Por qué importa</b>Es la mejor noticia sobre el hueco de cobertura: <strong>no hay que construir la capacidad de medir, ya existe y está funcionando</strong>. Falta el paso que convierte esa medición en un hallazgo con su nombre y su gravedad. Reduce de semanas a días la parte más costosa del plan de mejoras.</div>
+<details class="tec"><summary>Evidencia técnica y recomendación</summary>
+<div class="tecbody"><p style="margin-top:0"><b>En términos técnicos:</b> 12 reglas dadas por no implementadas ya tienen el dato recogido</p>
+<dl>
+<dt>Evidencia</dt><dd>Al contrastar las columnas que la plataforma guarda contra las 32 reglas sin evidencia del catálogo, 12 tienen una columna que <strong>ya mide exactamente lo que la regla describe</strong>: <code>TECH_REDIRECT_CHAIN</code> ↔ <code>redirect_chain_statuses</code>, <code>PERF_IMAGENES_SIN_FORMATO_MODERNO</code> ↔ <code>modern_image_issue_count</code>, <code>PERF_IMAGENES_SIN_LAZY_LOAD</code> ↔ <code>lazyload_missing_count</code>, <code>PERF_IMAGENES_PESADAS_SIN_OPTIMIZAR</code> ↔ <code>heavy_image_count</code>, <code>PERF_JS_ROTOS</code> ↔ <code>broken_js_count</code>, <code>PERF_CSS_ROTOS</code> ↔ <code>broken_css_count</code>, y seis más. Las columnas existen, se rellenan y se guardan en cada corrida.</dd>
+<dt>Impacto</dt><dd>Cambia el coste de cerrar el hueco de cobertura. No hay que construir la capacidad de medir —ya existe y está en producción—: falta el paso que convierte esa medición en un hallazgo con su código, su severidad y su recomendación. De las 32 reglas sin evidencia, 12 están a un umbral de distancia, no a un desarrollo.</dd>
+<dt>Recomendación</dt><dd>Empezar por esas 12: definir el umbral de cada una y emitir el hallazgo desde la columna que ya se rellena. Es la parte más rentable de la Ola 3 del plan de trabajo.</dd>
 </dl></div></details>
 </div></details>
 <details class="hall alta" id="H-22">
@@ -1024,28 +1101,25 @@ a hacerse:</p>
 <tr><td><strong>3b</strong></td><td>Ciclo de vida de los datos: alta, edición y borrado</td><td><span class="tag warn">~ Parcial</span> — <a href="#operaciones-fuera">cinco operaciones fuera</a></td></tr>
 <tr><td><strong>4a</strong></td><td>Reconciliación con la revisión de agosto</td><td><span class="tag good">✓ Completa</span></td></tr>
 <tr><td><strong>4b</strong></td><td><strong>Experiencia de uso</strong>: análisis por rol y revisión asistida por IA</td><td><span class="tag crit">▲ Pendiente</span></td></tr>
-<tr><td><strong>5</strong></td><td><strong>Diccionario de datos frente al esquema real</strong></td><td><span class="tag crit">▲ Pendiente</span></td></tr>
+<tr class="fila-nueva"><td><strong>5</strong></td><td><strong>Diccionario de datos frente al esquema real</strong>: 34 tablas y 713 columnas contrastadas <span class="tag nuevo">✦ Nuevo</span></td><td><span class="tag good">✓ Completa</span></td></tr>
 <tr><td>—</td><td>Fiabilidad de las cifras y calidad interna del código</td><td><span class="tag good">✓ Completa</span></td></tr>
 </table></div>
 
 
 <h3>Pendiente, y no depende de nadie</h3>
+<p style="font-size:14.5px;color:var(--tinta3);margin:0 0 10px">Queda un solo frente en este grupo: la Fase 5 se completó el 14 de agosto, al recibir el diccionario de datos.</p>
 <div class="card">
 <p><strong>Fase 4b · La experiencia de uso.</strong> Tiene dos partes, ninguna hecha.</p>
 <p><em>El análisis por rol:</em> se recorrieron las pantallas con las cuentas de los tres roles y se
 guardaron las capturas, pero no se comparó en qué se diferencia lo que ve un usuario básico de lo que
 ve un superadmin. Es la dimensión que la revisión anterior no pudo cubrir —usó una sola cuenta— y la
 que explicaría mejor el hallazgo <code>H-04</code>, las pantallas que quedan en blanco.</p>
-<p><em>La revisión asistida por inteligencia artificial:</em> sobre esas mismas capturas, aprovechando
+<p style="margin-bottom:0"><em>La revisión asistida por inteligencia artificial:</em> sobre esas mismas capturas, aprovechando
 el servicio de IA que la plataforma ya usa. Detectaría problemas de claridad y jerarquía visual que
 ninguna herramienta automática ve. Antes de ejecutarla hay que decidir una cosa: nueve de las capturas
 muestran correos de personas, y enviarlas a un modelo es una decisión de tratamiento de datos, no
 técnica. Se resuelve excluyéndolas o difuminándolas, como ya hizo el equipo anterior.</p>
-<p style="margin-bottom:0"><strong>Fase 5 · El diccionario de datos frente al esquema real.</strong> La
-plataforma documenta sus tablas en <code>docs/DICCIONARIO_DATOS.md</code>, pero no se contrastó con
-las tablas que existen de verdad en la base de datos. Hay un indicio de desfase: la migración
-aplicada esta semana añadió tres columnas a la tabla de alertas y el diccionario no las recoge. Es
-análisis sin riesgo y responde a una consulta que ya nos hicieron.</p>
+
 </div>
 
 <h3>Pendiente, y necesita algo que hoy no existe</h3>
@@ -1402,7 +1476,102 @@ archivo. <code>ux_audit</code> lo midió en 178 KB: ha crecido desde entonces. N
 sí mismo, pero sin pruebas automatizadas (<code>H-23</code>) cada cambio ahí se hace sin red.</div>
 
 
-<h2 id="s17">17. Fiabilidad del dato</h2>
+<h2 id="s17">17. El diccionario de datos <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 5</span></h2>
+<p>El equipo entregó un diccionario de datos en hoja de cálculo
+(<code>config/diccionario_datos_140826.xlsx</code>). No es solo documentación: su portada lo declara
+como <strong>«Migración BigQuery → Cloud SQL (PostgreSQL)»</strong>, y cada columna trae su tipo de
+origen y su tipo de destino. Es, por tanto, <strong>el plano con el que se construirá la base de
+datos nueva</strong>, y por eso se audita contra el esquema real.</p>
+
+<div class="kpis">
+<div class="kpi"><div class="n">34</div><div class="l">Tablas documentadas</div></div>
+<div class="kpi"><div class="n" style="color:var(--ok)">0</div><div class="l">Documentadas que no existen</div></div>
+<div class="kpi"><div class="n" style="color:var(--crit)">3</div><div class="l">Tablas sin documentar</div></div>
+<div class="kpi"><div class="n" style="color:var(--crit)">85</div><div class="l">Columnas sin documentar</div></div>
+</div>
+
+<div class="nota ok"><strong>Lo que hace bien.</strong> Las 713 columnas llevan descripción, sin una
+sola vacía. No declara ninguna tabla ni columna que no exista, lo que descarta que se haya escrito
+de memoria. Y está al día: recoge las tres columnas que se añadieron a <code>alert_events</code>
+esta misma semana. La traducción de tipos está pensada, no automatizada —<code>TIMESTAMP</code> a
+<code>TIMESTAMPTZ</code>, arreglos nativos, <code>JSONB</code> donde procede—.</div>
+
+<h3>Lo que quedaría fuera de la migración</h3>
+<div class="tabla-wrap"><table>
+<tr><th>Tabla que existe y no se documenta</th><th class="num">Columnas</th><th>Consecuencia</th></tr>
+<tr><td><code>alert_notification_log</code></td><td class="num">—</td>
+<td>Registro de los avisos enviados.</td></tr><tr><td><code>rules_catalog</code></td><td class="num">—</td>
+<td>Es la tabla del catálogo de reglas: da nombre, severidad y recomendación a cada hallazgo.</td></tr><tr><td><code>sitemap_url_type_rules</code></td><td class="num">—</td>
+<td>Reglas de clasificación de URLs del sitemap.</td></tr>
+</table></div>
+
+<div class="tabla-wrap"><table>
+<tr><th>Tabla</th><th class="num">Documentadas</th><th class="num">Reales</th><th class="num">Sin documentar</th></tr>
+<tr><td><code>technical_crawl_results</code></td><td class="num">39</td>
+  <td class="num">60</td><td class="num">21</td></tr><tr><td><code>tagging_validation_results</code></td><td class="num">49</td>
+  <td class="num">65</td><td class="num">16</td></tr><tr><td><code>seo_validation_results</code></td><td class="num">42</td>
+  <td class="num">52</td><td class="num">10</td></tr><tr><td><code>sitemap_master_urls</code></td><td class="num">36</td>
+  <td class="num">45</td><td class="num">9</td></tr><tr><td><code>performance_validation_results</code></td><td class="num">40</td>
+  <td class="num">48</td><td class="num">8</td></tr><tr><td><code>technical_crawl_findings</code></td><td class="num">22</td>
+  <td class="num">28</td><td class="num">6</td></tr><tr><td><code>performance_validation_findings</code></td><td class="num">10</td>
+  <td class="num">14</td><td class="num">4</td></tr><tr><td><code>technical_crawl_run_log</code></td><td class="num">13</td>
+  <td class="num">16</td><td class="num">3</td></tr><tr><td><code>content_validation_findings</code></td><td class="num">29</td>
+  <td class="num">31</td><td class="num">2</td></tr><tr><td><code>audit_image_asset</code></td><td class="num">24</td>
+  <td class="num">25</td><td class="num">1</td></tr><tr><td><code>audit_image_typography_analysis</code></td><td class="num">19</td>
+  <td class="num">20</td><td class="num">1</td></tr><tr><td><code>seo_validation_run_log</code></td><td class="num">12</td>
+  <td class="num">13</td><td class="num">1</td></tr><tr><td><code>sitemap_raw_entries</code></td><td class="num">12</td>
+  <td class="num">13</td><td class="num">1</td></tr><tr><td><code>sitemap_run_log</code></td><td class="num">15</td>
+  <td class="num">16</td><td class="num">1</td></tr><tr><td><code>tagging_validation_run_log</code></td><td class="num">15</td>
+  <td class="num">16</td><td class="num">1</td></tr>
+</table></div>
+
+<h3>Tipos y obligatoriedad</h3>
+<div class="nota info"><strong>Una lectura que hay que hacer con cuidado.</strong>
+De las 258 diferencias de obligatoriedad, <strong>220 no son un
+error</strong>: BigQuery crea toda columna como opcional salvo indicación expresa, así que cuando el
+diccionario dice «obligatoria» está declarando la restricción que debe tener <em>en PostgreSQL</em>.
+Eso es justamente lo que se le pide a un plano de migración. Las que sí son un problema son las
+<strong>38 contrarias</strong>: el diccionario admite vacío donde BigQuery hoy lo
+prohíbe, y migrar así perdería una garantía que existe.</div>
+
+<div class="tabla-wrap"><table>
+<tr><th>Columna</th><th>Declarado</th><th>Real</th><th>Efecto al migrar</th></tr>
+<tr><td><code>audit_image_context_analysis.raw_response_json</code></td><td><code>STRING</code></td>
+  <td><code>JSON</code></td><td>Deja de ser consultable como estructura.</td></tr><tr><td><code>audit_image_context_analysis.visual_entities_json</code></td><td><code>STRING</code></td>
+  <td><code>JSON</code></td><td>Deja de ser consultable como estructura.</td></tr><tr><td><code>audit_image_ocr_result.raw_response_json</code></td><td><code>STRING</code></td>
+  <td><code>JSON</code></td><td>Deja de ser consultable como estructura.</td></tr><tr><td><code>audit_image_ocr_result.text_blocks_json</code></td><td><code>STRING</code></td>
+  <td><code>JSON</code></td><td>Deja de ser consultable como estructura.</td></tr><tr><td><code>audit_image_ocr_result.words_json</code></td><td><code>STRING</code></td>
+  <td><code>JSON</code></td><td>Deja de ser consultable como estructura.</td></tr><tr><td><code>audit_image_typography_analysis.raw_gemini_response_json</code></td><td><code>STRING</code></td>
+  <td><code>JSON</code></td><td>Deja de ser consultable como estructura.</td></tr><tr><td><code>audit_image_typography_analysis.visual_features_json</code></td><td><code>STRING</code></td>
+  <td><code>JSON</code></td><td>Deja de ser consultable como estructura.</td></tr><tr><td><code>content_validation_results.eeat_score</code></td><td><code>INT64</code></td>
+  <td><code>FLOAT64</code></td><td>Se pierden los decimales.</td></tr><tr><td><code>seo_validation_findings.duplicate_urls</code></td><td><code>ARRAY&lt;STRING&gt;</code></td>
+  <td><code>STRING</code></td><td>Se crearía un arreglo donde hay una cadena.</td></tr>
+</table></div>
+
+<h3>El cruce que reduce el coste de la Ola 3</h3>
+<p>Varias de las columnas sin documentar tenían nombres reconocibles. Cruzadas contra las
+32 reglas que el catálogo da por no implementadas (<code>H-10</code>),
+<strong>12 tienen una columna que ya mide lo que la regla describe</strong>:</p>
+<div class="tabla-wrap"><table>
+<tr><th>Regla del catálogo</th><th>Severidad</th><th>Columna que ya recoge el dato</th></tr>
+<tr><td><code>TECH_REDIRECT_CHAIN</code></td><td><span class="chip grave">Media</span></td>
+<td><code>technical_crawl_results.redirect_chain_statuses</code></td></tr><tr><td><code>PERF_IMAGENES_SIN_FORMATO_MODERNO</code></td><td><span class="chip grave">Media</span></td>
+<td><code>performance_validation_results.modern_image_issue_count</code></td></tr><tr><td><code>PERF_IMAGENES_SIN_LAZY_LOAD</code></td><td><span class="chip mod">Baja</span></td>
+<td><code>performance_validation_results.lazyload_missing_count</code></td></tr><tr><td><code>PERF_IMAGENES_PESADAS_SIN_OPTIMIZAR</code></td><td><span class="chip crit">Alta</span></td>
+<td><code>performance_validation_results.heavy_image_count</code></td></tr><tr><td><code>PERF_JS_ROTOS</code></td><td><span class="chip crit">Alta</span></td>
+<td><code>performance_validation_results.broken_js_count</code></td></tr><tr><td><code>PERF_CSS_ROTOS</code></td><td><span class="chip crit">Alta</span></td>
+<td><code>performance_validation_results.broken_css_count</code></td></tr><tr><td><code>INDEX_PAGINA_CON_STATUS_NO_VALIDO</code></td><td><span class="chip crit">Alta</span></td>
+<td><code>technical_crawl_results.soft_404_detected</code></td></tr><tr><td><code>TAG_TRACKING_EN_WHATSAPP</code></td><td><span class="chip grave">Media</span></td>
+<td><code>tagging_validation_results.tracked_whatsapp_count</code></td></tr><tr><td><code>TAG_TRACKING_DE_GENERACION_DE_LEAD</code></td><td><span class="chip crit">Alta</span></td>
+<td><code>tagging_validation_results.untracked_form_count</code></td></tr><tr><td><code>PERF_FUENTES_WEB_FONTS</code></td><td><span class="chip grave">Media</span></td>
+<td><code>performance_validation_results.font_weight_kb</code></td></tr><tr><td><code>PERF_FONT_LOAD_SLOW</code></td><td><span class="chip grave">Media</span></td>
+<td><code>performance_validation_results.font_display_issue_count</code></td></tr><tr><td><code>PERF_FONT_PRELOAD_MISSING</code></td><td><span class="chip grave">Media</span></td>
+<td><code>performance_validation_results.font_preload_missing_count</code></td></tr>
+</table></div>
+<p>Ver <code>H-28</code>: no falta la capacidad de medir, falta emitir el hallazgo.</p>
+
+
+<h2 id="s18">18. Fiabilidad del dato</h2>
 <p>La auditoría previa calificó esta dimensión como <strong>deficiente</strong> y la describió como
 «la que decide si el producto sirve»: documentó cinco cifras que se contradecían entre pantallas de
 una misma corrida y un doble conteo en el módulo técnico. Ellos lo dedujeron comparando pantallas;
@@ -1442,7 +1611,7 @@ exige revisar cómo se calcula; lo segundo, escribir la unidad al lado del núme
 mismo problema multiplicaría por diez el esfuerzo estimado.</div>
 
 
-<h2 id="s18">18. Reconciliación con la auditoría previa <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 4a</span></h2>
+<h2 id="s19">19. Reconciliación con la auditoría previa <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 4a</span></h2>
 <p>En agosto de 2026 otro equipo auditó esta plataforma —proyecto <code>ux_audit</code>— desde
 fuera, sin acceso al código, y dejó 60 hallazgos de usabilidad y 1 016 incidencias de
 accesibilidad. Aquí no se repite esa medición: se comprueba, uno a uno, <strong>cuáles de sus
@@ -1484,7 +1653,7 @@ tamaño de los controles sí cambió por completo: 43 elementos por debajo de 44
 vacías, 2,934 con datos.</div>
 
 
-<h2 id="s19">19. Ciclo de vida de los datos <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 3b</span></h2>
+<h2 id="s20">20. Ciclo de vida de los datos <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 3b</span></h2>
 <p>La fase anterior probó que nadie ejecuta lo que no le toca. Esta prueba lo contrario: que la
 operación <em>funcione bien</em> cuando la ejecuta quien sí puede. Se recorrió el ciclo completo
 —alta, edición, borrado— y se comprobó la persistencia de los campos, la validación de referencias
@@ -1553,7 +1722,7 @@ comprobarlo. Resultado: <strong>ningún dato de prueba llegó a producción</str
 ni BigQuery. Cerrar estas cinco exige un proyecto de pruebas separado en Google Cloud.</p>
 
 
-<h2 id="s20">20. El catálogo de reglas <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 2</span></h2>
+<h2 id="s21">21. El catálogo de reglas <span style="font-weight:400;font-size:15px;color:var(--gris)">· Fase 2</span></h2>
 <div class="nota info"><strong>Esta cifra se corrigió durante la auditoría.</strong>
 La primera medición comparó los códigos del catálogo contra los de BigQuery y contra el texto del
 código fuente, y concluyó que 53 reglas no tenían evidencia. Faltaba una pieza: el BFF mantiene una
@@ -1606,7 +1775,7 @@ en BigQuery. Ninguna regla se da por buena solo porque esté escrita.</p>
 </table></div>
 
 
-<h2 id="s21">21. Rendimiento de carga</h2>
+<h2 id="s22">22. Rendimiento de carga</h2>
 <div class="nota info"><strong>Cómo leer estos números.</strong> Se midieron desde una máquina
 en Lima contra servicios alojados en <code>us-central1</code>. En producción, aplicación y datos
 conviven en la misma región, así que <strong>los tiempos reales son menores</strong>. Sirven para
@@ -1654,14 +1823,14 @@ comparar pantallas entre sí, no como cifra de la experiencia del usuario final.
 </table></div>
 
 
-<h2 id="s22">22. Errores en ejecución</h2>
+<h2 id="s23">23. Errores en ejecución</h2>
 <div class="tabla-wrap"><table>
 <tr><th class="num">Veces</th><th>Error de consola</th></tr>
 <tr><td class="num">3</td><td><code>Failed to load resource: the server responded with a status of 403 (Forbidden)</code></td></tr><tr><td class="num">3</td><td><code>API ERROR: /api/activity HTTP 403</code></td></tr><tr><td class="num">1</td><td><code>Failed to load resource: net::ERR_CONNECTION_CLOSED</code></td></tr>
 </table></div>
 
 
-<h2 id="s23">23. Detalle por pantalla</h2>
+<h2 id="s24">24. Detalle por pantalla</h2>
 <details class="det"><summary>Subdominios — 72 fallo(s) de accesibilidad · 4.7 s</summary>
   <div class="body"><p style="font-size:13.5px;color:var(--gris)"><code>/subdominios.html</code></p>
   <div class="tabla-wrap"><table>
@@ -2223,7 +2392,7 @@ comparar pantallas entre sí, no como cifra de la experiencia del usuario final.
   </div></details>
 
 
-<h2 id="s24">24. Correcciones a nuestra propia medición</h2>
+<h2 id="s25">25. Correcciones a nuestra propia medición</h2>
 <p>Seis veces, a lo largo de la auditoría, una medición nuestra iba a producir un resultado
 equivocado. Se detectaron antes de publicarlas y se documentan aquí porque un instrumento sin
 declarar sus fallos no es un instrumento auditable.</p>
@@ -2242,7 +2411,7 @@ Es también la que mejor ilustra por qué esta auditoría necesitaba el código 
 navegador: la tabla de equivalencias no es observable desde fuera.</div>
 
 
-<h2 id="s25">25. Qué NO cubren estas fases</h2>
+<h2 id="s26">26. Qué NO cubren estas fases</h2>
 <div class="card">
 <p>Para que nadie lea de más en este informe:</p>
 <ul>
@@ -2254,7 +2423,7 @@ navegador: la tabla de equivalencias no es observable desde fuera.</div>
 <li><strong>No se midió el comportamiento bajo carga</strong>: todas las mediciones son de un solo usuario.</li>
 </ul>
 <p style="margin-bottom:0"><strong>Reproducible.</strong>
-<code>node fase0-baseline.mjs && node test-autorizacion.mjs && node fase1-api.mjs && node fase2-reglas.mjs && node fase3a-escrituras.mjs && node fase3b-flujos.mjs && node fase4a-visor-3d.mjs && node consistencia-datos.mjs && python calidad-codigo.py && node build-informe.mjs</code>.
+<code>node fase0-baseline.mjs && node test-autorizacion.mjs && node fase1-api.mjs && node fase2-reglas.mjs && node fase3a-escrituras.mjs && node fase3b-flujos.mjs && node fase4a-visor-3d.mjs && node consistencia-datos.mjs && python calidad-codigo.py && python fase5-diccionario.py && node build-informe.mjs</code>.
 Evidencia cruda en <code>out/</code>.</p>
 </div>
 
