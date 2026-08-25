@@ -1,0 +1,1441 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PAIN · Auditoría de resoluciones poco comunes</title>
+<style>
+:root{
+  color-scheme:light;
+  --fondo:#f4f5f7; --sup:#ffffff; --sup2:#fafbfc;
+  --tinta:#14161a; --tinta2:#4a5160; --tinta3:#767d8c;
+  --linea:#e2e5ea; --acento:#da291c;
+  --good:#0ca30c; --warn:#fab219; --ser:#ec835a; --crit:#d03b3b; --barra:#2a78d6;
+}
+@media (prefers-color-scheme:dark){:root:where(:not([data-theme="light"])){
+  color-scheme:dark;
+  --fondo:#14150f; --sup:#1a1a19; --sup2:#212120;
+  --tinta:#ffffff; --tinta2:#c3c2b7; --tinta3:#8e8d85;
+  --linea:#33332f; --acento:#ff6a5e; --barra:#3987e5;
+}}
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --fondo:#14150f; --sup:#1a1a19; --sup2:#212120;
+  --tinta:#ffffff; --tinta2:#c3c2b7; --tinta3:#8e8d85;
+  --linea:#33332f; --acento:#ff6a5e; --barra:#3987e5;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);
+ font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+.w{max-width:1000px;margin:0 auto;padding:0 26px 90px}
+header{background:var(--sup);border-top:6px solid var(--acento);padding:46px 0 32px;
+ border-bottom:1px solid var(--linea);margin-bottom:36px}
+header .w{padding-bottom:0}
+.eyebrow{font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--tinta3);margin:0 0 10px}
+h1{font-size:34px;line-height:1.2;margin:0 0 10px;letter-spacing:-.025em}
+.lede{font-size:18px;color:var(--tinta2);margin:0;max-width:70ch}
+h2{font-size:23px;margin:52px 0 6px;letter-spacing:-.02em}
+h2+.dek{color:var(--tinta3);margin:0 0 18px;font-size:15px}
+h3{font-size:17px;margin:30px 0 10px}
+p{max-width:74ch}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin:22px 0}
+.tile{background:var(--sup);border:1px solid var(--linea);border-radius:12px;padding:18px 20px}
+.tile .n{font-size:32px;font-weight:660;letter-spacing:-.03em;line-height:1.05}
+.tile .l{font-size:13px;color:var(--tinta2);margin-top:6px}
+.tile .sub{font-size:12.5px;color:var(--tinta3);margin-top:2px}
+table{width:100%;border-collapse:collapse;background:var(--sup);font-size:14.5px}
+.tw{overflow-x:auto;border:1px solid var(--linea);border-radius:12px;margin:16px 0}
+th,td{padding:10px 13px;text-align:left;border-bottom:1px solid var(--linea);vertical-align:top}
+th{background:var(--sup2);font-size:12px;text-transform:uppercase;letter-spacing:.05em;
+ color:var(--tinta3);font-weight:650;white-space:nowrap;position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+code{background:var(--sup2);border:1px solid var(--linea);padding:1px 6px;border-radius:5px;
+ font-size:13px;font-family:ui-monospace,Consolas,monospace;word-break:break-word}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:99px;
+ font-size:12.5px;font-weight:650;white-space:nowrap;border:1px solid transparent}
+.tag.crit{color:var(--crit);border-color:var(--crit);background:color-mix(in srgb,var(--crit) 10%,transparent)}
+.tag.ser{color:var(--ser);border-color:var(--ser);background:color-mix(in srgb,var(--ser) 12%,transparent)}
+.tag.warn{color:var(--tinta2);border-color:var(--warn);background:color-mix(in srgb,var(--warn) 16%,transparent)}
+.tag.good{color:var(--good);border-color:var(--good);background:color-mix(in srgb,var(--good) 10%,transparent)}
+.tag.hecho{color:var(--good);border-color:var(--good);font-weight:700;
+ background:color-mix(in srgb,var(--good) 12%,transparent)}
+.tag.nuevo{color:var(--acento);border-color:var(--acento);font-weight:700;
+ background:color-mix(in srgb,var(--acento) 12%,transparent)}
+.tag.parcial{color:var(--ser);border-color:var(--ser);font-weight:700;
+ background:color-mix(in srgb,var(--ser) 12%,transparent)}
+.h .pend{margin:10px 0 0;padding:12px 16px;border-radius:8px;font-size:15px;
+ background:color-mix(in srgb,var(--warn) 8%,transparent);border-left:3px solid var(--warn)}
+.h .pend b{display:block;margin-bottom:4px;color:var(--tinta2);font-size:12px;
+ text-transform:uppercase;letter-spacing:.05em}
+.ab{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin:20px 0}
+.ab .lado{background:var(--sup);border:1px solid var(--linea);border-radius:12px;padding:18px 20px;text-align:center}
+.ab .lado .n{font-size:30px;font-weight:660;letter-spacing:-.03em;line-height:1.1}
+.ab .lado .l{font-size:12.5px;color:var(--tinta3);margin-top:4px}
+.ab .flecha{color:var(--tinta3);font-size:22px}
+@media (max-width:560px){.ab{grid-template-columns:1fr}.ab .flecha{transform:rotate(90deg)}}
+.nota{border-left:4px solid var(--acento);background:var(--sup);padding:16px 20px;margin:18px 0;
+ border-radius:0 10px 10px 0}
+.nota.ok{border-left-color:var(--good)} .nota.info{border-left-color:var(--barra)}
+.h{background:var(--sup);border:1px solid var(--linea);border-radius:12px;padding:20px 24px;margin:14px 0}
+.h .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.h .cod{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:var(--tinta3)}
+.h h3{margin:0;font-size:18px;letter-spacing:-.01em}
+.h .par{margin:10px 0 0}
+.h .neg{margin:10px 0 0;padding:12px 16px;background:var(--sup2);border-radius:8px;font-size:15px}
+.h .fix{margin:10px 0 0;padding:12px 16px;border-radius:8px;font-size:15px;
+ background:color-mix(in srgb,var(--good) 7%,transparent);border-left:3px solid var(--good)}
+.h .fix b{display:block;margin-bottom:4px;color:var(--good);font-size:12px;
+ text-transform:uppercase;letter-spacing:.05em}
+.esc{display:flex;align-items:center;gap:14px;margin:18px 0;flex-wrap:wrap}
+.esc .caja{border:2px solid var(--linea);border-radius:8px;background:var(--sup2);
+ display:flex;align-items:center;justify-content:center;color:var(--tinta3);font-size:11px;flex:none}
+footer{border-top:1px solid var(--linea);margin-top:60px;padding-top:22px;
+ color:var(--tinta3);font-size:13.5px}
+</style></head><body>
+
+<header><div class="w">
+<p class="eyebrow">Plataforma PAIN · Fase 6 · 24 de agosto de 2026</p>
+<h1>Resoluciones poco comunes</h1>
+<p class="lede">Andrey pidió auditar PAIN con la resolución del Galaxy Fold que usa el CEO de Claro, y extender la
+prueba a otras resoluciones de baja frecuencia. Son casos poco habituales, con consecuencia directa cuando ocurren.
+Esto es lo que encontramos en <strong>84 medidas</strong> sobre
+<strong>12 resoluciones</strong>.</p>
+</div></header>
+
+<div class="w">
+
+<h2>1. En una página</h2>
+<p class="dek">Lo esencial, antes del detalle.</p>
+
+<p><strong>El reporte del CEO se reproduce, tenía una sola causa, y ya está corregido.</strong> No era el visor ni las
+tablas: era la <strong>cabecera de 2 pantallas de gestión</strong>, construida con una fila que no podía
+partirse en dos líneas. Esa fila exigía 701 px de ancho, y un Galaxy Fold cerrado tiene
+280 px. Se añadió <code>flex-wrap:wrap</code> a las 7 pantallas de gestión y se
+volvió a medir: <strong>el desbordamiento desaparece por completo</strong> y la reducción sobre el Fold cerrado pasa
+del 60 % al
+0 %.</p>
+
+<div class="ab">
+  <div class="lado"><div class="n" style="color:var(--crit)">701 px</div>
+    <div class="l">ancho mínimo exigido, al detectar</div></div>
+  <div class="flecha">→</div>
+  <div class="lado"><div class="n" style="color:var(--good)">320 px</div>
+    <div class="l">ancho mínimo exigido, hoy</div></div>
+</div>
+
+<div class="tiles">
+<div class="tile"><div class="n">84</div><div class="l">Medidas</div>
+<div class="sub">12 resoluciones × 7 pantallas</div></div>
+<div class="tile"><div class="n" style="color:var(--good)">7<span style="font-size:19px;color:var(--tinta3)"> → 3</span></div>
+<div class="l">Con zoom forzado</div><div class="sub">merma máxima 60 % → 13 %</div></div>
+<div class="tile"><div class="n" style="color:var(--good)">1<span style="font-size:19px;color:var(--tinta3)"> → 0</span></div>
+<div class="l">Desbordan la página</div><div class="sub">ninguna, tras la corrección</div></div>
+<div class="tile"><div class="n" style="color:var(--good)">1<span style="font-size:19px;color:var(--tinta3)"> → 0</span></div>
+<div class="l">Incumplen WCAG 1.4.10</div><div class="sub">reflow en dos ejes</div></div>
+<div class="tile"><div class="n" style="color:var(--good)">2<span style="font-size:19px;color:var(--tinta3)"> / 10</span></div>
+<div class="l">Hallazgos resueltos</div><div class="sub">los 2 de severidad alta</div></div>
+<div class="tile"><div class="n" style="color:var(--good)">12<span style="font-size:19px;color:var(--tinta3)"> / 12</span></div>
+<div class="l">Inicios de sesión</div><div class="sub">funcionó en todas</div></div>
+</div>
+
+<div class="nota ok"><strong>Los 2 hallazgos de severidad alta están cerrados y verificados.</strong>
+Se corrigieron con <strong>14 declaraciones CSS aditivas</strong> —ninguna sustitución— y se volvió a medir el
+conjunto completo. De las 84 medidas, <strong>ninguna desborda la página</strong> y ninguna exige desplazar en
+los dos ejes. El diseño en escritorio no cambia: la fila de la cabecera ya cabía en una línea.</div>
+
+<div class="nota"><strong>Y uno corregido a medias, dicho como tal.</strong>
+R-03, el barrido horizontal de las tablas, se atacó por la vía de <strong>plegar las columnas que no informan</strong>:
+11 de las 18 tablas se estrechan y el ancho sumado baja un
+21 %. Pero 7 no se mueven, porque todas sus columnas
+varían y no hay nada que plegar. La peor, <code>tag-findings</code>, sigue en ×11,34. Queda
+abierto como R-10, y cerrarlo exige una decisión de producto, no una corrección.</div>
+
+<div class="nota info"><strong>Lo que queda abierto.</strong>
+7 hallazgos, <strong>ninguno de severidad alta</strong>: 4
+medios y 3 bajos. El de mayor peso es R-10: las tablas de hallazgos, que
+exigen hasta ×11,34 de barrido en un móvil. Ninguno exige rehacer nada.</div>
+
+<div class="nota"><strong>Un dato que conviene tener claro antes de la reunión.</strong>
+El síntoma que reporta el CEO —«se rompe»— no produce una barra de desplazamiento horizontal, que es lo que uno
+buscaría. El navegador de un plegable <strong>reduce la página para que quepa</strong>. Por eso un detector de
+desbordamiento devuelve cero y el problema parece no existir: hay que medir la escala, no el desborde. Fue el primer
+ajuste que hicimos al instrumento.</div>
+
+<h2>2. Qué se midió</h2>
+<p class="dek">La matriz completa, y por qué cada resolución está en ella.</p>
+
+<div class="tw"><table>
+<thead><tr><th>Resolución</th><th>Tamaño</th><th>Proporción</th><th>Por qué está en la lista</th></tr></thead>
+<tbody><tr>
+<td><code>fold-cerrado</code></td>
+<td class="n">280×653</td>
+<td class="n">0,43:1</td>
+<td>pantalla de cubierta, plegado — el viewport más estrecho en uso real</td></tr><tr>
+<td><code>fold-cerrado-horiz</code></td>
+<td class="n">653×280</td>
+<td class="n">2,33:1</td>
+<td>plegado y girado — alto de 280 px</td></tr><tr>
+<td><code>fold-abierto-vert</code></td>
+<td class="n">884×1104</td>
+<td class="n">0,80:1</td>
+<td>desplegado, vertical — casi cuadrado</td></tr><tr>
+<td><code>fold-abierto-horiz</code></td>
+<td class="n">1104×884</td>
+<td class="n">1,25:1</td>
+<td>desplegado y girado — 5:4, la resolución que reporta el CEO</td></tr><tr>
+<td><code>surface-duo</code></td>
+<td class="n">540×720</td>
+<td class="n">0,75:1</td>
+<td>Surface Duo, un panel — 4:3 exacto</td></tr><tr>
+<td><code>surface-duo-doble</code></td>
+<td class="n">1114×705</td>
+<td class="n">1,58:1</td>
+<td>Surface Duo extendido a los dos paneles</td></tr><tr>
+<td><code>movil-320</code></td>
+<td class="n">320×568</td>
+<td class="n">0,56:1</td>
+<td>el móvil más pequeño todavía en uso</td></tr><tr>
+<td><code>movil-horizontal</code></td>
+<td class="n">844×390</td>
+<td class="n">2,16:1</td>
+<td>teléfono girado — alto mínimo</td></tr><tr>
+<td><code>tablet-4-3-vert</code></td>
+<td class="n">768×1024</td>
+<td class="n">0,75:1</td>
+<td>4:3 vertical</td></tr><tr>
+<td><code>tablet-4-3-horiz</code></td>
+<td class="n">1024×768</td>
+<td class="n">1,33:1</td>
+<td>4:3 horizontal — kioscos, proyectores y equipos antiguos</td></tr><tr>
+<td><code>ultrapanoramico</code></td>
+<td class="n">3440×1440</td>
+<td class="n">2,39:1</td>
+<td>monitor 21:9</td></tr><tr>
+<td><code>reflow-400</code></td>
+<td class="n">320×256</td>
+<td class="n">1,25:1</td>
+<td>1280×1024 con zoom al 400 % — el umbral de WCAG 1.4.10 Reflow</td></tr></tbody>
+</table></div>
+
+<p>Sobre cada una se recorrieron 7 pantallas, elegidas por ser las que más estresan el ancho:
+<code>login</code>, <code>subdominios</code>, <code>usuarios</code>, <code>salud</code>, <code>overview</code>, <code>technical</code>, <code>links</code>. Se midió con el rol de superadministrador, que es el
+que más elementos ve — y por tanto el peor caso.</p>
+
+<div class="nota info"><strong>Todo en modo observación.</strong>
+Se bloquearon a nivel de red todas las operaciones de escritura durante el ejercicio.
+<strong>No se registró ni un intento de escritura</strong>:
+la plataforma no se modificó, ni sus datos.</div>
+
+<h2>3. El caso reportado: Galaxy Fold</h2>
+<p class="dek">Los cuatro estados reales del dispositivo, medidos por separado.</p>
+
+<p>Un plegable no es una resolución, son cuatro: cerrado en vertical, cerrado en horizontal, desplegado en vertical y
+desplegado en horizontal. El CEO reporta el fallo en la proporción ancha —el aparato abierto y girado—, pero el estado
+que más castiga la interfaz es el <strong>cerrado</strong>, con 280 px de ancho.</p>
+
+<div class="tw"><table>
+<thead><tr><th>Estado</th><th>Tamaño</th><th>Escala forzada</th><th>Texto más pequeño</th><th>Control más pequeño</th></tr></thead>
+<tbody><tr>
+  <td>pantalla de cubierta, plegado</td>
+  <td class="n">280×653</td>
+  <td class="n"><span class="tag crit">×0,875</span></td>
+  <td class="n">12,5 px → <strong>10,9 px</strong></td>
+  <td class="n">37 px → <strong>32,3 px</strong></td>
+  </tr><tr>
+  <td>plegado y girado</td>
+  <td class="n">653×280</td>
+  <td class="n"><span class="tag good">1:1</span></td>
+  <td class="n">11 px</td>
+  <td class="n">15 px</td>
+  </tr><tr>
+  <td>desplegado, vertical</td>
+  <td class="n">884×1104</td>
+  <td class="n"><span class="tag good">1:1</span></td>
+  <td class="n">11 px</td>
+  <td class="n">15 px</td>
+  </tr><tr>
+  <td>desplegado y girado</td>
+  <td class="n">1104×884</td>
+  <td class="n"><span class="tag good">1:1</span></td>
+  <td class="n">11 px</td>
+  <td class="n">15 px</td>
+  </tr></tbody>
+</table></div>
+
+<p>La columna que importa es la tercera, y la tabla ya muestra el estado corregido. <strong>Al detectar</strong>, sobre
+el Fold cerrado la pantalla de subdominios se dibujaba a <strong>39,9 %</strong> de su tamaño: un
+texto de 12 px acababa midiendo 4,8 px en el cristal. Para
+comparar, la letra pequeña de un contrato ronda los 8 px.</p>
+
+<div class="esc">
+  <div class="caja" style="width:120px;height:40px">12 px · normal</div>
+  <div class="caja" style="width:120px;height:40px;font-size:4.4px">4,8 px · como se veía</div>
+  <div style="color:var(--tinta3);font-size:13px">tamaño relativo real de la letra, antes de la corrección</div>
+</div>
+
+<div class="nota ok"><strong>Hoy esa pantalla apenas se reduce en el Fold cerrado.</strong>
+Tras añadir <code>flex-wrap:wrap</code>, <code>subdominios</code> pasa de escala 0,399 a
+1 y deja de desbordar. Lo que impide
+llegar a 1:1 son los 28 px de R-09, no la cabecera.
+El resto del zoom que queda en la tabla corresponde a las pantallas del visor, y tiene <strong>otra causa</strong>:
+<code>html{min-width:320px}</code> en la hoja de estilos compartida fija un suelo de 320 px, así que en un dispositivo
+de 280 px el navegador reduce al 87,5 %. Es una reducción del
+12,5 %, muy lejos del
+60,1 % que provocaba la cabecera, y es una decisión deliberada del
+diseño, no un descuido. Se deja como está.</div>
+
+<h2>4. Hallazgos</h2>
+<p class="dek">10 en total: 2 de severidad alta,
+5 media, 3 baja.
+<strong>2 resueltos</strong>, 7 abiertos.</p>
+
+<div class="nota"><strong>Los hallazgos corregidos conservan su evidencia original.</strong>
+Un hallazgo resuelto no se reescribe ni se borra: mantiene lo que se midió al detectarlo y se le añade qué se cambió y
+qué dio la nueva medición. Así queda el registro de qué se encontró y qué se hizo, y no solo el resultado final.
+Nada se marca como resuelto sin haberlo <strong>vuelto a medir</strong>: la línea base se regeneró restaurando los
+archivos originales desde <code>copias-r01/</code> y corriendo la auditoría completa otra vez.</div>
+
+<div class="h">
+<div class="top"><span class="cod">R-01</span><span class="tag crit">Alta</span><span class="tag hecho">✓ Resuelto el 24 de agosto</span></div>
+<h3>El encabezado de 2 pantallas no se pliega y obliga a un mínimo de 701 px</h3>
+<p class="par"><code>subdominios.html</code> y <code>colecciones.html</code> montan su cabecera con
+      <code>header .user{display:flex}</code> <strong>sin declarar <code>flex-wrap</code></strong>. El valor por
+      defecto de flex es <code>nowrap</code>, así que la fila —campana de avisos, cinco enlaces de rol, nombre del
+      usuario y botón de salir, 8 elementos— no puede romperse en dos líneas. La página entera exige
+      <strong>701 px</strong> de ancho: por debajo de eso, no cabe.</p>
+<p class="par"><strong>Evidencia al detectar.</strong> Medido en las 8 anchuras de referencia. A 280 px la página
+      desborda <strong>421 px</strong>; a 320 px, 381 px;
+      a 653 px todavía 48 px — que es de donde sale la cifra exacta:
+      653 + 48 = <strong>701 px</strong>. El primer ancho probado
+      que ya no desbordaba era 768 px. Las otras 5 pantallas de gestión declaraban el mismo
+      <code>display:flex</code> sin <code>flex-wrap</code>, pero solo muestran 2 elementos
+      (nombre y salir), exigían 323 px y por eso aguantaban.</p>
+<div class="neg"><strong>Por qué importa.</strong> Es el defecto que explica el reporte del CEO. En un plegable el navegador reacciona de una de dos maneras,
+      y ninguna es buena: si emula móvil, <strong>reduce la página entera para que quepa</strong>; si no, la desborda y
+      obliga a arrastrar en horizontal. Sobre el Galaxy Fold cerrado la escala bajaba a
+      <strong>0,399</strong> — el texto de 12 px se leía como
+      <strong>4,8 px</strong> y el control más pequeño quedaba en
+      <strong>6,8 px</strong>. No es que se viera mal: no se podía usar.</div>
+<div class="fix"><b>Qué se cambió · verificado volviendo a medir</b>Se añadió <code>flex-wrap:wrap</code> a <code>header</code> y a <code>header .user</code> en las
+      7 pantallas de gestión, más un <code>row-gap:10px</code> en <code>header</code> para que las dos
+      líneas no se toquen al plegarse. <strong>14 declaraciones, ninguna sustitución</strong>: no se modificó ni un
+      color, ni un espaciado, ni el orden de los elementos. En escritorio la fila sigue cabiendo en una línea, así que
+      el diseño no cambia. Aplicado con <code>aplicar-r01.mjs</code>, originales en <code>copias-r01/</code>.
+      <br><br><strong>Comprobado volviendo a medir.</strong> El ancho mínimo exigido por <code>subdominios</code> pasa de
+      <strong>701 px a 320 px</strong> —el viewport de maquetación sobre el Fold cerrado baja de
+      701 px a 280 px— y el desbordamiento es
+      <strong>cero desde 320 px en adelante</strong>. La reducción sobre el Galaxy Fold cerrado pasa de
+      escala <strong>0,399 a 1</strong>:
+      del 60 % de merma al
+      0 %.
+      En las 84 medidas, el desbordamiento pasa de 1 a 0 y el zoom forzado
+      de 7 casos a 3.
+      <br><br><strong>No llega a 1:1, y conviene decir por qué.</strong> Queda un residuo de 28 px a
+      280 px de ancho que <strong>no es de la cabecera</strong>: lo produce la tarjeta de subdominio,
+      que no descuenta el relleno de su contenedor. Estaba tapado por el desbordamiento mayor y salió a la luz al
+      corregirlo. Se recoge aparte como R-09.
+      <br><br><strong>El contrapeso del cambio, dicho de frente.</strong> Comprobado a seis anchuras: a 1440 px y a
+      1024 px la fila sigue en <strong>una sola línea</strong> y la cabecera mide los mismos 71 px que antes — el
+      diseño en escritorio es idéntico. Por debajo se pliega, y ahí crece: 107 px a 768 px, y hasta
+      <strong>212 px a 280 px</strong>, donde los ocho elementos ocupan cuatro líneas. En un Fold cerrado eso es casi
+      un tercio del alto de la pantalla. Es preferible a no poder leer nada, pero la solución de fondo para pantallas
+      muy estrechas es un menú plegable, no una fila que se parte. Queda anotado para el plan.</div>
+
+</div><div class="h">
+<div class="top"><span class="cod">R-02</span><span class="tag crit">Alta</span><span class="tag hecho">✓ Resuelto el 24 de agosto</span></div>
+<h3>Incumple el criterio de reflow de WCAG 1.4.10</h3>
+<p class="par">El criterio exige que el contenido se pueda leer <strong>sin desplazamiento en dos ejes</strong> a
+      320 × 256 px, que es lo que queda de una pantalla de 1280 × 1024 con el zoom al 400 %. Es el ajuste que usa
+      quien tiene baja visión.</p>
+<p class="par"><strong>Evidencia al detectar.</strong> A esa resolución, <code>subdominios.html</code> desbordaba
+      <strong>381 px</strong> (el documento medía 701 px en un viewport de
+      320 px) y exigía desplazar en horizontal y en vertical a la vez. Los elementos que lo provocaban
+      eran los mismos del hallazgo anterior: <code>div.user</code> (+381 px), <code>button#logoutBtn</code> (+381 px), <code>span#userLabel</code> (+303 px).</p>
+<div class="neg"><strong>Por qué importa.</strong> Es el único incumplimiento de norma que salió del ejercicio, y comparte causa con R-01: al corregir el
+      <code>flex-wrap</code> se cierra también este. Conviene citarlo por separado porque es exigible por
+      accesibilidad, no solo por comodidad.</div>
+<div class="fix"><b>Qué se cambió · verificado volviendo a medir</b>Cerrado por la corrección de R-01, sin trabajo adicional. Vuelto a medir a 320 × 256 px:
+      el desbordamiento pasa de <strong>381 px a cero</strong> y el desplazamiento en dos ejes
+      desaparece. En el conjunto de las 84 medidas no queda <strong>ninguna</strong> que exija desplazar en
+      los dos ejes (antes 1).</div>
+
+</div><div class="h">
+<div class="top"><span class="cod">R-03</span><span class="tag ser">Media</span><span class="tag parcial">◑ Corregido en parte · 24 de agosto</span></div>
+<h3>Las tablas del visor exigían hasta ×11,34 de barrido horizontal</h3>
+<p class="par">Las tablas del visor no rompen la página: se desplazan dentro de su propia caja, que es lo correcto. Lo que
+      mide este hallazgo es <strong>cuánto cuesta leerlas</strong> en una pantalla estrecha.</p>
+<p class="par"><strong>Evidencia al detectar.</strong> Medidas las <strong>18 tablas</strong> de los 9 módulos a
+      320×568. Sumaban <strong>32 650 px</strong> de ancho. La peor,
+      <code>tag-findings</code>, medía 3 221 px en 284 px de hueco:
+      <strong>×11,34</strong>, más de once pantallas por fila. La regla que fija el suelo es
+      <code>table{min-width:920px}</code>, y las tablas de evidencia suben a <code>min-width:1080px</code>.
+      <br><br>Al cruzar las columnas con los datos reales apareció la causa de fondo: <strong>columnas que no
+      informan</strong>. En el módulo técnico, sobre las 200 filas de la corrida
+      <code>tc_20260820_121439_441865</code>, seis de las dieciséis columnas tenían <strong>un único valor en todas
+      las filas</strong> —<code>device_profile</code>, <code>status_code</code>, <code>has_temporary_redirect</code>,
+      <code>is_crawlable</code>, <code>crawl_status</code> y <code>runtime_status</code>— y otras dos lo repetían en
+      el 99,5 %. Entre todas gastaban el <strong>45 % del ancho</strong> sin decir nada.</p>
+<div class="neg"><strong>Por qué importa.</strong> Leer una fila en un móvil obligaba a más de diez barridos. No es un fallo de maquetación —el diseño previó
+      el desplazamiento— pero sí la razón por la que nadie consultaría el detalle técnico desde un teléfono.</div>
+<div class="fix"><b>Qué se cambió · verificado volviendo a medir</b>Se cambió <code>table()</code>, la función con la que los 9
+      módulos con tabla pintan las suyas, para que <strong>en cada render detecte qué columnas llevan un solo valor</strong> en
+      las filas cargadas y las saque de la tabla a una línea de resumen encima. No se pierde nada: el valor sigue ahí,
+      dicho una vez en lugar de doscientas, y el botón «Ver detalles» sigue mostrando el registro completo. Se
+      recalcula siempre, así que si otra corrida trae variedad en esa columna, la columna vuelve sola.
+      <br><br><strong>Vacío y uniforme se tratan aparte.</strong> Una columna con el mismo valor real se resume
+      diciendo ese valor; una columna sin dato en ninguna fila se resume diciendo que no lo hay, con marca propia.
+      Meterlas en el mismo saco habría convertido una carencia en una línea tranquilizadora. En
+      <code>performance</code> son 18 columnas sin dato: antes eran
+      18 columnas de guiones y ahora la pantalla lo <em>declara</em>.
+      <br><br><strong>Comprobado volviendo a medir.</strong> De las 18 tablas,
+      <strong>11 se estrechan</strong> y el ancho sumado baja de 32 650 px a
+      <strong>25 637 px</strong> (-21 %), con
+      88 columnas plegadas en total. Las mayores reducciones:
+      <code>seo-findings</code> -54 %, <code>tagging</code> -50 %, <code>performance</code> -49 %, <code>technical</code> -40 %.
+      La de resultados técnicos pasa de 1 957 px a <strong>1 166 px</strong>
+      (×6,89 → ×4,11) y de 17 columnas a
+      9. Verificado además que «Ver detalles» sigue abriendo la fila correcta con sus 37 campos,
+      y sin un solo error de JavaScript.</div>
+<div class="pend"><b>Qué queda</b><strong>Queda abierto lo que este enfoque no puede resolver.</strong> 7 de las
+      18 tablas no se mueven, porque <strong>todas sus columnas varían</strong>: no hay nada constante
+      que plegar. Son las de hallazgos, donde cada fila es una regla distinta. La peor de todas,
+      <code>tag-findings</code>, sigue en 3 221 px —<strong>×11,34</strong>— y es
+      hoy el límite del módulo. Cerrarla exige el otro camino: elegir columnas esenciales y esconder el resto, o una
+      vista apilada en móvil. Se recoge como R-10.</div>
+</div><div class="h">
+<div class="top"><span class="cod">R-04</span><span class="tag ser">Media</span></div>
+<h3>Hasta 45 elementos con el texto recortado sin aviso</h3>
+<p class="par">Celdas y etiquetas cuyo contenido no cabe y queda cortado por <code>overflow:hidden</code>, sin puntos
+      suspensivos ni forma de ver el resto.</p>
+<p class="par"><strong>Evidencia.</strong> El peor caso es links en 280×653, con
+      <strong>45 elementos</strong> recortados. Los más repetidos:
+      <code>span</code> ×1 (−168 px), <code>a.url-cell</code> ×43 (−28 px), <code>td.url-cell</code> ×1 (−4 px).
+      Afecta a <strong>24 de las 84 medidas</strong>.</p>
+<div class="neg"><strong>Por qué importa.</strong> Las direcciones URL y los mensajes de error son justo los campos que se recortan. Quien audita necesita
+      leerlos completos para actuar; si no puede, la pantalla informa de que hay un problema pero no de cuál.</div>
+<div class="fix"><b>Cómo se arregla · esfuerzo bajo — es presentación, no datos</b>Mostrar el valor completo al pulsar, o llevar la URL a una segunda línea en anchos reducidos.</div>
+
+</div><div class="h">
+<div class="top"><span class="cod">R-05</span><span class="tag ser">Media</span></div>
+<h3>Controles que se solapan en 24 de las 84 medidas</h3>
+<p class="par">Dos áreas de pulsación que se cruzan: al tocar una se puede activar la otra. Se descartan los casos de
+      anidamiento —un icono dentro de su botón no es un solape— para no inflar la cifra.</p>
+<p class="par"><strong>Evidencia.</strong> El peor caso es technical en 653×280, con
+      <strong>5 pares</strong>. Ejemplos:
+      <code>a.nav</code> sobre <code>button#toggleSidebarTop.sidebar-toggle.icon-button</code> (836 px²); <code>a.nav</code> sobre <code>a</code> (2 213 px²); <code>a.nav.active</code> sobre <code>button#toggleSidebarRail.sidebar-collapse-btn</code> (6 520 px²).
+      Se concentra en las resoluciones de <strong>poco alto</strong>: 653×280 y
+      844×390, donde la barra lateral y el contenido compiten por el mismo espacio.</p>
+<div class="neg"><strong>Por qué importa.</strong> Un plegable girado y un teléfono en horizontal caen exactamente en ese rango. Es el escenario en el que
+      alguien abre PAIN de pie, en una reunión, para comprobar un dato.</div>
+<div class="fix"><b>Cómo se arregla · esfuerzo medio — toca el comportamiento de la navegación</b>Revisar la barra lateral por debajo de 400 px de alto: o se convierte en barra superior o se repliega.</div>
+
+</div><div class="h">
+<div class="top"><span class="cod">R-06</span><span class="tag ser">Media</span></div>
+<h3>Los enlaces del encabezado miden 17 px de alto, por debajo del mínimo táctil</h3>
+<p class="par">Los cinco enlaces de rol del encabezado —Estado, Bitácora, Usuarios, Alertas, Categorías— son texto suelto,
+      sin relleno ni área de pulsación propia. WCAG 2.2 AA pide un mínimo de 24 × 24 px.</p>
+<p class="par"><strong>Evidencia.</strong> Medidos en 320×568: alturas de <strong>17 px</strong>, con anchos de 39 a 63 px.
+      Por debajo del mínimo aparecen controles en <strong>60 de las 84 medidas</strong>.
+      Sobre el Galaxy Fold cerrado, con la escala en 0,875, esos 17 px se quedan en
+      <strong>14,9 px</strong> reales.</p>
+<div class="neg"><strong>Por qué importa.</strong> Son los accesos a las pantallas de administración. Fallar el toque lleva a otra sección, y en un
+      dispositivo pequeño el error se repite.</div>
+<div class="fix"><b>Cómo se arregla · esfuerzo bajo — relleno en una regla compartida</b>Dar relleno vertical a los enlaces hasta alcanzar 24 px, o 44 px si se quiere el criterio móvil.</div>
+
+</div><div class="h">
+<div class="top"><span class="cod">R-07</span><span class="tag warn">Baja</span></div>
+<h3>Los iconos de ayuda quedan por debajo del mínimo en cualquier resolución</h3>
+<p class="par"><code>span.help-tip</code>, el icono de información junto a cada indicador, mide 15 × 15 px.</p>
+<p class="par"><strong>Evidencia.</strong> Once ocurrencias en el módulo técnico, y siguen midiendo 15 × 15 px incluso en
+      3440×1440: no dependen del ancho de pantalla, están por debajo del mínimo siempre.</p>
+<div class="neg"><strong>Por qué importa.</strong> Menor, pero es el control que explica qué significa cada cifra — justo lo que el informe anterior señaló
+      como el punto a resolver para que se pueda confiar en el dato.</div>
+<div class="fix"><b>Cómo se arregla · esfuerzo bajo</b>Ampliar el área de pulsación sin cambiar el tamaño visible del icono.</div>
+
+</div><div class="h">
+<div class="top"><span class="cod">R-08</span><span class="tag warn">Baja</span></div>
+<h3>El menú lateral esconde sus etiquetas en resoluciones apaisadas medianas</h3>
+<p class="par">Entre 1024 y 1114 px de ancho la barra lateral se queda en su versión estrecha, pero el contenido del menú
+      sigue necesitando el ancho completo.</p>
+<p class="par"><strong>Evidencia.</strong> <code>nav.nav-menu</code> muestra <strong>63 px</strong> de
+      <strong>234 px</strong> de contenido: 171 px ocultos, ×3,71.
+      Ocurre en 1104×884, 1114×705, 1024×768.</p>
+<div class="neg"><strong>Por qué importa.</strong> El Fold desplegado y girado cae en ese rango, igual que un 4:3 de 1024. Las etiquetas del menú quedan
+      cortadas justo en el dispositivo del reporte.</div>
+<div class="fix"><b>Cómo se arregla · esfuerzo bajo — un punto de corte</b>Ajustar el punto de corte para que la barra pase a modo icono antes, o permita el ancho completo.</div>
+
+</div><div class="h">
+<div class="top"><span class="cod">R-09</span><span class="tag warn">Baja</span><span class="tag nuevo">✦ Nuevo</span></div>
+<h3>La tarjeta de subdominio no descuenta el relleno del contenedor</h3>
+<p class="par">Al corregir R-01 quedó a la vista un desbordamiento menor que antes estaba tapado por el de la cabecera.
+      La tarjeta de subdominio se dimensiona al ancho del viewport sin restar el relleno horizontal de su contenedor,
+      así que sobresale por la diferencia.</p>
+<p class="par"><strong>Evidencia.</strong> A 280 px de ancho, <code>subdominios.html</code> desborda
+      <strong>28 px</strong>. El elemento es <code>div.card</code>, que mide
+      280 px —el ancho completo del viewport— dentro de un contenedor con relleno lateral.
+      Desde 320 px en adelante el desbordamiento es cero. En <code>alertas-config.html</code> aparece el
+      mismo patrón por otra vía: <code>input#testEmail</code> lleva un ancho fijo que sobresale 8 px.</p>
+<div class="neg"><strong>Por qué importa.</strong> Menor y acotado al dispositivo más estrecho del mercado. Se documenta porque apareció <em>al</em> corregir
+      R-01 y conviene que quede constancia de que se vio, no de que se pasó por alto.</div>
+<div class="fix"><b>Cómo se arregla · esfuerzo bajo</b>Dar <code>max-width:100%</code> a la tarjeta contando el relleno, o pasar el contenedor a
+      <code>box-sizing</code> con relleno interno. Para el campo, sustituir el ancho fijo por
+      <code>width:100%;max-width:260px</code>.</div>
+
+</div><div class="h">
+<div class="top"><span class="cod">R-10</span><span class="tag ser">Media</span><span class="tag nuevo">✦ Nuevo</span></div>
+<h3>Las tablas de hallazgos siguen exigiendo hasta ×11,34 de barrido</h3>
+<p class="par">El plegado de columnas constantes que cerró la mayor parte de R-03 no sirve aquí: en las tablas de hallazgos
+      <strong>cada fila es una regla distinta</strong>, así que ninguna columna repite valor y no hay nada que plegar.
+      El ancho que piden es real, no desperdicio.</p>
+<p class="par"><strong>Evidencia.</strong> 7 de las 18 tablas no cambiaron nada con la corrección. La peor es
+      <code>tag-findings</code>: 3 221 px en 284 px de hueco a
+      320×568, <strong>×11,34</strong>, con 14 columnas.
+      Le siguen <code>tech-findings</code> ×10,48, <code>tag-findings</code> ×11,34, <code>content-findings</code> ×8,68.</p>
+<div class="neg"><strong>Por qué importa.</strong> Es donde está el contenido que de verdad se consulta: qué regla falló, en qué página y qué se recomienda.
+      Que sea la parte menos legible en móvil es lo contrario de lo que conviene.</div>
+<div class="fix"><b>Cómo se arregla · esfuerzo medio — hay que decidir qué columnas son esenciales</b>El camino que R-03 dejó sin recorrer: elegir tres o cuatro columnas esenciales —URL, regla, severidad,
+      recomendación— y llevar el resto a «Ver detalles» por debajo de cierto ancho; o pasar cada fila a ficha apilada
+      en móvil. Es una decisión de producto, no una corrección.</div>
+
+</div>
+
+<h2>5. Qué aguantó</h2>
+<p class="dek">Tan importante como lo que falló.</p>
+
+<div class="nota ok">
+<ul style="margin:0;padding-left:20px">
+<li><strong>El inicio de sesión funcionó en las 12 resoluciones</strong>, sin excepción y sin necesidad
+de ampliar la ventana.</li>
+<li><strong>Las 84 medidas no desbordan la página</strong>, tras la corrección de R-01.</li>
+<li><strong>El monitor ultrapanorámico (3440×1440) salió limpio:</strong> sin zoom forzado, sin
+desbordamiento, sin solapamientos y sin recortes de texto.</li>
+<li><strong>Las 7 pantallas de gestión aguantan 280 px</strong> ya sin romperse.</li>
+<li><strong>El Fold desplegado —la proporción que reporta el CEO— no fuerza zoom</strong> en ninguna de las
+7 pantallas. El problema estaba en el estado cerrado.</li>
+</ul></div>
+
+<div class="nota"><strong>Una comprobación que conviene hacer con el cliente.</strong>
+El CEO describe el fallo con el aparato <em>desplegado</em>, y ese estado no forzaba zoom ni antes ni ahora. El defecto
+que encontramos y corregimos está en la <strong>pantalla de cubierta</strong>, con el aparato cerrado. Merece la pena
+confirmar con él en cuál de los dos estados lo ve: si es con el aparato abierto, hay algo que estas
+84 medidas no recogen.</div>
+
+<div class="nota"><strong>Una salvedad sobre el inicio de sesión.</strong>
+En 3 de las 12 resoluciones —las de menor altura:
+653×280, 844×390, 320×256— el botón de entrar queda <strong>por debajo del área visible
+inicial</strong>. Se alcanza desplazando y el inicio de sesión funcionó, pero no hay ninguna señal de que haya algo más
+abajo. En una pantalla de 256 px de alto, quien no desplace concluye que la
+plataforma no carga.</div>
+
+<h2>6. Qué recomendamos, y en qué orden</h2>
+<p class="dek">Por relación entre consecuencia y esfuerzo.</p>
+
+<div class="tw"><table>
+<thead><tr><th>Orden</th><th>Trabajo</th><th>Cierra</th><th>Esfuerzo</th></tr></thead>
+<tbody>
+<tr style="background:color-mix(in srgb,var(--good) 6%,transparent)">
+<td class="n">✓</td><td><strong>Añadir <code>flex-wrap:wrap</code> a la cabecera</strong> de las
+7 pantallas de gestión</td><td>R-01, R-02</td><td><span class="tag hecho">Hecho</span></td></tr>
+<tr><td class="n">1</td><td><strong>Dar área de pulsación de 24 px</strong> a los enlaces del encabezado y a los
+iconos de ayuda</td><td>R-06, R-07</td><td>Bajo</td></tr>
+<tr><td class="n">2</td><td><strong>Mostrar completo el texto recortado</strong> al pulsar, en celdas de URL y de
+mensaje</td><td>R-04</td><td>Bajo</td></tr>
+<tr><td class="n">3</td><td><strong>Ajustar el ancho de la tarjeta y del campo de correo</strong> para que descuenten
+el relleno del contenedor</td><td>R-09</td><td>Bajo</td></tr>
+<tr><td class="n">4</td><td><strong>Ajustar el punto de corte de la barra lateral</strong> por debajo de 1114 px de
+ancho y de 400 px de alto</td><td>R-05, R-08</td><td>Medio</td></tr>
+<tr><td class="n">5</td><td><strong>Columnas esenciales o vista apilada</strong> en las tablas de hallazgos, que no
+tienen columnas constantes que plegar</td><td>R-10</td><td>Medio</td></tr>
+</tbody></table></div>
+
+<div class="tw"><table>
+<thead><tr><th>Ya aplicado</th><th>Trabajo</th><th>Cierra</th><th>Resultado medido</th></tr></thead>
+<tbody>
+<tr style="background:color-mix(in srgb,var(--good) 6%,transparent)">
+<td class="n">✓</td><td><strong>Añadir <code>flex-wrap:wrap</code> a la cabecera</strong> de las
+7 pantallas de gestión</td><td>R-01, R-02</td>
+<td>ancho mínimo 701 px → 320 px · desbordamiento a cero</td></tr>
+<tr style="background:color-mix(in srgb,var(--ser) 6%,transparent)">
+<td class="n">◑</td><td><strong>Plegar las columnas constantes</strong> en <code>table()</code>, la función común a
+los 9 módulos</td><td>R-03 en parte</td>
+<td>11 de 18 tablas se estrechan · 32 650 px → 25 637 px
+(-21 %)</td></tr>
+</tbody></table></div>
+
+<p>Los dos <strong>ya están aplicados y verificados volviendo a medir</strong>. El primero cerró los
+2 hallazgos de severidad alta; el segundo dejó R-03 corregido en parte y destapó R-10.
+De lo que queda, los tres primeros de la lista son declaraciones CSS que no cambian el diseño en escritorio y cierran
+4 de los 7 hallazgos
+abiertos. Los dos últimos son trabajo de diseño.</p>
+
+<h2>7. Las 84 medidas</h2>
+<p class="dek">La evidencia completa, sin filtrar. Las capturas están en <code>out/res-capturas/</code>.</p>
+
+<div class="tw" style="max-height:640px;overflow-y:auto"><table>
+<thead><tr><th>Resolución</th><th>Pantalla</th><th>Escala</th><th>Desborde</th><th>Barrido</th>
+<th>Solapes</th><th>Recortes</th><th>&lt;24 px</th><th>2 ejes</th></tr></thead>
+<tbody><tr>
+  <td><code>fold-cerrado</code><div style="color:var(--tinta3);font-size:12px">280×653</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado</code><div style="color:var(--tinta3);font-size:12px">280×653</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado</code><div style="color:var(--tinta3);font-size:12px">280×653</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado</code><div style="color:var(--tinta3);font-size:12px">280×653</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado</code><div style="color:var(--tinta3);font-size:12px">280×653</div></td>
+  <td>overview</td>
+  <td class="n"><span class="tag crit">×0,875</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado</code><div style="color:var(--tinta3);font-size:12px">280×653</div></td>
+  <td>technical</td>
+  <td class="n"><span class="tag crit">×0,875</span></td>
+  <td class="n">0</td>
+  <td class="n">×10,48</td>
+  <td class="n">2</td>
+  <td class="n">41</td>
+  <td class="n">4</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado</code><div style="color:var(--tinta3);font-size:12px">280×653</div></td>
+  <td>links</td>
+  <td class="n"><span class="tag crit">×0,875</span></td>
+  <td class="n">0</td>
+  <td class="n">×5,28</td>
+  <td class="n">2</td>
+  <td class="n">45</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado-horiz</code><div style="color:var(--tinta3);font-size:12px">653×280</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado-horiz</code><div style="color:var(--tinta3);font-size:12px">653×280</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado-horiz</code><div style="color:var(--tinta3);font-size:12px">653×280</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado-horiz</code><div style="color:var(--tinta3);font-size:12px">653×280</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×1,04</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado-horiz</code><div style="color:var(--tinta3);font-size:12px">653×280</div></td>
+  <td>overview</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">3</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado-horiz</code><div style="color:var(--tinta3);font-size:12px">653×280</div></td>
+  <td>technical</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×4,82</td>
+  <td class="n">5</td>
+  <td class="n">40</td>
+  <td class="n">4</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-cerrado-horiz</code><div style="color:var(--tinta3);font-size:12px">653×280</div></td>
+  <td>links</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×2,43</td>
+  <td class="n">4</td>
+  <td class="n">44</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-vert</code><div style="color:var(--tinta3);font-size:12px">884×1104</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-vert</code><div style="color:var(--tinta3);font-size:12px">884×1104</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-vert</code><div style="color:var(--tinta3);font-size:12px">884×1104</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-vert</code><div style="color:var(--tinta3);font-size:12px">884×1104</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-vert</code><div style="color:var(--tinta3);font-size:12px">884×1104</div></td>
+  <td>overview</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-vert</code><div style="color:var(--tinta3);font-size:12px">884×1104</div></td>
+  <td>technical</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×1,58</td>
+  <td class="n">3</td>
+  <td class="n">—</td>
+  <td class="n">11</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-vert</code><div style="color:var(--tinta3);font-size:12px">884×1104</div></td>
+  <td>links</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×1,77</td>
+  <td class="n">2</td>
+  <td class="n">44</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-horiz</code><div style="color:var(--tinta3);font-size:12px">1104×884</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-horiz</code><div style="color:var(--tinta3);font-size:12px">1104×884</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-horiz</code><div style="color:var(--tinta3);font-size:12px">1104×884</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-horiz</code><div style="color:var(--tinta3);font-size:12px">1104×884</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-horiz</code><div style="color:var(--tinta3);font-size:12px">1104×884</div></td>
+  <td>overview</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×3,71</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-horiz</code><div style="color:var(--tinta3);font-size:12px">1104×884</div></td>
+  <td>technical</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×3,71</td>
+  <td class="n">—</td>
+  <td class="n">4</td>
+  <td class="n">11</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>fold-abierto-horiz</code><div style="color:var(--tinta3);font-size:12px">1104×884</div></td>
+  <td>links</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×3,71</td>
+  <td class="n">—</td>
+  <td class="n">44</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo</code><div style="color:var(--tinta3);font-size:12px">540×720</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo</code><div style="color:var(--tinta3);font-size:12px">540×720</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo</code><div style="color:var(--tinta3);font-size:12px">540×720</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo</code><div style="color:var(--tinta3);font-size:12px">540×720</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×1,29</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo</code><div style="color:var(--tinta3);font-size:12px">540×720</div></td>
+  <td>overview</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">2</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo</code><div style="color:var(--tinta3);font-size:12px">540×720</div></td>
+  <td>technical</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×5,9</td>
+  <td class="n">4</td>
+  <td class="n">40</td>
+  <td class="n">4</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo</code><div style="color:var(--tinta3);font-size:12px">540×720</div></td>
+  <td>links</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×2,98</td>
+  <td class="n">3</td>
+  <td class="n">44</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo-doble</code><div style="color:var(--tinta3);font-size:12px">1114×705</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo-doble</code><div style="color:var(--tinta3);font-size:12px">1114×705</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo-doble</code><div style="color:var(--tinta3);font-size:12px">1114×705</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo-doble</code><div style="color:var(--tinta3);font-size:12px">1114×705</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo-doble</code><div style="color:var(--tinta3);font-size:12px">1114×705</div></td>
+  <td>overview</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×3,71</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo-doble</code><div style="color:var(--tinta3);font-size:12px">1114×705</div></td>
+  <td>technical</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×3,71</td>
+  <td class="n">—</td>
+  <td class="n">4</td>
+  <td class="n">11</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>surface-duo-doble</code><div style="color:var(--tinta3);font-size:12px">1114×705</div></td>
+  <td>links</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×3,71</td>
+  <td class="n">—</td>
+  <td class="n">44</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-320</code><div style="color:var(--tinta3);font-size:12px">320×568</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-320</code><div style="color:var(--tinta3);font-size:12px">320×568</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-320</code><div style="color:var(--tinta3);font-size:12px">320×568</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-320</code><div style="color:var(--tinta3);font-size:12px">320×568</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×2,37</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-320</code><div style="color:var(--tinta3);font-size:12px">320×568</div></td>
+  <td>overview</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">2</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-320</code><div style="color:var(--tinta3);font-size:12px">320×568</div></td>
+  <td>technical</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×5,11</td>
+  <td class="n">4</td>
+  <td class="n">15</td>
+  <td class="n">11</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-320</code><div style="color:var(--tinta3);font-size:12px">320×568</div></td>
+  <td>links</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×5,28</td>
+  <td class="n">3</td>
+  <td class="n">45</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-horizontal</code><div style="color:var(--tinta3);font-size:12px">844×390</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-horizontal</code><div style="color:var(--tinta3);font-size:12px">844×390</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-horizontal</code><div style="color:var(--tinta3);font-size:12px">844×390</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-horizontal</code><div style="color:var(--tinta3);font-size:12px">844×390</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-horizontal</code><div style="color:var(--tinta3);font-size:12px">844×390</div></td>
+  <td>overview</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">3</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-horizontal</code><div style="color:var(--tinta3);font-size:12px">844×390</div></td>
+  <td>technical</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×1,66</td>
+  <td class="n">4</td>
+  <td class="n">—</td>
+  <td class="n">11</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>movil-horizontal</code><div style="color:var(--tinta3);font-size:12px">844×390</div></td>
+  <td>links</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×1,86</td>
+  <td class="n">4</td>
+  <td class="n">44</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-vert</code><div style="color:var(--tinta3);font-size:12px">768×1024</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-vert</code><div style="color:var(--tinta3);font-size:12px">768×1024</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-vert</code><div style="color:var(--tinta3);font-size:12px">768×1024</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-vert</code><div style="color:var(--tinta3);font-size:12px">768×1024</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-vert</code><div style="color:var(--tinta3);font-size:12px">768×1024</div></td>
+  <td>overview</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-vert</code><div style="color:var(--tinta3);font-size:12px">768×1024</div></td>
+  <td>technical</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×1,84</td>
+  <td class="n">3</td>
+  <td class="n">—</td>
+  <td class="n">11</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-vert</code><div style="color:var(--tinta3);font-size:12px">768×1024</div></td>
+  <td>links</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×2,05</td>
+  <td class="n">2</td>
+  <td class="n">44</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-horiz</code><div style="color:var(--tinta3);font-size:12px">1024×768</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-horiz</code><div style="color:var(--tinta3);font-size:12px">1024×768</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-horiz</code><div style="color:var(--tinta3);font-size:12px">1024×768</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-horiz</code><div style="color:var(--tinta3);font-size:12px">1024×768</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-horiz</code><div style="color:var(--tinta3);font-size:12px">1024×768</div></td>
+  <td>overview</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×3,71</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-horiz</code><div style="color:var(--tinta3);font-size:12px">1024×768</div></td>
+  <td>technical</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×3,71</td>
+  <td class="n">—</td>
+  <td class="n">2</td>
+  <td class="n">11</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>tablet-4-3-horiz</code><div style="color:var(--tinta3);font-size:12px">1024×768</div></td>
+  <td>links</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×3,71</td>
+  <td class="n">—</td>
+  <td class="n">44</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>ultrapanoramico</code><div style="color:var(--tinta3);font-size:12px">3440×1440</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>ultrapanoramico</code><div style="color:var(--tinta3);font-size:12px">3440×1440</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>ultrapanoramico</code><div style="color:var(--tinta3);font-size:12px">3440×1440</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>ultrapanoramico</code><div style="color:var(--tinta3);font-size:12px">3440×1440</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>ultrapanoramico</code><div style="color:var(--tinta3);font-size:12px">3440×1440</div></td>
+  <td>overview</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>ultrapanoramico</code><div style="color:var(--tinta3);font-size:12px">3440×1440</div></td>
+  <td>technical</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×1,86</td>
+  <td class="n">—</td>
+  <td class="n">40</td>
+  <td class="n">4</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>ultrapanoramico</code><div style="color:var(--tinta3);font-size:12px">3440×1440</div></td>
+  <td>links</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">44</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>reflow-400</code><div style="color:var(--tinta3);font-size:12px">320×256</div></td>
+  <td>login</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>reflow-400</code><div style="color:var(--tinta3);font-size:12px">320×256</div></td>
+  <td>subdominios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">5</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>reflow-400</code><div style="color:var(--tinta3);font-size:12px">320×256</div></td>
+  <td>usuarios</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>reflow-400</code><div style="color:var(--tinta3);font-size:12px">320×256</div></td>
+  <td>salud</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×2,37</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>reflow-400</code><div style="color:var(--tinta3);font-size:12px">320×256</div></td>
+  <td>overview</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">—</td>
+  <td class="n">3</td>
+  <td class="n">1</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>reflow-400</code><div style="color:var(--tinta3);font-size:12px">320×256</div></td>
+  <td>technical</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×5,11</td>
+  <td class="n">4</td>
+  <td class="n">15</td>
+  <td class="n">11</td>
+  <td class="n">—</td>
+</tr><tr>
+  <td><code>reflow-400</code><div style="color:var(--tinta3);font-size:12px">320×256</div></td>
+  <td>links</td>
+  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n">0</td>
+  <td class="n">×5,28</td>
+  <td class="n">4</td>
+  <td class="n">45</td>
+  <td class="n">—</td>
+  <td class="n">—</td>
+</tr></tbody>
+</table></div>
+
+<h2>8. Límites de este ejercicio</h2>
+<p class="dek">Lo que no cubre, dicho antes de que lo pregunten.</p>
+
+<div class="nota">
+<p style="margin:0 0 10px"><strong>Se midió con emulación, no con aparatos reales.</strong> Las resoluciones, la
+densidad de píxeles y el modo táctil se reproducen fielmente, pero un Galaxy Fold físico añade una bisagra, un cambio
+de pantalla en caliente al plegar y un teclado propio. El defecto de la cabecera es de CSS y se reproduce en cualquier
+navegador; los efectos del plegado en caliente no se han probado.</p>
+<p style="margin:0 0 10px"><strong>Un motor de navegador.</strong> Esta fase se corrió sobre Chromium. La
+compatibilidad entre Chromium, Firefox y WebKit ya quedó verificada en la auditoría de calidad; aquí lo que se
+mide es la geometría, que no depende del motor.</p>
+<p style="margin:0"><strong>7 pantallas de las 19.</strong> Se eligieron las que más estresan
+el ancho. Las 7 pantallas de gestión sí se midieron todas en el análisis de cabeceras, que es donde
+salió el hallazgo principal.</p>
+</div>
+
+<footer>
+Generado el 24/8/2026, 11:38:00 p. m. desde <code>out/resoluciones.json</code> y
+<code>out/encabezados.json</code>. Todas las cifras se interpolan desde la evidencia; ninguna está escrita a mano.
+Modo seguro activo: 0 escrituras registradas.
+</footer>
+
+</div></body></html>
