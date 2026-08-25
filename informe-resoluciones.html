@@ -62,9 +62,9 @@ code{background:var(--sup2);border:1px solid var(--linea);padding:1px 6px;border
  background:color-mix(in srgb,var(--acento) 12%,transparent)}
 .tag.parcial{color:var(--ser);border-color:var(--ser);font-weight:700;
  background:color-mix(in srgb,var(--ser) 12%,transparent)}
-.h .pend{margin:10px 0 0;padding:12px 16px;border-radius:8px;font-size:15px;
+.hallbody .pend{margin:10px 0 0;padding:12px 16px;border-radius:8px;font-size:15px;
  background:color-mix(in srgb,var(--warn) 8%,transparent);border-left:3px solid var(--warn)}
-.h .pend b{display:block;margin-bottom:4px;color:var(--tinta2);font-size:12px;
+.hallbody .pend b{display:block;margin-bottom:4px;color:var(--tinta2);font-size:12px;
  text-transform:uppercase;letter-spacing:.05em}
 .ab{display:grid;grid-template-columns:1fr auto 1fr;gap:16px;align-items:center;margin:20px 0}
 .ab .lado{background:var(--sup);border:1px solid var(--linea);border-radius:12px;padding:18px 20px;text-align:center}
@@ -75,15 +75,41 @@ code{background:var(--sup2);border:1px solid var(--linea);padding:1px 6px;border
 .nota{border-left:4px solid var(--acento);background:var(--sup);padding:16px 20px;margin:18px 0;
  border-radius:0 10px 10px 0}
 .nota.ok{border-left-color:var(--good)} .nota.info{border-left-color:var(--barra)}
-.h{background:var(--sup);border:1px solid var(--linea);border-radius:12px;padding:20px 24px;margin:14px 0}
-.h .top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
-.h .cod{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:var(--tinta3)}
-.h h3{margin:0;font-size:18px;letter-spacing:-.01em}
-.h .par{margin:10px 0 0}
-.h .neg{margin:10px 0 0;padding:12px 16px;background:var(--sup2);border-radius:8px;font-size:15px}
-.h .fix{margin:10px 0 0;padding:12px 16px;border-radius:8px;font-size:15px;
+/* ── Hallazgos plegados ─────────────────────────────────────────────────────
+   Mismo patrón que el informe de auditoría: la cabecera lleva lo justo para
+   decidir si abrir —código, severidad, estado y título— y el cuerpo va dentro.
+   El color del borde izquierdo repite la severidad, así que la lista se lee de
+   un vistazo sin desplegar nada. */
+.hall{background:var(--sup);border:1px solid var(--linea);border-left:4px solid var(--linea);
+ border-radius:12px;margin:10px 0;scroll-margin-top:16px;overflow:hidden}
+.hall.alta{border-left-color:var(--crit)}
+.hall.media{border-left-color:var(--ser)}
+.hall.baja{border-left-color:var(--warn)}
+.hall>summary{cursor:pointer;padding:15px 22px;display:flex;align-items:center;gap:10px;
+ flex-wrap:wrap;list-style:none;transition:background .12s}
+.hall>summary::-webkit-details-marker{display:none}
+.hall>summary::before{content:'▸';color:var(--tinta3);font-size:12px;flex:none}
+.hall[open]>summary::before{content:'▾'}
+.hall>summary:hover{background:var(--sup2)}
+.hall[open]>summary{border-bottom:1px solid var(--linea);background:var(--sup2)}
+.hall .cod{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:var(--tinta3);flex:none}
+.hall .hall-tit{font-weight:640;font-size:16px;flex:1 1 320px;min-width:0}
+.hall .hall-esf{font-size:12.5px;color:var(--tinta3);white-space:nowrap}
+.hallbody{padding:16px 22px 20px}
+.hallbody>:first-child{margin-top:0}
+.hallbody .cod{font-family:ui-monospace,Consolas,monospace;font-size:12.5px;color:var(--tinta3)}
+.hallbody .par{margin:10px 0 0}
+.hallbody .neg{margin:10px 0 0;padding:12px 16px;background:var(--sup2);border-radius:8px;font-size:15px}
+.hallbody .fix{margin:10px 0 0;padding:12px 16px;border-radius:8px;font-size:15px;
  background:color-mix(in srgb,var(--good) 7%,transparent);border-left:3px solid var(--good)}
-.h .fix b{display:block;margin-bottom:4px;color:var(--good);font-size:12px;
+.hallbody .fix b{display:block;margin-bottom:4px;color:var(--good);font-size:12px;
+ text-transform:uppercase;letter-spacing:.05em}
+/* El verde se reserva para lo que ya se hizo y se volvió a medir. Una propuesta
+   de arreglo en un hallazgo abierto va en azul: si fuera verde se leería como
+   resuelto, que es justo la confusión que hay que evitar. */
+.hallbody .prop{margin:10px 0 0;padding:12px 16px;border-radius:8px;font-size:15px;
+ background:color-mix(in srgb,var(--barra) 7%,transparent);border-left:3px solid var(--barra)}
+.hallbody .prop b{display:block;margin-bottom:4px;color:var(--barra);font-size:12px;
  text-transform:uppercase;letter-spacing:.05em}
 .esc{display:flex;align-items:center;gap:14px;margin:18px 0;flex-wrap:wrap}
 .esc .caja{border:2px solid var(--linea);border-radius:8px;background:var(--sup2);
@@ -93,7 +119,7 @@ footer{border-top:1px solid var(--linea);margin-top:60px;padding-top:22px;
 </style></head><body>
 
 <header><div class="w">
-<p class="eyebrow">Plataforma PAIN · Fase 6 · 24 de agosto de 2026</p>
+<p class="eyebrow">Plataforma PAIN · Fase 6 · 25 de agosto de 2026</p>
 <h1>Resoluciones poco comunes</h1>
 <p class="lede">Andrey pidió auditar PAIN con la resolución del Galaxy Fold que usa el CEO de Claro, y extender la
 prueba a otras resoluciones de baja frecuencia. Son casos poco habituales, con consecuencia directa cuando ocurren.
@@ -112,7 +138,7 @@ partirse en dos líneas. Esa fila exigía 701 px de ancho, y un Galaxy Fold cerr
 280 px. Se añadió <code>flex-wrap:wrap</code> a las 7 pantallas de gestión y se
 volvió a medir: <strong>el desbordamiento desaparece por completo</strong> y la reducción sobre el Fold cerrado pasa
 del 60 % al
-0 %.</p>
+9 %.</p>
 
 <div class="ab">
   <div class="lado"><div class="n" style="color:var(--crit)">701 px</div>
@@ -125,14 +151,14 @@ del 60 % al
 <div class="tiles">
 <div class="tile"><div class="n">84</div><div class="l">Medidas</div>
 <div class="sub">12 resoluciones × 7 pantallas</div></div>
-<div class="tile"><div class="n" style="color:var(--good)">7<span style="font-size:19px;color:var(--tinta3)"> → 3</span></div>
+<div class="tile"><div class="n" style="color:var(--good)">7<span style="font-size:19px;color:var(--tinta3)"> → 5</span></div>
 <div class="l">Con zoom forzado</div><div class="sub">merma máxima 60 % → 13 %</div></div>
 <div class="tile"><div class="n" style="color:var(--good)">1<span style="font-size:19px;color:var(--tinta3)"> → 0</span></div>
 <div class="l">Desbordan la página</div><div class="sub">ninguna, tras la corrección</div></div>
 <div class="tile"><div class="n" style="color:var(--good)">1<span style="font-size:19px;color:var(--tinta3)"> → 0</span></div>
 <div class="l">Incumplen WCAG 1.4.10</div><div class="sub">reflow en dos ejes</div></div>
-<div class="tile"><div class="n" style="color:var(--good)">2<span style="font-size:19px;color:var(--tinta3)"> / 10</span></div>
-<div class="l">Hallazgos resueltos</div><div class="sub">los 2 de severidad alta</div></div>
+<div class="tile"><div class="n" style="color:var(--good)">4<span style="font-size:19px;color:var(--tinta3)"> / 10</span></div>
+<div class="l">Hallazgos resueltos</div><div class="sub">los 2 altos y 2 medios</div></div>
 <div class="tile"><div class="n" style="color:var(--good)">12<span style="font-size:19px;color:var(--tinta3)"> / 12</span></div>
 <div class="l">Inicios de sesión</div><div class="sub">funcionó en todas</div></div>
 </div>
@@ -142,17 +168,20 @@ Se corrigieron con <strong>14 declaraciones CSS aditivas</strong> —ninguna sus
 conjunto completo. De las 84 medidas, <strong>ninguna desborda la página</strong> y ninguna exige desplazar en
 los dos ejes. El diseño en escritorio no cambia: la fila de la cabecera ya cabía en una línea.</div>
 
-<div class="nota"><strong>Y uno corregido a medias, dicho como tal.</strong>
-R-03, el barrido horizontal de las tablas, se atacó por la vía de <strong>plegar las columnas que no informan</strong>:
-11 de las 18 tablas se estrechan y el ancho sumado baja un
-21 %. Pero 7 no se mueven, porque todas sus columnas
-varían y no hay nada que plegar. La peor, <code>tag-findings</code>, sigue en ×11,34. Queda
-abierto como R-10, y cerrarlo exige una decisión de producto, no una corrección.</div>
+<div class="nota ok"><strong>Y el barrido horizontal de las tablas, en dos etapas.</strong>
+Primero se plegaron <strong>las columnas que no informan</strong> —las que repiten el mismo valor en todas las filas—;
+eso estrechó 11 tablas pero dejó intactas las 7 de hallazgos, donde cada fila es una
+regla distinta y no hay nada constante que plegar. La segunda etapa saca de esas tablas, en pantalla estrecha, las
+columnas de detalle forense y las deja en «Ver detalles». Entre las dos:
+<strong>16 de 18 tablas se estrechan</strong>, el ancho sumado baja de 32 650 px a
+<strong>18 832 px</strong> (-42 %) y el peor barrido pasa de
+<strong>×11,34 a ×5,64</strong>. En escritorio no cambia nada.</div>
 
 <div class="nota info"><strong>Lo que queda abierto.</strong>
-7 hallazgos, <strong>ninguno de severidad alta</strong>: 4
-medios y 3 bajos. El de mayor peso es R-10: las tablas de hallazgos, que
-exigen hasta ×11,34 de barrido en un móvil. Ninguno exige rehacer nada.</div>
+6 hallazgos, <strong>ninguno de severidad alta</strong>: 3
+medios y 3 bajos. Los de más peso son los controles por debajo del mínimo
+táctil y el texto recortado en las celdas. Ninguno exige rehacer nada, y los tres primeros del plan son declaraciones
+CSS.</div>
 
 <div class="nota"><strong>Un dato que conviene tener claro antes de la reunión.</strong>
 El síntoma que reporta el CEO —«se rompe»— no produce una barra de desplazamiento horizontal, que es lo que uno
@@ -274,19 +303,20 @@ comparar, la letra pequeña de un contrato ronda los 8 px.</p>
 
 <div class="nota ok"><strong>Hoy esa pantalla apenas se reduce en el Fold cerrado.</strong>
 Tras añadir <code>flex-wrap:wrap</code>, <code>subdominios</code> pasa de escala 0,399 a
-1 y deja de desbordar. Lo que impide
+0,909 y deja de desbordar. Lo que impide
 llegar a 1:1 son los 28 px de R-09, no la cabecera.
 El resto del zoom que queda en la tabla corresponde a las pantallas del visor, y tiene <strong>otra causa</strong>:
 <code>html{min-width:320px}</code> en la hoja de estilos compartida fija un suelo de 320 px, así que en un dispositivo
-de 280 px el navegador reduce al 87,5 %. Es una reducción del
-12,5 %, muy lejos del
+de 280 px el navegador reduce al 90,9 %. Es una reducción del
+9,1 %, muy lejos del
 60,1 % que provocaba la cabecera, y es una decisión deliberada del
 diseño, no un descuido. Se deja como está.</div>
 
 <h2>4. Hallazgos</h2>
 <p class="dek">10 en total: 2 de severidad alta,
 5 media, 3 baja.
-<strong>2 resueltos</strong>, 7 abiertos.</p>
+<strong>4 resueltos</strong>, 6 abiertos.
+Van plegados: pulsa uno para desplegarlo. El color del borde marca la severidad.</p>
 
 <div class="nota"><strong>Los hallazgos corregidos conservan su evidencia original.</strong>
 Un hallazgo resuelto no se reescribe ni se borra: mantiene lo que se midió al detectarlo y se le añade qué se cambió y
@@ -294,9 +324,14 @@ qué dio la nueva medición. Así queda el registro de qué se encontró y qué 
 Nada se marca como resuelto sin haberlo <strong>vuelto a medir</strong>: la línea base se regeneró restaurando los
 archivos originales desde <code>copias-r01/</code> y corriendo la auditoría completa otra vez.</div>
 
-<div class="h">
-<div class="top"><span class="cod">R-01</span><span class="tag crit">Alta</span><span class="tag hecho">✓ Resuelto el 24 de agosto</span></div>
-<h3>El encabezado de 2 pantallas no se pliega y obliga a un mínimo de 701 px</h3>
+<details class="hall alta" id="R-01">
+<summary>
+  <span class="cod">R-01</span>
+  <span class="tag crit">Alta</span><span class="tag hecho">✓ Resuelto</span>
+  <span class="hall-tit">El encabezado de 2 pantallas no se plegaba y obligaba a un mínimo de 701 px</span>
+  <span class="hall-esf">24 de agosto</span>
+</summary>
+<div class="hallbody">
 <p class="par"><code>subdominios.html</code> y <code>colecciones.html</code> montan su cabecera con
       <code>header .user{display:flex}</code> <strong>sin declarar <code>flex-wrap</code></strong>. El valor por
       defecto de flex es <code>nowrap</code>, así que la fila —campana de avisos, cinco enlaces de rol, nombre del
@@ -322,13 +357,13 @@ archivos originales desde <code>copias-r01/</code> y corriendo la auditoría com
       el diseño no cambia. Aplicado con <code>aplicar-r01.mjs</code>, originales en <code>copias-r01/</code>.
       <br><br><strong>Comprobado volviendo a medir.</strong> El ancho mínimo exigido por <code>subdominios</code> pasa de
       <strong>701 px a 320 px</strong> —el viewport de maquetación sobre el Fold cerrado baja de
-      701 px a 280 px— y el desbordamiento es
+      701 px a 308 px— y el desbordamiento es
       <strong>cero desde 320 px en adelante</strong>. La reducción sobre el Galaxy Fold cerrado pasa de
-      escala <strong>0,399 a 1</strong>:
+      escala <strong>0,399 a 0,909</strong>:
       del 60 % de merma al
-      0 %.
+      9 %.
       En las 84 medidas, el desbordamiento pasa de 1 a 0 y el zoom forzado
-      de 7 casos a 3.
+      de 7 casos a 5.
       <br><br><strong>No llega a 1:1, y conviene decir por qué.</strong> Queda un residuo de 28 px a
       280 px de ancho que <strong>no es de la cabecera</strong>: lo produce la tarjeta de subdominio,
       que no descuenta el relleno de su contenedor. Estaba tapado por el desbordamiento mayor y salió a la luz al
@@ -340,9 +375,15 @@ archivos originales desde <code>copias-r01/</code> y corriendo la auditoría com
       un tercio del alto de la pantalla. Es preferible a no poder leer nada, pero la solución de fondo para pantallas
       muy estrechas es un menú plegable, no una fila que se parte. Queda anotado para el plan.</div>
 
-</div><div class="h">
-<div class="top"><span class="cod">R-02</span><span class="tag crit">Alta</span><span class="tag hecho">✓ Resuelto el 24 de agosto</span></div>
-<h3>Incumple el criterio de reflow de WCAG 1.4.10</h3>
+</div>
+</details><details class="hall alta" id="R-02">
+<summary>
+  <span class="cod">R-02</span>
+  <span class="tag crit">Alta</span><span class="tag hecho">✓ Resuelto</span>
+  <span class="hall-tit">Incumplía el criterio de reflow de WCAG 1.4.10</span>
+  <span class="hall-esf">24 de agosto</span>
+</summary>
+<div class="hallbody">
 <p class="par">El criterio exige que el contenido se pueda leer <strong>sin desplazamiento en dos ejes</strong> a
       320 × 256 px, que es lo que queda de una pantalla de 1280 × 1024 con el zoom al 400 %. Es el ajuste que usa
       quien tiene baja visión.</p>
@@ -358,9 +399,15 @@ archivos originales desde <code>copias-r01/</code> y corriendo la auditoría com
       desaparece. En el conjunto de las 84 medidas no queda <strong>ninguna</strong> que exija desplazar en
       los dos ejes (antes 1).</div>
 
-</div><div class="h">
-<div class="top"><span class="cod">R-03</span><span class="tag ser">Media</span><span class="tag parcial">◑ Corregido en parte · 24 de agosto</span></div>
-<h3>Las tablas del visor exigían hasta ×11,34 de barrido horizontal</h3>
+</div>
+</details><details class="hall media" id="R-03">
+<summary>
+  <span class="cod">R-03</span>
+  <span class="tag ser">Media</span><span class="tag hecho">✓ Resuelto</span>
+  <span class="hall-tit">Las tablas del visor exigían hasta ×11,34 de barrido horizontal</span>
+  <span class="hall-esf">25 de agosto</span>
+</summary>
+<div class="hallbody">
 <p class="par">Las tablas del visor no rompen la página: se desplazan dentro de su propia caja, que es lo correcto. Lo que
       mide este hallazgo es <strong>cuánto cuesta leerlas</strong> en una pantalla estrecha.</p>
 <p class="par"><strong>Evidencia al detectar.</strong> Medidas las <strong>18 tablas</strong> de los 9 módulos a
@@ -386,37 +433,73 @@ archivos originales desde <code>copias-r01/</code> y corriendo la auditoría com
       Meterlas en el mismo saco habría convertido una carencia en una línea tranquilizadora. En
       <code>performance</code> son 18 columnas sin dato: antes eran
       18 columnas de guiones y ahora la pantalla lo <em>declara</em>.
-      <br><br><strong>Comprobado volviendo a medir.</strong> De las 18 tablas,
-      <strong>11 se estrechan</strong> y el ancho sumado baja de 32 650 px a
-      <strong>25 637 px</strong> (-21 %), con
-      88 columnas plegadas en total. Las mayores reducciones:
-      <code>seo-findings</code> -54 %, <code>tagging</code> -50 %, <code>performance</code> -49 %, <code>technical</code> -40 %.
-      La de resultados técnicos pasa de 1 957 px a <strong>1 166 px</strong>
-      (×6,89 → ×4,11) y de 17 columnas a
-      9. Verificado además que «Ver detalles» sigue abriendo la fila correcta con sus 37 campos,
-      y sin un solo error de JavaScript.</div>
-<div class="pend"><b>Qué queda</b><strong>Queda abierto lo que este enfoque no puede resolver.</strong> 7 de las
-      18 tablas no se mueven, porque <strong>todas sus columnas varían</strong>: no hay nada constante
-      que plegar. Son las de hallazgos, donde cada fila es una regla distinta. La peor de todas,
-      <code>tag-findings</code>, sigue en 3 221 px —<strong>×11,34</strong>— y es
-      hoy el límite del módulo. Cerrarla exige el otro camino: elegir columnas esenciales y esconder el resto, o una
-      vista apilada en móvil. Se recoge como R-10.</div>
-</div><div class="h">
-<div class="top"><span class="cod">R-04</span><span class="tag ser">Media</span></div>
-<h3>Hasta 45 elementos con el texto recortado sin aviso</h3>
+      <br><br><strong>Primera etapa, comprobada volviendo a medir.</strong> 11 de las
+      18 tablas se estrecharon y el ancho sumado bajó de 32 650 px a 25 637 px
+      (-21 %). La de resultados técnicos pasó de 1 957 px a
+      1 166 px y de 17 columnas a 9.
+      <br><br><strong>Pero 7 tablas no se movieron</strong>, y eran las importantes: las de
+      hallazgos, donde cada fila es una regla distinta y por tanto ninguna columna repite valor. La peor,
+      <code>tag-findings</code>, seguía en 3 221 px. Plegar no servía ahí, así que hizo falta
+      una <strong>segunda etapa</strong> por otro camino.
+      <br><br><strong>Segunda etapa: el detalle forense sale de la tabla en pantalla estrecha.</strong> Por debajo de
+      900 px, en las tablas de hallazgos quedan las cuatro columnas con las que se tría —<em>dónde</em> (URL),
+      <em>qué</em> (regla), <em>cuánto importa</em> (severidad) y <em>qué hacer</em> (recomendación)— más el botón de
+      detalle. Las demás —selector, sección HTML, valores actual y esperado, tipo e identificador de componente,
+      identificador de regla, detalle largo— se ocultan y se consultan en «Ver detalles», que muestra la fila entera.
+      <strong>La pantalla avisa de cuántas oculta</strong>: esconder columnas sin decirlo es la clase de cosa que hace
+      desconfiar de la herramienta.
+      <br><br>Se marca cada celda con su clave y una clase, <strong>no por posición</strong>: el plegado de la primera
+      etapa cambia el índice de cada columna según los datos, así que una regla basada en <code>nth-child</code>
+      habría acertado solo mientras no se plegara nada.
+      <br><br><strong>Resultado de las dos etapas.</strong> 16 de las 18 tablas se
+      estrechan y el ancho sumado baja de 32 650 px a <strong>18 832 px</strong>
+      (-42 %). El peor barrido pasa de <strong>×11,34</strong>
+      (<code>tag-findings</code>) a <strong>×5,64</strong> (<code>seo</code>).
+      7 de las 8 tablas de hallazgos quedan en el suelo de 920 px que fija
+      <code>table{min-width:920px}</code>: ya no se puede bajar más sin tocar esa constante.
+      Las mayores reducciones: <code>tag-findings</code> -71 %, <code>tech-findings</code> -68 %, <code>content-findings</code> -63 %, <code>seo-findings</code> -54 %.
+      <br><br><strong>Verificado en los dos extremos.</strong> A 1440 px las tablas de hallazgos muestran sus
+      14 columnas y miden lo mismo que antes —3 221 px en tagging—: <strong>el escritorio no cambia
+      nada</strong>. A 320 px quedan 5 columnas visibles, y al abrir «Ver detalles» se recuperan las 6 columnas
+      forenses comprobadas, con 29 campos en total. Cero errores de JavaScript y cero desbordamiento de página.
+      <br><br><strong>Dónde está el techo.</strong> El barrido no llega a cero porque
+      <code>table{min-width:920px}</code> fija el ancho mínimo de cualquier tabla —a 320×568, ×3,24—.
+      Eso no es un resto de la corrección: es el suelo del diseño, y bajarlo sería rediseñar la tabla, no corregirla.
+      <br><br>Por encima de ese suelo quedan 6 tablas de
+      resultados —<code>seo</code> 1 601 px, <code>content</code> 1 430 px, <code>image-audit</code> 1 403 px
+      y 3 más—, y ahí ya no sobra ancho: cada columna es
+      una métrica del módulo, con dato y distinto en cada fila. Estrecharlas más es posible y el mecanismo <strong>ya
+      está construido</strong> —basta añadir a la lista las métricas que se acuerden secundarias—, pero lo que falta no
+      es código: es decidir con quien usa cada módulo qué columna consulta y cuál no. Queda anotado en el plan.</div>
+
+</div>
+</details><details class="hall media" id="R-04">
+<summary>
+  <span class="cod">R-04</span>
+  <span class="tag ser">Media</span>
+  <span class="hall-tit">Hasta 45 elementos con el texto recortado sin aviso</span>
+  <span class="hall-esf">esfuerzo bajo</span>
+</summary>
+<div class="hallbody">
 <p class="par">Celdas y etiquetas cuyo contenido no cabe y queda cortado por <code>overflow:hidden</code>, sin puntos
       suspensivos ni forma de ver el resto.</p>
 <p class="par"><strong>Evidencia.</strong> El peor caso es links en 280×653, con
       <strong>45 elementos</strong> recortados. Los más repetidos:
       <code>span</code> ×1 (−168 px), <code>a.url-cell</code> ×43 (−28 px), <code>td.url-cell</code> ×1 (−4 px).
-      Afecta a <strong>24 de las 84 medidas</strong>.</p>
+      Afecta a <strong>27 de las 84 medidas</strong>.</p>
 <div class="neg"><strong>Por qué importa.</strong> Las direcciones URL y los mensajes de error son justo los campos que se recortan. Quien audita necesita
       leerlos completos para actuar; si no puede, la pantalla informa de que hay un problema pero no de cuál.</div>
-<div class="fix"><b>Cómo se arregla · esfuerzo bajo — es presentación, no datos</b>Mostrar el valor completo al pulsar, o llevar la URL a una segunda línea en anchos reducidos.</div>
+<div class="prop"><b>Cómo se arregla · esfuerzo bajo — es presentación, no datos</b>Mostrar el valor completo al pulsar, o llevar la URL a una segunda línea en anchos reducidos.</div>
 
-</div><div class="h">
-<div class="top"><span class="cod">R-05</span><span class="tag ser">Media</span></div>
-<h3>Controles que se solapan en 24 de las 84 medidas</h3>
+</div>
+</details><details class="hall media" id="R-05">
+<summary>
+  <span class="cod">R-05</span>
+  <span class="tag ser">Media</span>
+  <span class="hall-tit">Controles que se solapan en 25 de las 84 medidas</span>
+  <span class="hall-esf">esfuerzo medio</span>
+</summary>
+<div class="hallbody">
 <p class="par">Dos áreas de pulsación que se cruzan: al tocar una se puede activar la otra. Se descartan los casos de
       anidamiento —un icono dentro de su botón no es un solape— para no inflar la cifra.</p>
 <p class="par"><strong>Evidencia.</strong> El peor caso es technical en 653×280, con
@@ -426,11 +509,17 @@ archivos originales desde <code>copias-r01/</code> y corriendo la auditoría com
       844×390, donde la barra lateral y el contenido compiten por el mismo espacio.</p>
 <div class="neg"><strong>Por qué importa.</strong> Un plegable girado y un teléfono en horizontal caen exactamente en ese rango. Es el escenario en el que
       alguien abre PAIN de pie, en una reunión, para comprobar un dato.</div>
-<div class="fix"><b>Cómo se arregla · esfuerzo medio — toca el comportamiento de la navegación</b>Revisar la barra lateral por debajo de 400 px de alto: o se convierte en barra superior o se repliega.</div>
+<div class="prop"><b>Cómo se arregla · esfuerzo medio — toca el comportamiento de la navegación</b>Revisar la barra lateral por debajo de 400 px de alto: o se convierte en barra superior o se repliega.</div>
 
-</div><div class="h">
-<div class="top"><span class="cod">R-06</span><span class="tag ser">Media</span></div>
-<h3>Los enlaces del encabezado miden 17 px de alto, por debajo del mínimo táctil</h3>
+</div>
+</details><details class="hall media" id="R-06">
+<summary>
+  <span class="cod">R-06</span>
+  <span class="tag ser">Media</span>
+  <span class="hall-tit">Los enlaces del encabezado miden 17 px de alto, por debajo del mínimo táctil</span>
+  <span class="hall-esf">esfuerzo bajo</span>
+</summary>
+<div class="hallbody">
 <p class="par">Los cinco enlaces de rol del encabezado —Estado, Bitácora, Usuarios, Alertas, Categorías— son texto suelto,
       sin relleno ni área de pulsación propia. WCAG 2.2 AA pide un mínimo de 24 × 24 px.</p>
 <p class="par"><strong>Evidencia.</strong> Medidos en 320×568: alturas de <strong>17 px</strong>, con anchos de 39 a 63 px.
@@ -439,21 +528,33 @@ archivos originales desde <code>copias-r01/</code> y corriendo la auditoría com
       <strong>14,9 px</strong> reales.</p>
 <div class="neg"><strong>Por qué importa.</strong> Son los accesos a las pantallas de administración. Fallar el toque lleva a otra sección, y en un
       dispositivo pequeño el error se repite.</div>
-<div class="fix"><b>Cómo se arregla · esfuerzo bajo — relleno en una regla compartida</b>Dar relleno vertical a los enlaces hasta alcanzar 24 px, o 44 px si se quiere el criterio móvil.</div>
+<div class="prop"><b>Cómo se arregla · esfuerzo bajo — relleno en una regla compartida</b>Dar relleno vertical a los enlaces hasta alcanzar 24 px, o 44 px si se quiere el criterio móvil.</div>
 
-</div><div class="h">
-<div class="top"><span class="cod">R-07</span><span class="tag warn">Baja</span></div>
-<h3>Los iconos de ayuda quedan por debajo del mínimo en cualquier resolución</h3>
+</div>
+</details><details class="hall baja" id="R-07">
+<summary>
+  <span class="cod">R-07</span>
+  <span class="tag warn">Baja</span>
+  <span class="hall-tit">Los iconos de ayuda quedan por debajo del mínimo en cualquier resolución</span>
+  <span class="hall-esf">esfuerzo bajo</span>
+</summary>
+<div class="hallbody">
 <p class="par"><code>span.help-tip</code>, el icono de información junto a cada indicador, mide 15 × 15 px.</p>
 <p class="par"><strong>Evidencia.</strong> Once ocurrencias en el módulo técnico, y siguen midiendo 15 × 15 px incluso en
       3440×1440: no dependen del ancho de pantalla, están por debajo del mínimo siempre.</p>
 <div class="neg"><strong>Por qué importa.</strong> Menor, pero es el control que explica qué significa cada cifra — justo lo que el informe anterior señaló
       como el punto a resolver para que se pueda confiar en el dato.</div>
-<div class="fix"><b>Cómo se arregla · esfuerzo bajo</b>Ampliar el área de pulsación sin cambiar el tamaño visible del icono.</div>
+<div class="prop"><b>Cómo se arregla · esfuerzo bajo</b>Ampliar el área de pulsación sin cambiar el tamaño visible del icono.</div>
 
-</div><div class="h">
-<div class="top"><span class="cod">R-08</span><span class="tag warn">Baja</span></div>
-<h3>El menú lateral esconde sus etiquetas en resoluciones apaisadas medianas</h3>
+</div>
+</details><details class="hall baja" id="R-08">
+<summary>
+  <span class="cod">R-08</span>
+  <span class="tag warn">Baja</span>
+  <span class="hall-tit">El menú lateral esconde sus etiquetas en resoluciones apaisadas medianas</span>
+  <span class="hall-esf">esfuerzo bajo</span>
+</summary>
+<div class="hallbody">
 <p class="par">Entre 1024 y 1114 px de ancho la barra lateral se queda en su versión estrecha, pero el contenido del menú
       sigue necesitando el ancho completo.</p>
 <p class="par"><strong>Evidencia.</strong> <code>nav.nav-menu</code> muestra <strong>63 px</strong> de
@@ -461,11 +562,17 @@ archivos originales desde <code>copias-r01/</code> y corriendo la auditoría com
       Ocurre en 1104×884, 1114×705, 1024×768.</p>
 <div class="neg"><strong>Por qué importa.</strong> El Fold desplegado y girado cae en ese rango, igual que un 4:3 de 1024. Las etiquetas del menú quedan
       cortadas justo en el dispositivo del reporte.</div>
-<div class="fix"><b>Cómo se arregla · esfuerzo bajo — un punto de corte</b>Ajustar el punto de corte para que la barra pase a modo icono antes, o permita el ancho completo.</div>
+<div class="prop"><b>Cómo se arregla · esfuerzo bajo — un punto de corte</b>Ajustar el punto de corte para que la barra pase a modo icono antes, o permita el ancho completo.</div>
 
-</div><div class="h">
-<div class="top"><span class="cod">R-09</span><span class="tag warn">Baja</span><span class="tag nuevo">✦ Nuevo</span></div>
-<h3>La tarjeta de subdominio no descuenta el relleno del contenedor</h3>
+</div>
+</details><details class="hall baja" id="R-09">
+<summary>
+  <span class="cod">R-09</span>
+  <span class="tag warn">Baja</span><span class="tag nuevo">✦ Nuevo</span>
+  <span class="hall-tit">La tarjeta de subdominio no descuenta el relleno del contenedor</span>
+  <span class="hall-esf">esfuerzo bajo</span>
+</summary>
+<div class="hallbody">
 <p class="par">Al corregir R-01 quedó a la vista un desbordamiento menor que antes estaba tapado por el de la cabecera.
       La tarjeta de subdominio se dimensiona al ancho del viewport sin restar el relleno horizontal de su contenedor,
       así que sobresale por la diferencia.</p>
@@ -476,27 +583,44 @@ archivos originales desde <code>copias-r01/</code> y corriendo la auditoría com
       mismo patrón por otra vía: <code>input#testEmail</code> lleva un ancho fijo que sobresale 8 px.</p>
 <div class="neg"><strong>Por qué importa.</strong> Menor y acotado al dispositivo más estrecho del mercado. Se documenta porque apareció <em>al</em> corregir
       R-01 y conviene que quede constancia de que se vio, no de que se pasó por alto.</div>
-<div class="fix"><b>Cómo se arregla · esfuerzo bajo</b>Dar <code>max-width:100%</code> a la tarjeta contando el relleno, o pasar el contenedor a
+<div class="prop"><b>Cómo se arregla · esfuerzo bajo</b>Dar <code>max-width:100%</code> a la tarjeta contando el relleno, o pasar el contenedor a
       <code>box-sizing</code> con relleno interno. Para el campo, sustituir el ancho fijo por
       <code>width:100%;max-width:260px</code>.</div>
 
-</div><div class="h">
-<div class="top"><span class="cod">R-10</span><span class="tag ser">Media</span><span class="tag nuevo">✦ Nuevo</span></div>
-<h3>Las tablas de hallazgos siguen exigiendo hasta ×11,34 de barrido</h3>
+</div>
+</details><details class="hall media" id="R-10">
+<summary>
+  <span class="cod">R-10</span>
+  <span class="tag ser">Media</span><span class="tag hecho">✓ Resuelto</span><span class="tag nuevo">✦ Nuevo</span>
+  <span class="hall-tit">Las tablas de hallazgos seguían exigiendo hasta ×11,34 de barrido</span>
+  <span class="hall-esf">25 de agosto</span>
+</summary>
+<div class="hallbody">
 <p class="par">El plegado de columnas constantes que cerró la mayor parte de R-03 no sirve aquí: en las tablas de hallazgos
       <strong>cada fila es una regla distinta</strong>, así que ninguna columna repite valor y no hay nada que plegar.
       El ancho que piden es real, no desperdicio.</p>
-<p class="par"><strong>Evidencia.</strong> 7 de las 18 tablas no cambiaron nada con la corrección. La peor es
-      <code>tag-findings</code>: 3 221 px en 284 px de hueco a
-      320×568, <strong>×11,34</strong>, con 14 columnas.
-      Le siguen <code>tech-findings</code> ×10,48, <code>tag-findings</code> ×11,34, <code>content-findings</code> ×8,68.</p>
+<p class="par"><strong>Evidencia al detectar.</strong> Tras la primera etapa de R-03, <strong>7 de las 18 tablas</strong> no
+      habían cambiado un solo píxel. La peor era <code>tag-findings</code>: 3 221 px en
+      284 px de hueco a 320×568, <strong>×11,34</strong>, con
+      14 columnas. Le seguían
+      <code>tech-findings</code> ×10,48, <code>content-findings</code> ×8,68, <code>image-audit</code> ×4,94.</p>
 <div class="neg"><strong>Por qué importa.</strong> Es donde está el contenido que de verdad se consulta: qué regla falló, en qué página y qué se recomienda.
       Que sea la parte menos legible en móvil es lo contrario de lo que conviene.</div>
-<div class="fix"><b>Cómo se arregla · esfuerzo medio — hay que decidir qué columnas son esenciales</b>El camino que R-03 dejó sin recorrer: elegir tres o cuatro columnas esenciales —URL, regla, severidad,
-      recomendación— y llevar el resto a «Ver detalles» por debajo de cierto ancho; o pasar cada fila a ficha apilada
-      en móvil. Es una decisión de producto, no una corrección.</div>
+<div class="fix"><b>Qué se cambió · verificado volviendo a medir</b>Cerrado con la segunda etapa de R-03: por debajo de 900 px las tablas de hallazgos conservan URL,
+      regla, severidad y recomendación, y el resto se consulta en «Ver detalles».
+      <strong>Las 7 tablas de hallazgos afectadas bajan al suelo de 920 px</strong>
+      —<code>tag-findings</code> de 3 221 px a
+      925 px, ×11,34 → ×3,26—
+      y el peor barrido de toda la aplicación deja de estar en una tabla de hallazgos.
+      <br><br>Un detalle que costó una iteración: la primera versión escondía una lista fija de columnas forenses, y
+      <code>content-findings</code> apenas mejoró porque nombra las suyas de otra manera —«URL recurso», «Valor
+      detectado», «Tipo de hallazgo»—. Se invirtió el criterio: en las tablas de hallazgos <strong>se declara lo que
+      se queda, no lo que se va</strong>. Con eso <code>content-findings</code> pasó de
+      2 465 px a
+      920 px.</div>
 
 </div>
+</details>
 
 <h2>5. Qué aguantó</h2>
 <p class="dek">Tan importante como lo que falló.</p>
@@ -541,10 +665,11 @@ iconos de ayuda</td><td>R-06, R-07</td><td>Bajo</td></tr>
 mensaje</td><td>R-04</td><td>Bajo</td></tr>
 <tr><td class="n">3</td><td><strong>Ajustar el ancho de la tarjeta y del campo de correo</strong> para que descuenten
 el relleno del contenedor</td><td>R-09</td><td>Bajo</td></tr>
-<tr><td class="n">4</td><td><strong>Ajustar el punto de corte de la barra lateral</strong> por debajo de 1114 px de
+<tr><td class="n">4</td><td><strong>Acordar qué métrica es secundaria</strong> en cada módulo y añadirla a la lista que
+ya existe, para estrechar las 6 tablas de resultados</td>
+<td>continúa R-03</td><td>Bajo</td></tr>
+<tr><td class="n">5</td><td><strong>Ajustar el punto de corte de la barra lateral</strong> por debajo de 1114 px de
 ancho y de 400 px de alto</td><td>R-05, R-08</td><td>Medio</td></tr>
-<tr><td class="n">5</td><td><strong>Columnas esenciales o vista apilada</strong> en las tablas de hallazgos, que no
-tienen columnas constantes que plegar</td><td>R-10</td><td>Medio</td></tr>
 </tbody></table></div>
 
 <div class="tw"><table>
@@ -554,22 +679,29 @@ tienen columnas constantes que plegar</td><td>R-10</td><td>Medio</td></tr>
 <td class="n">✓</td><td><strong>Añadir <code>flex-wrap:wrap</code> a la cabecera</strong> de las
 7 pantallas de gestión</td><td>R-01, R-02</td>
 <td>ancho mínimo 701 px → 320 px · desbordamiento a cero</td></tr>
-<tr style="background:color-mix(in srgb,var(--ser) 6%,transparent)">
-<td class="n">◑</td><td><strong>Plegar las columnas constantes</strong> en <code>table()</code>, la función común a
-los 9 módulos</td><td>R-03 en parte</td>
-<td>11 de 18 tablas se estrechan · 32 650 px → 25 637 px
+<tr style="background:color-mix(in srgb,var(--good) 6%,transparent)">
+<td class="n">✓</td><td><strong>Plegar las columnas constantes</strong> en <code>table()</code>, la función común a
+los 9 módulos</td><td>R-03, 1.ª etapa</td>
+<td>11 tablas se estrechan · 32 650 px → 25 637 px
 (-21 %)</td></tr>
+<tr style="background:color-mix(in srgb,var(--good) 6%,transparent)">
+<td class="n">✓</td><td><strong>Sacar el detalle forense de las tablas de hallazgos</strong> por debajo de 900 px,
+dejándolo en «Ver detalles»</td><td>R-03, 2.ª etapa · R-10</td>
+<td>25 637 px → 18 832 px · peor barrido ×11,34 → ×5,64</td></tr>
 </tbody></table></div>
 
-<p>Los dos <strong>ya están aplicados y verificados volviendo a medir</strong>. El primero cerró los
-2 hallazgos de severidad alta; el segundo dejó R-03 corregido en parte y destapó R-10.
-De lo que queda, los tres primeros de la lista son declaraciones CSS que no cambian el diseño en escritorio y cierran
-4 de los 7 hallazgos
-abiertos. Los dos últimos son trabajo de diseño.</p>
+<p>Los tres <strong>ya están aplicados y verificados volviendo a medir</strong>: cerraron los
+4 hallazgos que figuran como resueltos, incluidos los 2 de
+severidad alta. De lo que queda, los tres primeros de la lista son declaraciones CSS que no cambian el diseño en
+escritorio y cierran 4 de los
+6 hallazgos abiertos.</p>
 
 <h2>7. Las 84 medidas</h2>
 <p class="dek">La evidencia completa, sin filtrar. Las capturas están en <code>out/res-capturas/</code>.</p>
 
+<details class="hall"><summary><span class="hall-tit">Desplegar la tabla de las 84 medidas</span>
+<span class="hall-esf">12 resoluciones × 7 pantallas</span></summary>
+<div class="hallbody">
 <div class="tw" style="max-height:640px;overflow-y:auto"><table>
 <thead><tr><th>Resolución</th><th>Pantalla</th><th>Escala</th><th>Desborde</th><th>Barrido</th>
 <th>Solapes</th><th>Recortes</th><th>&lt;24 px</th><th>2 ejes</th></tr></thead>
@@ -586,7 +718,7 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
 </tr><tr>
   <td><code>fold-cerrado</code><div style="color:var(--tinta3);font-size:12px">280×653</div></td>
   <td>subdominios</td>
-  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n"><span class="tag crit">×0,909</span></td>
   <td class="n">0</td>
   <td class="n">—</td>
   <td class="n">—</td>
@@ -606,9 +738,9 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
 </tr><tr>
   <td><code>fold-cerrado</code><div style="color:var(--tinta3);font-size:12px">280×653</div></td>
   <td>salud</td>
-  <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
+  <td class="n"><span class="tag crit">×0,909</span></td>
   <td class="n">0</td>
-  <td class="n">—</td>
+  <td class="n">×2,79</td>
   <td class="n">—</td>
   <td class="n">—</td>
   <td class="n">1</td>
@@ -628,9 +760,9 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td>technical</td>
   <td class="n"><span class="tag crit">×0,875</span></td>
   <td class="n">0</td>
-  <td class="n">×10,48</td>
+  <td class="n">×4,11</td>
   <td class="n">2</td>
-  <td class="n">41</td>
+  <td class="n">27</td>
   <td class="n">4</td>
   <td class="n">—</td>
 </tr><tr>
@@ -638,7 +770,7 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td>links</td>
   <td class="n"><span class="tag crit">×0,875</span></td>
   <td class="n">0</td>
-  <td class="n">×5,28</td>
+  <td class="n">×3,56</td>
   <td class="n">2</td>
   <td class="n">45</td>
   <td class="n">—</td>
@@ -698,9 +830,9 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td>technical</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×4,82</td>
+  <td class="n">×1,89</td>
   <td class="n">5</td>
-  <td class="n">40</td>
+  <td class="n">26</td>
   <td class="n">4</td>
   <td class="n">—</td>
 </tr><tr>
@@ -708,7 +840,7 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td>links</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×2,43</td>
+  <td class="n">×1,64</td>
   <td class="n">4</td>
   <td class="n">44</td>
   <td class="n">—</td>
@@ -768,17 +900,17 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td>technical</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×1,58</td>
-  <td class="n">3</td>
-  <td class="n">—</td>
-  <td class="n">11</td>
+  <td class="n">×1,38</td>
+  <td class="n">4</td>
+  <td class="n">26</td>
+  <td class="n">4</td>
   <td class="n">—</td>
 </tr><tr>
   <td><code>fold-abierto-vert</code><div style="color:var(--tinta3);font-size:12px">884×1104</div></td>
   <td>links</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×1,77</td>
+  <td class="n">×1,19</td>
   <td class="n">2</td>
   <td class="n">44</td>
   <td class="n">—</td>
@@ -840,8 +972,8 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td class="n">0</td>
   <td class="n">×3,71</td>
   <td class="n">—</td>
+  <td class="n">40</td>
   <td class="n">4</td>
-  <td class="n">11</td>
   <td class="n">—</td>
 </tr><tr>
   <td><code>fold-abierto-horiz</code><div style="color:var(--tinta3);font-size:12px">1104×884</div></td>
@@ -908,9 +1040,9 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td>technical</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×5,9</td>
+  <td class="n">×2,31</td>
   <td class="n">4</td>
-  <td class="n">40</td>
+  <td class="n">26</td>
   <td class="n">4</td>
   <td class="n">—</td>
 </tr><tr>
@@ -918,7 +1050,7 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td>links</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×2,98</td>
+  <td class="n">×2,01</td>
   <td class="n">3</td>
   <td class="n">44</td>
   <td class="n">—</td>
@@ -980,8 +1112,8 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td class="n">0</td>
   <td class="n">×3,71</td>
   <td class="n">—</td>
+  <td class="n">40</td>
   <td class="n">4</td>
-  <td class="n">11</td>
   <td class="n">—</td>
 </tr><tr>
   <td><code>surface-duo-doble</code><div style="color:var(--tinta3);font-size:12px">1114×705</div></td>
@@ -1048,17 +1180,17 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td>technical</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×5,11</td>
+  <td class="n">×4,11</td>
+  <td class="n">3</td>
+  <td class="n">27</td>
   <td class="n">4</td>
-  <td class="n">15</td>
-  <td class="n">11</td>
   <td class="n">—</td>
 </tr><tr>
   <td><code>movil-320</code><div style="color:var(--tinta3);font-size:12px">320×568</div></td>
   <td>links</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×5,28</td>
+  <td class="n">×3,56</td>
   <td class="n">3</td>
   <td class="n">45</td>
   <td class="n">—</td>
@@ -1118,17 +1250,17 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td>technical</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×1,66</td>
+  <td class="n">×1,44</td>
+  <td class="n">5</td>
+  <td class="n">26</td>
   <td class="n">4</td>
-  <td class="n">—</td>
-  <td class="n">11</td>
   <td class="n">—</td>
 </tr><tr>
   <td><code>movil-horizontal</code><div style="color:var(--tinta3);font-size:12px">844×390</div></td>
   <td>links</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×1,86</td>
+  <td class="n">×1,25</td>
   <td class="n">4</td>
   <td class="n">44</td>
   <td class="n">—</td>
@@ -1188,17 +1320,17 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td>technical</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×1,84</td>
-  <td class="n">3</td>
-  <td class="n">—</td>
-  <td class="n">11</td>
+  <td class="n">×1,59</td>
+  <td class="n">4</td>
+  <td class="n">26</td>
+  <td class="n">4</td>
   <td class="n">—</td>
 </tr><tr>
   <td><code>tablet-4-3-vert</code><div style="color:var(--tinta3);font-size:12px">768×1024</div></td>
   <td>links</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×2,05</td>
+  <td class="n">×1,38</td>
   <td class="n">2</td>
   <td class="n">44</td>
   <td class="n">—</td>
@@ -1259,9 +1391,9 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
   <td class="n">×3,71</td>
-  <td class="n">—</td>
-  <td class="n">2</td>
-  <td class="n">11</td>
+  <td class="n">1</td>
+  <td class="n">40</td>
+  <td class="n">4</td>
   <td class="n">—</td>
 </tr><tr>
   <td><code>tablet-4-3-horiz</code><div style="color:var(--tinta3);font-size:12px">1024×768</div></td>
@@ -1398,23 +1530,25 @@ abiertos. Los dos últimos son trabajo de diseño.</p>
   <td>technical</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×5,11</td>
+  <td class="n">×4,11</td>
   <td class="n">4</td>
-  <td class="n">15</td>
-  <td class="n">11</td>
+  <td class="n">27</td>
+  <td class="n">4</td>
   <td class="n">—</td>
 </tr><tr>
   <td><code>reflow-400</code><div style="color:var(--tinta3);font-size:12px">320×256</div></td>
   <td>links</td>
   <td class="n"><span style="color:var(--tinta3)">1:1</span></td>
   <td class="n">0</td>
-  <td class="n">×5,28</td>
+  <td class="n">×3,56</td>
   <td class="n">4</td>
   <td class="n">45</td>
   <td class="n">—</td>
   <td class="n">—</td>
 </tr></tbody>
 </table></div>
+</div>
+</details>
 
 <h2>8. Límites de este ejercicio</h2>
 <p class="dek">Lo que no cubre, dicho antes de que lo pregunten.</p>
@@ -1433,7 +1567,7 @@ salió el hallazgo principal.</p>
 </div>
 
 <footer>
-Generado el 24/8/2026, 11:38:00 p. m. desde <code>out/resoluciones.json</code> y
+Generado el 25/8/2026, 11:32:38 a. m. desde <code>out/resoluciones.json</code> y
 <code>out/encabezados.json</code>. Todas las cifras se interpolan desde la evidencia; ninguna está escrita a mano.
 Modo seguro activo: 0 escrituras registradas.
 </footer>
