@@ -10,6 +10,13 @@ material de la revisión anterior.
 
 ---
 
+> **Actualizado el 17 de setiembre.** Al añadir filtros a las tarjetas de resumen
+> de cada módulo hubo que comprobar, módulo por módulo, que el número de la
+> tarjeta y las filas de la tabla salieran del mismo sitio. De ahí sale un cuarto
+> documento, **[revision-plataforma-2026-09.html](revision-plataforma-2026-09.html)**,
+> con 8 puntos donde el dato que se calcula y el que se muestra no coinciden.
+> Todos medidos sobre la colección MVP 200 Urls. Lo anterior no cambió.
+
 > **Actualizado el 25 de agosto.** El cliente pidió auditar la plataforma con la
 > resolución de un Galaxy Fold —el dispositivo desde el que se reportó que el
 > sitio se rompe— y extender la prueba a otras resoluciones poco frecuentes. Sale
@@ -22,13 +29,14 @@ material de la revisión anterior.
 > de datos a PostgreSQL—. Auditarlo añadió tres hallazgos y tres trabajos, marcados
 > con **✦ Nuevo** en ambos documentos. Lo anterior no cambió.
 
-## Los tres entregables
+## Los cuatro entregables
 
 | Documento | Para qué sirve | Quién lo lee |
 |-----------|----------------|--------------|
 | **[informe-auditoria.html](informe-auditoria.html)** | Los 28 hallazgos con su evidencia | Dirección y equipo de desarrollo |
 | **[plan-de-mejoras.html](plan-de-mejoras.html)** | Los 32 trabajos priorizados, con esfuerzo estimado | Quien planifica |
 | **[informe-resoluciones.html](informe-resoluciones.html)** | Los 10 hallazgos de resoluciones poco comunes, con el antes y el después de lo corregido | Dirección y equipo de desarrollo |
+| **[revision-plataforma-2026-09.html](revision-plataforma-2026-09.html)** | Los 8 puntos donde el dato calculado y el mostrado no coinciden, con capturas de cada caso | Equipo de desarrollo |
 
 Se abren con doble clic, no necesitan servidor ni conexión.
 
