@@ -22,11 +22,12 @@
   ul,ol{margin:0 0 14px;padding-left:22px}
   li{margin-bottom:8px}
   table{border-collapse:collapse;width:100%;font-size:14.5px;margin:16px 0}
-  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--linea);vertical-align:top}
+  th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--linea);vertical-align:top}
   th{background:var(--suave);font-size:12px;letter-spacing:.06em;
     text-transform:uppercase;color:var(--gris)}
   td.c{white-space:nowrap;font-weight:600;width:1%}
   td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;width:1%}
+  td.cod{font-family:ui-monospace,Consolas,monospace;font-size:13px}
   code{background:var(--suave);padding:1px 6px;border-radius:4px;font-size:13.5px}
   pre{background:#1f2328;color:#e8eaed;padding:14px 18px;border-radius:8px;
     font-size:13.5px;line-height:1.6;overflow-x:auto;margin:14px 0}
@@ -49,6 +50,7 @@
   .pie{margin-top:56px;padding-top:20px;border-top:1px solid var(--linea);
     color:var(--gris);font-size:13.5px}
   .mal{color:var(--rojo);font-weight:700}
+  .bien{color:var(--verde);font-weight:700}
 </style>
 </head>
 <body>
@@ -57,206 +59,290 @@
 <header class="tapa">
   <p class="marca">Plataforma de auditoría · Revisión técnica</p>
   <h1>Health Index 360 — dos cosas que desvían el puntaje</h1>
-  <p class="bajada">Revisión sobre la corrida <code>f9bcbf9bd11f44</code> · 200 URLs · octubre 2026</p>
+  <p class="bajada">Corrida <code>f9bcbf9bd11f44</code> · colección MVP 200 URLs · octubre 2026</p>
 </header>
 
-<p>Revisé el Health Index contra los datos reales de la última corrida. <b>Funciona y el
-diseño es sólido.</b> Encontré dos efectos que mueven el puntaje en sentidos opuestos, y
-conviene resolverlos antes de que el número se presente como métrica oficial del sprint.</p>
+<p>Revisé el Health Index contra los datos reales. <b>Funciona y el diseño es sólido.</b>
+Encontré dos problemas: uno pequeño en el conteo y otro de fondo en cómo puntúan las reglas
+que nunca se disparan. Van con números exactos y con el método para reproducirlos.</p>
 
-<div class="caja">
-  <p><b>El índice hoy da 81,5 (nota B).</b> Mi lectura es que ese número no es todavía
-  confiable como valor absoluto: un efecto lo baja y otro lo sube, y no se compensan de forma
-  conocida. Para tendencia sí sirve, siempre que el método no cambie entre sprints.</p>
+<div class="ok">
+  <p><b>Cómo se obtuvieron estas cifras.</b> No se usaron muestras. Se reconstruyó el conteo
+  verdadero pidiendo el <b>drill por URL de las 200 páginas</b>
+  (<code>/url-detail</code>, que deduplica por par página+código) y se comparó con lo que
+  informa el cálculo agregado. Después se recalculó el índice aplicando <b>la misma fórmula</b>
+  con el conteo correcto.</p>
+  <p>Como validación: en las dimensiones sin problema de conteo —SEO y Seguridad— mi recálculo
+  reproduce <b>exactamente</b> el puntaje que muestra hoy la plataforma (92,8 y 66,7). Eso confirma que la
+  comparación es válida y no un artefacto de reimplementar la fórmula.</p>
 </div>
 
 <h3>Lo que está bien resuelto</h3>
 <ul>
   <li><b>La renormalización cuando falta un módulo.</b> Si una dimensión no tiene datos queda
-  N/A y su peso se reparte, en vez de puntuar cero. Es el tratamiento correcto, y evita el
-  problema que vimos en el Comparador, donde dos módulos sin corrida previa hacían parecer que
-  174 de 200 páginas habían empeorado.</li>
+  N/A y su peso se reparte, en vez de puntuar cero. Es el tratamiento correcto.</li>
   <li><b>El cruce por <code>finding_code</code> y no por <code>rule_id</code>.</b> Entre el
-  Excel original y el catálogo de la plataforma hay diez reglas renombradas
-  (<code>IDX_012</code> es <code>LINK_008</code>, etc.). Cruzando por código eso no afecta.
-  Verifiqué las 176: todas tienen código y todos existen en el catálogo.</li>
-  <li><b>La cobertura de Seguridad e Indexación</b>, que no tienen tabla propia.</li>
-  <li><b>El deduplicado.</b> La consulta usa <code>COUNT(DISTINCT page_url)</code>, así que no
-  está contando ocurrencias repetidas. Lo menciono porque es lo primero que uno sospecha al ver
-  los números de abajo, y no es eso.</li>
+  Excel original y el catálogo hay diez reglas renombradas (<code>IDX_012</code> es
+  <code>LINK_008</code>, etc.). Cruzando por código eso no afecta. Verifiqué las 176: todas
+  tienen código y todos existen en el catálogo.</li>
+  <li><b>El deduplicado por página en SQL.</b> <code>COUNT(DISTINCT page_url)</code> está bien
+  puesto. El problema del punto 1 no está ahí, sino después.</li>
+  <li><b>La vista por URL es correcta</b> y no comparte el problema del agregado.</li>
 </ul>
 
 
-<h2>Hallazgo 1 · El numerador y el denominador no miran el mismo conjunto</h2>
+<h2>Problema 1 · El mismo código se cuenta dos veces</h2>
 
-<p>El denominador es <code>evaluated_urls = 200</code>, las URLs de la colección. El ranking
-por URL del propio índice también devuelve 200 páginas, así que ahí son consistentes.</p>
+<p>En <code>_compute_health_for_run()</code>, los conteos por código se <b>suman</b> entre
+tablas de módulos:</p>
 
-<p>Pero las tablas de hallazgos de varios módulos contienen páginas <b>que no están entre esas
-200</b>. Como el numerador sale de esas tablas y el denominador de la corrida, hay reglas que
-marcan más páginas fallidas que páginas existen:</p>
+<pre><span class="c"># main.py · _compute_health_for_run()</span>
+for code, n in repo.get_finding_failcounts(table, run_id_col, mrid, code_col=code_col).items():
+    failing_by_code[code] = failing_by_code.get(code, 0) + int(n or 0)   <span class="c">← suma</span></pre>
 
-<pre><span class="c"># health_index.py · compute()</span>
-compliance = max(0.0, 1.0 - (fails / evaluated_urls))
-<span class="c">#              con fails=400 y evaluated_urls=200  →  max(0, -1)  →  0</span></pre>
+<p>Cuando un mismo <code>finding_code</code> vive en más de una tabla, <b>las mismas páginas se
+cuentan varias veces</b>. La vista por URL no tiene este problema porque usa un conjunto de
+pares <i>(página, código)</i>, así que la misma página con el mismo código colapsa en una.</p>
 
-<p>El resultado es que esas reglas quedan <b class="mal">clavadas en cero</b>, pase lo que pase
-en el portal.</p>
+<p>Ejemplo comprobado, con los <code>module_run_id</code> de esta misma auditoría:</p>
 
 <table>
-  <tr><th>Regla</th><th class="n">URLs que marca</th><th class="n">Denominador</th><th>Dimensión</th></tr>
-  <tr><td class="c">Disclaimers</td><td class="n mal">400</td><td class="n">200</td><td>Identidad de marca</td></tr>
-  <tr><td class="c">Stock / condiciones obligatorias</td><td class="n mal">400</td><td class="n">200</td><td>Identidad de marca</td></tr>
-  <tr><td class="c">HTTPS + Security Headers</td><td class="n mal">400</td><td class="n">200</td><td>Seguridad y privacidad</td></tr>
-  <tr><td class="c">Imagen obsoleta (&gt;180 días)</td><td class="n mal">362</td><td class="n">200</td><td>Identidad de marca</td></tr>
-  <tr><td class="c">Performance bajo</td><td class="n mal">276</td><td class="n">200</td><td>Experiencia de usuario</td></tr>
-  <tr><td class="c">LCP alto</td><td class="n mal">268</td><td class="n">200</td><td>Experiencia de usuario</td></tr>
-  <tr><td class="c">TBT alto (&gt;300 ms)</td><td class="n mal">268</td><td class="n">200</td><td>Experiencia de usuario</td></tr>
-  <tr><td class="c">LCP crítico</td><td class="n mal">263</td><td class="n">200</td><td>Experiencia de usuario</td></tr>
+  <tr><th>Tabla</th><th class="n">Páginas con <code>SECURITY_HTTPS_SECURITY_HEADERS</code></th></tr>
+  <tr><td class="c">technical_crawl_findings</td><td class="n">200</td></tr>
+  <tr><td class="c">alert_events</td><td class="n">200</td></tr>
+  <tr><td class="c"><b>El índice informa</b></td><td class="n mal"><b>400</b></td></tr>
+  <tr><td class="c"><b>Páginas reales</b></td><td class="n bien"><b>200</b></td></tr>
 </table>
 
-<div class="aviso">
-  <p><b>Son al menos ocho, probablemente más.</b> El endpoint sólo devuelve las cinco reglas
-  peores de cada dimensión (<code>top_issues[:5]</code>), así que esta lista es un suelo, no el
-  total.</p>
-</div>
+<h3>Todas las reglas afectadas que se pueden ver</h3>
 
-<h3>De dónde salen esas páginas de más</h3>
+<p>Comparando lo que informa el agregado con el conteo real del drill:</p>
 
-<p><b>Seguridad.</b> Pedí los eventos de alerta de HTTPS / Security Headers y devuelve más de
-500 URLs distintas, del sitio entero y no de la colección:</p>
+<table>
+  <tr><th>Código</th><th class="n">Informa</th><th class="n">Real</th><th class="n">Factor</th></tr>
+  <tr><td class="cod">CONTENT_DISCLAIMERS</td><td class="n">400</td><td class="n">200</td><td class="n mal">×2,00</td></tr>
+  <tr><td class="cod">CONTENT_STOCK_CONDICIONES_OBLIGATORIAS</td><td class="n">400</td><td class="n">200</td><td class="n mal">×2,00</td></tr>
+  <tr><td class="cod">SECURITY_HTTPS_SECURITY_HEADERS</td><td class="n">400</td><td class="n">200</td><td class="n mal">×2,00</td></tr>
+  <tr><td class="cod">IMG_STALE_IMAGE</td><td class="n">362</td><td class="n">181</td><td class="n mal">×2,00</td></tr>
+  <tr><td class="cod">PERF_SCORE_LOW</td><td class="n">276</td><td class="n">168</td><td class="n mal">×1,64</td></tr>
+  <tr><td class="cod">PERF_LCP_HIGH</td><td class="n">268</td><td class="n">169</td><td class="n mal">×1,59</td></tr>
+  <tr><td class="cod">PERF_TBT_HIGH</td><td class="n">268</td><td class="n">169</td><td class="n mal">×1,59</td></tr>
+  <tr><td class="cod">PERF_LCP_CRITICO</td><td class="n">263</td><td class="n">166</td><td class="n mal">×1,58</td></tr>
+  <tr><td class="cod">INDEX_PAGINA_HUERFANA</td><td class="n">182</td><td class="n">91</td><td class="n mal">×2,00</td></tr>
+  <tr><td class="cod">PERF_PERFORMANCE_CRITICO</td><td class="n">176</td><td class="n">106</td><td class="n mal">×1,66</td></tr>
+  <tr><td class="cod">BRAND_INVALID_FONT_BUTTON</td><td class="n">176</td><td class="n">175</td><td class="n mal">×1,01</td></tr>
+  <tr><td class="cod">TAG_TRACKING_DE_GENERACION_DE_LEAD</td><td class="n">76</td><td class="n">38</td><td class="n mal">×2,00</td></tr>
+  <tr><td class="cod">IMG_FONT_NOT_AUTHORIZED</td><td class="n">62</td><td class="n">31</td><td class="n mal">×2,00</td></tr>
+  <tr><td class="cod">LINK_LINKS_INTERNOS_ROTOS</td><td class="n">14</td><td class="n">7</td><td class="n mal">×2,00</td></tr>
+</table>
 
-<pre>https://www.claro.com.pe/consulta-de-numero
-https://www.claro.com.pe/personas
-https://www.claro.com.pe/contactanos
-https://www.claro.com.pe/conoce-tu-recibo/canales-digitales</pre>
+<p><b>14 reglas infladas de las 25 que el endpoint deja ver.</b> Son las cinco peores de cada
+dimensión (<code>top_issues[:5]</code>), así que esta lista es un suelo: puede haber más entre
+las que no se exponen.</p>
 
-<p><b>Contenido.</b> En la muestra aparecen rutas distintas del mismo contenido, que tampoco
-están entre las 200:</p>
+<h3>De dónde sale la duplicación: Alertas reemite lo de otros módulos</h3>
 
-<pre>/hablando-claro/compromiso/<b>sustentabilidad</b>/aprende-con-claro-...
-/hablando-claro/compromiso/<b>sostenibilidad</b>/aprende-con-claro-...
+<p>Recorriendo las tablas completas —1.597 filas de alertas y 2.574 de performance, paginando,
+no una muestra— la aritmética cierra:</p>
 
-/hablando-claro/seguridad/claro-empresas-boletin-ciberseguridad-junio<b>-2026</b>
-/hablando-claro/seguridad/claro-empresas-boletin-ciberseguridad-junio</pre>
-
-<h3>Por qué importa más allá del número</h3>
+<table>
+  <tr><th>Código</th><th class="n">Su módulo</th><th class="n">alert_events</th><th class="n">Suma</th><th class="n">El índice informa</th></tr>
+  <tr><td class="cod">PERF_SCORE_LOW</td><td class="n">166</td><td class="n">108</td><td class="n">274</td><td class="n">276</td></tr>
+  <tr><td class="cod">PERF_LCP_HIGH</td><td class="n">167</td><td class="n">99</td><td class="n">266</td><td class="n">268</td></tr>
+  <tr><td class="cod">PERF_TBT_HIGH</td><td class="n">168</td><td class="n">99</td><td class="n">267</td><td class="n">268</td></tr>
+  <tr><td class="cod">PERF_LCP_CRITICO</td><td class="n">165</td><td class="n">97</td><td class="n">262</td><td class="n">263</td></tr>
+  <tr><td class="cod">PERF_PERFORMANCE_CRITICO</td><td class="n">105</td><td class="n">70</td><td class="n">175</td><td class="n">176</td></tr>
+  <tr><td class="cod">SECURITY_HTTPS_SECURITY_HEADERS</td><td class="n">200 <span style="color:#5b6470">(técnico)</span></td><td class="n">200</td><td class="n">400</td><td class="n">400</td></tr>
+  <tr><td class="cod">INDEX_PAGINA_HUERFANA</td><td class="n">91 <span style="color:#5b6470">(links)</span></td><td class="n">91</td><td class="n">182</td><td class="n">182</td></tr>
+</table>
 
 <div class="alerta">
-  <p><b>Una regla clavada en cero no puede mejorar, y el trending no la ve.</b> Si «Disclaimers»
-  pasara de 400 a 250 páginas afectadas —una mejora real y grande— el cumplimiento seguiría
-  siendo 0 y el índice no se movería. Justo lo que el Health Index existe para capturar.</p>
-  <p>Y afecta a tres dimensiones a la vez: Experiencia de usuario (64,1), Identidad de marca
-  (79,3) y Seguridad (66,7). Son 45 puntos de peso entre las tres.</p>
+  <p><b>La causa de fondo es que el motor de alertas reemite hallazgos de otros módulos.</b>
+  Un mismo problema queda registrado dos veces: en la tabla de su módulo y en
+  <code>alert_events</code>. Como el índice recorre las dos y suma, cada página se cuenta
+  por partida doble.</p>
+  <p>El factor es ×2 exacto cuando todas las páginas que fallan generan además alerta, y menor
+  —×1,58 a ×1,66 en Performance— cuando solo una parte la genera. Las diferencias de una o dos
+  páginas en la tabla son filas sin <code>page_url</code>.</p>
+  <p>Esto también explica que las dimensiones más afectadas sean Experiencia de usuario,
+  Identidad de marca y Seguridad: son las que más alertas generan.</p>
 </div>
 
-<h3>Lo que propondría</h3>
-<ul>
-  <li><b>Acotar el numerador al mismo conjunto que el denominador:</b> contar sólo las páginas
-  que pertenecen a la corrida auditada. Es la opción que mantiene la fórmula intacta.</li>
-  <li>O, si el alcance amplio es intencional en algunos módulos, <b>usar el denominador propio
-  de cada módulo</b> en vez del común — pero entonces el índice mezcla alcances y conviene
-  decirlo en pantalla.</li>
-  <li>Como red de seguridad, <b>avisar cuando <code>fails &gt; evaluated_urls</code></b>: hoy el
-  <code>max(0.0, …)</code> lo absorbe en silencio y no hay forma de notarlo desde la interfaz.</li>
-</ul>
+<h3>Cuánto mueve el número — menos de lo que parece</h3>
 
-
-<h2>Hallazgo 2 · Media tabla de reglas nunca se dispara, y suma como perfecta</h2>
-
-<p>El índice informa <b>173 de 176 reglas evaluadas</b>. Pero «evaluada» significa, según la
-propia definición, <i>que su módulo corrió y la regla tiene un código real</i> — no que la
-comprobación haya producido un veredicto.</p>
-
-<p>Sumando los <code>failing_rules</code> que devuelve el propio endpoint:</p>
+<p>Recalculando con el conteo real y la misma fórmula:</p>
 
 <table>
-  <tr><th>Dimensión</th><th class="n">Peso</th><th class="n">Score</th><th class="n">Reglas evaluadas</th><th class="n">Con hallazgos</th><th class="n">Nunca se disparan</th></tr>
-  <tr><td class="c">Salud técnica</td><td class="n">25 %</td><td class="n">94,5</td><td class="n">46</td><td class="n">11</td><td class="n mal">35</td></tr>
-  <tr><td class="c">SEO</td><td class="n">20 %</td><td class="n">92,8</td><td class="n">23</td><td class="n">6</td><td class="n mal">17</td></tr>
-  <tr><td class="c">Experiencia de usuario</td><td class="n">20 %</td><td class="n">64,1</td><td class="n">46</td><td class="n">34</td><td class="n">12</td></tr>
-  <tr><td class="c">Identidad de marca</td><td class="n">15 %</td><td class="n">79,3</td><td class="n">42</td><td class="n">29</td><td class="n">13</td></tr>
-  <tr><td class="c">Medición y etiquetado</td><td class="n">10 %</td><td class="n">79,5</td><td class="n">13</td><td class="n">4</td><td class="n mal">9</td></tr>
-  <tr><td class="c">Seguridad y privacidad</td><td class="n">10 %</td><td class="n">66,7</td><td class="n">3</td><td class="n">1</td><td class="n">2</td></tr>
-  <tr><td class="c"><b>Total</b></td><td class="n"></td><td class="n"><b>81,5</b></td><td class="n"><b>173</b></td><td class="n"><b>85</b></td><td class="n mal"><b>88</b></td></tr>
+  <tr><th>Dimensión</th><th class="n">Lo que muestra hoy</th><th class="n">Con conteo deduplicado</th><th class="n">Diferencia</th></tr>
+  <tr><td class="c">Salud técnica</td><td class="n">94,5</td><td class="n">96,2</td><td class="n">+1,7</td></tr>
+  <tr><td class="c">SEO</td><td class="n">92,8</td><td class="n">92,8</td><td class="n">0,0</td></tr>
+  <tr><td class="c">Experiencia de usuario</td><td class="n">64,1</td><td class="n">68,0</td><td class="n">+3,9</td></tr>
+  <tr><td class="c">Identidad de marca</td><td class="n">79,3</td><td class="n">80,7</td><td class="n">+1,4</td></tr>
+  <tr><td class="c">Medición y etiquetado</td><td class="n">79,5</td><td class="n">81,3</td><td class="n">+1,8</td></tr>
+  <tr><td class="c">Seguridad y privacidad</td><td class="n">66,7</td><td class="n">66,7</td><td class="n">0,0</td></tr>
+  <tr><td class="c"><b>Índice global</b></td><td class="n"><b>81,5</b></td><td class="n"><b>83,1</b></td><td class="n"><b>+1,6</b></td></tr>
 </table>
 
-<p><b>88 de 173 reglas aportan un cumplimiento de 1,0 sin haber detectado nada.</b> Puede ser
-porque la página está limpia —que es lo deseable— o porque esa comprobación todavía no se
-emite. Hoy las dos cosas puntúan igual.</p>
+<p><b>Sólo 1,6 puntos.</b> La razón es que el <code>max(0.0, …)</code> ya absorbe gran parte del
+daño: una regla que marca 400 de 200 da cumplimiento 0, y con las 200 reales también da 0. El
+efecto sólo aparece cuando el conteo inflado cruza el umbral y el real no — como
+<code>INDEX_PAGINA_HUERFANA</code>, que pasa de 0,09 a 0,55 de cumplimiento.</p>
 
-<div class="caja">
-  <p><b>Se ve claro en Salud técnica.</b> Sale <b>94,5</b> aunque «Página huérfana» falla en 182
-  de 200 páginas, un 91 %. Lo que ocurre es que la dimensión tiene 46 reglas y sólo fallan 11:
-  las otras 35 la levantan.</p>
-  <p>Dicho de otro modo: <b>añadir reglas a una dimensión sube su puntaje</b> aunque las nuevas
-  nunca detecten nada. Esa propiedad hace difícil comparar dimensiones entre sí, y hace que el
-  índice se mueva cuando se amplía el catálogo aunque el portal no haya cambiado.</p>
+<div class="alerta">
+  <p><b>Aun así conviene arreglarlo, y no por el 1,6.</b> Una regla cuyo conteo supera el total
+  de páginas queda clavada en cero y <b>deja de poder mejorar</b>. Si «Disclaimers» pasara de
+  200 a 120 páginas afectadas —una mejora real— el cumplimiento seguiría en 0 mientras el
+  conteo informado (240) siga por encima de 200. El trending no vería esa mejora, que es
+  justo para lo que existe el índice.</p>
 </div>
 
-<h3>Lo que propondría</h3>
+<h3>Arreglo propuesto</h3>
+<p>Acumular el <b>conjunto de páginas</b> por código en vez de sumar conteos, y contar al final
+— exactamente lo que ya hace la vista por URL:</p>
+
+<pre><span class="c"># en vez de sumar conteos por código…</span>
+fail_urls_by_code = {}
+for mod_key, (table, run_col, code_col) in hi.modules_needed().items():
+    for page_url, code in repo.get_finding_fail_pairs(table, run_col, mrid, code_col=code_col):
+        fail_urls_by_code.setdefault(code, set()).add(page_url)
+failing_by_code = {c: len(s) for c, s in fail_urls_by_code.items()}</pre>
+
+<p>La función <code>get_finding_fail_pairs()</code> ya existe y es la que usa el endpoint por
+URL, así que no hace falta SQL nuevo.</p>
+
+<p>La alternativa sería <b>excluir <code>alert_events</code> del barrido</b> salvo para los
+códigos que solo existen ahí —los <code>SECURITY_*</code>—, ya que el resto son un reflejo de
+hallazgos que el índice ya lee de su módulo de origen.</p>
+
+
+
+<h2>Problema 2 · La mitad de las reglas nunca se dispara, y suma como perfecta</h2>
+
+<p>Éste es el de fondo. El índice informa <b>173 de 176 reglas evaluadas</b>, pero «evaluada»
+significa <i>que su módulo corrió y la regla tiene un código real</i> — no que la comprobación
+haya producido un veredicto.</p>
+
+<p>Contando sobre el drill completo de las 200 páginas:</p>
+
+<table>
+  <tr><th>Dimensión</th><th class="n">Peso</th><th class="n">Reglas</th><th class="n">Con hallazgos</th><th class="n">Nunca se disparan</th><th class="n">Score</th></tr>
+  <tr><td class="c">Salud técnica</td><td class="n">25 %</td><td class="n">49</td><td class="n">11</td><td class="n mal">38 (78 %)</td><td class="n">96,2</td></tr>
+  <tr><td class="c">SEO</td><td class="n">20 %</td><td class="n">23</td><td class="n">6</td><td class="n mal">17 (74 %)</td><td class="n">92,8</td></tr>
+  <tr><td class="c">Experiencia de usuario</td><td class="n">20 %</td><td class="n">46</td><td class="n">34</td><td class="n">12 (26 %)</td><td class="n">68,0</td></tr>
+  <tr><td class="c">Identidad de marca</td><td class="n">15 %</td><td class="n">42</td><td class="n">29</td><td class="n">13 (31 %)</td><td class="n">80,7</td></tr>
+  <tr><td class="c">Medición y etiquetado</td><td class="n">10 %</td><td class="n">13</td><td class="n">4</td><td class="n mal">9 (69 %)</td><td class="n">81,3</td></tr>
+  <tr><td class="c">Seguridad y privacidad</td><td class="n">10 %</td><td class="n">3</td><td class="n">1</td><td class="n">2 (67 %)</td><td class="n">66,7</td></tr>
+  <tr><td class="c"><b>Total</b></td><td class="n"></td><td class="n"><b>176</b></td><td class="n"><b>85</b></td><td class="n mal"><b>91 (52 %)</b></td><td class="n"><b>83,1</b></td></tr>
+</table>
+
+<p><b>91 de 176 reglas aportan cumplimiento 1,0 sin haber detectado nada.</b> Puede ser porque
+las páginas están limpias —lo deseable— o porque esa comprobación todavía no se emite. Hoy las
+dos cosas puntúan igual.</p>
+
+<div class="alerta">
+  <p><b>Mira la correlación de la tabla.</b> Las dos dimensiones con mejor puntaje son
+  justamente las que tienen más reglas mudas: Salud técnica saca 96,2 con <b>38 de sus 49 reglas
+  sin disparar</b>, y SEO saca 92,8 con 17 de 23. Las dos peores —Experiencia de usuario y
+  Seguridad— son las que más reglas activas tienen en proporción.</p>
+  <p>Dicho de otro modo: <b>hoy el puntaje mide tanto cuántas comprobaciones están implementadas
+  como cuán sano está el portal</b>. Salud técnica saca 96,2 aunque «Página huérfana» falle en
+  91 de 200 páginas, porque las otras 38 reglas la levantan.</p>
+</div>
+
+<h3>Por qué importa para el trending</h3>
+<p>Cuando se implementen las comprobaciones que faltan, esas reglas empezarán a disparar y el
+índice <b>bajará</b> sin que el portal haya empeorado. Al revés, ampliar el catálogo con reglas
+nuevas lo <b>subirá</b>. En los dos casos la línea de tendencia se moverá por motivos ajenos al
+estado del sitio.</p>
+
+<h3>Arreglo propuesto</h3>
 <ul>
-  <li><b>Distinguir tres estados por regla</b> en lugar de dos: <i>falla</i>, <i>comprobada y
-  limpia</i>, <i>sin veredicto</i>. Las de la tercera no entrarían al promedio, igual que hoy no
-  entran las de un módulo que no corrió.</li>
-  <li>Y <b>mostrar la cobertura real</b> junto al puntaje: «81,5 calculado sobre 85 de 176
-  reglas». Un 81,5 sobre 85 reglas y un 81,5 sobre 176 no son lo mismo, y hoy no hay forma de
-  distinguirlos desde la pantalla.</li>
+  <li><b>Tres estados por regla</b> en lugar de dos: <i>falla</i>, <i>comprobada y limpia</i>,
+  <i>sin veredicto</i>. Las de la tercera no entrarían al promedio, igual que hoy no entran las
+  de un módulo que no corrió.</li>
+  <li>Si distinguirlas no es viable a corto plazo, al menos <b>mostrar la cobertura real</b>
+  junto al puntaje: «83,1 calculado sobre 85 de 176 reglas activas». Un 83 sobre 85 reglas y un
+  83 sobre 176 no significan lo mismo.</li>
 </ul>
 
 
 <h2>Dos apuntes menores</h2>
 
 <div class="aviso">
-  <p><b>La lámina del sprint dice 132 reglas; el modelo tiene 176.</b> El Excel y el catálogo de
-  la plataforma coinciden en 176. Conviene cuadrar la cifra antes de comunicarla, o se estará
-  anunciando un índice calculado sobre un conjunto distinto del que se presentó.</p>
+  <p><b>La lámina del sprint dice 132 reglas; el modelo tiene 176.</b> El Excel de dimensiones y
+  el catálogo de la plataforma coinciden en 176. Conviene cuadrar la cifra antes de comunicarla.</p>
 </div>
 
 <div class="aviso">
   <p><b>Seguridad y privacidad es prácticamente binaria.</b> Tres reglas con el 10 % del peso:
-  cada una vale 33 puntos de esa dimensión. Hoy falla una y la dimensión queda en 66,7. No digo
-  que el peso esté mal — digo que con tres reglas el puntaje salta de golpe y no refleja
+  cada una vale 33 puntos de la dimensión. Hoy falla una —HTTPS + Security Headers, en las 200
+  páginas— y la dimensión queda en 66,7. Con tres reglas el puntaje salta de golpe y no refleja
   gradualidad.</p>
 </div>
 
 
 <h2>Cómo reproducir estas cifras</h2>
 
-<p>Todo sale de los endpoints del propio Health Index, sin tocar nada:</p>
+<p>Todo sale de los endpoints del propio Health Index, en modo lectura:</p>
 
-<pre><span class="c"># El índice y el desglose por dimensión</span>
+<pre><span class="c"># 1 · El índice agregado: scores por dimensión y top_issues con failing_urls</span>
 GET /api/health-index/f9bcbf9bd11f44
 
-<span class="c"># El ranking por URL — devuelve 200, igual que el denominador</span>
+<span class="c"># 2 · Las 200 URLs con incidencias</span>
 GET /api/health-index/f9bcbf9bd11f44/urls?limit=500
 
-<span class="c"># Las páginas que ve cada módulo, que es donde aparecen las de más</span>
-GET /api/modules/alerts/runs/{alert_run_id}/events?limit=500
-GET /api/modules/content/runs/{content_run_id}/findings?limit=500</pre>
+<span class="c"># 3 · Para CADA una de esas 200, su lista completa de reglas incumplidas</span>
+GET /api/health-index/f9bcbf9bd11f44/url-detail?page_url=...
 
-<p>Las reglas que marcan más páginas que el denominador salen comparando
-<code>top_issues[].failing_urls</code> contra <code>evaluated_urls</code> en la primera
-respuesta.</p>
+<span class="c"># El conteo real por código = nº de URLs distintas del paso 3 que lo incumplen.</span>
+<span class="c"># Comparar contra failing_urls del paso 1 → sale la tabla de factores.</span></pre>
+
+<p>Para el ejemplo de la doble cuenta, con los <code>module_run_id</code> de
+<code>GET /api/runs/{run_id}</code>:</p>
+
+<pre>GET /api/modules/technical/runs/{technical_run_id}/findings?limit=500
+GET /api/modules/alerts/runs/{alert_run_id}/events?limit=500
+<span class="c"># SECURITY_HTTPS_SECURITY_HEADERS aparece en las dos, con 200 páginas en cada una.</span></pre>
+
+
+<h2>Los límites de esta revisión</h2>
+
+<p>Para que puedas juzgar hasta dónde llegan estas cifras, esto es lo que <b>no</b> queda
+comprobado:</p>
+
+<div class="aviso">
+  <p><b>Los pesos de severidad</b> (Alta 5 · Media 3 · Baja 1) son configurables por variable de
+  entorno. Usé los que devuelve el endpoint en este entorno; si en producción son otros, los
+  puntajes recalculados cambian.</p>
+  <p><b>La lista de 14 reglas infladas es un suelo.</b> El endpoint solo expone las cinco peores
+  de cada dimensión, así que puede haber más entre las que no se ven.</p>
+  <p><b>«Nunca se dispara» significa en estas 200 páginas y en esta corrida.</b> Una regla podría
+  dispararse en otro alcance o en otra auditoría.</p>
+  <p><b>El 83,1 es un recálculo mío</b> con la misma fórmula, no el resultado de parchear el
+  código y volver a ejecutarlo. Lo que sí está validado es que en las dimensiones sin duplicación
+  ese recálculo reproduce al decimal el puntaje que muestra la plataforma.</p>
+</div>
 
 
 <h2>En resumen</h2>
 
 <div class="pregunta">
-  <p><b class="t">1 · ¿Se puede acotar el numerador a las páginas de la corrida?</b></p>
-  <p>Es el cambio con más impacto. Hoy Seguridad mide sobre el sitio entero y se compara contra
-  las 200 de la colección, y eso deja ocho reglas clavadas en cero.</p>
+  <p><b class="t">1 · Deduplicar el conteo entre tablas</b></p>
+  <p>Acumular el conjunto de páginas por código en vez de sumar conteos. Mueve el índice +1,6
+  puntos, pero sobre todo evita que 14 o más reglas queden clavadas en cero y no puedan reflejar
+  mejoras en el trending.</p>
 </div>
 
 <div class="pregunta">
-  <p><b class="t">2 · ¿Conviene separar «comprobado y limpio» de «sin veredicto»?</b></p>
-  <p>Hoy 88 de 173 reglas suben el índice sin haber detectado nada, y no hay forma de saber
-  cuáles desde la pantalla.</p>
+  <p><b class="t">2 · Separar «comprobado y limpio» de «sin veredicto»</b></p>
+  <p>91 de 176 reglas suben el índice sin haber detectado nada, y las dimensiones con mejor
+  puntaje son precisamente las que más reglas mudas tienen. Mientras no se distingan, el índice
+  mide en parte el avance del catálogo y no sólo la salud del portal.</p>
 </div>
 
-<p class="pie">Revisión hecha sobre la corrida <code>f9bcbf9bd11f44</code> con los datos reales
-de la plataforma. No se modificó ningún archivo ni se ejecutó ninguna auditoría: todas las
-cifras provienen de consultas de lectura a los endpoints existentes.</p>
+<p class="pie">Revisión sobre la corrida <code>f9bcbf9bd11f44</code> (colección MVP 200 URLs) con
+los datos reales de la plataforma. No se modificó ningún archivo ni se ejecutó ninguna
+auditoría: todas las cifras provienen de consultas de lectura a los endpoints existentes.</p>
 
 </div>
 </body>
