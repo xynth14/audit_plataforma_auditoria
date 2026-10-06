@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Revisión · Health Index 360</title>
+<style>
+  :root{--rojo:#da291c;--tinta:#1f2328;--gris:#5b6470;--suave:#f5f6f8;
+    --linea:#e2e4e8;--ambar:#b26a00;--verde:#0f7a3d}
+  *{box-sizing:border-box}
+  body{margin:0;background:#fff;color:var(--tinta);
+    font:16px/1.65 "Segoe UI",system-ui,-apple-system,sans-serif}
+  .hoja{max-width:1060px;margin:0 auto;padding:40px 24px 90px}
+  header.tapa{border-bottom:3px solid var(--rojo);padding-bottom:20px;margin-bottom:30px}
+  .marca{color:var(--rojo);font-weight:700;letter-spacing:.14em;font-size:12px;
+    text-transform:uppercase;margin:0 0 8px}
+  h1{font-size:30px;line-height:1.22;margin:0 0 8px}
+  .bajada{color:var(--gris);margin:0;font-size:17px}
+  h2{font-size:22px;margin:48px 0 12px;padding-top:22px;border-top:3px solid var(--rojo)}
+  h3{font-size:16.5px;margin:28px 0 8px}
+  p{margin:0 0 14px}
+  ul,ol{margin:0 0 14px;padding-left:22px}
+  li{margin-bottom:8px}
+  table{border-collapse:collapse;width:100%;font-size:14.5px;margin:16px 0}
+  th,td{text-align:left;padding:10px 13px;border-bottom:1px solid var(--linea);vertical-align:top}
+  th{background:var(--suave);font-size:12px;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--gris)}
+  td.c{white-space:nowrap;font-weight:600;width:1%}
+  td.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;width:1%}
+  code{background:var(--suave);padding:1px 6px;border-radius:4px;font-size:13.5px}
+  pre{background:#1f2328;color:#e8eaed;padding:14px 18px;border-radius:8px;
+    font-size:13.5px;line-height:1.6;overflow-x:auto;margin:14px 0}
+  pre .c{color:#9aa4b2}
+  .caja{background:var(--suave);border-radius:10px;padding:18px 22px;margin:18px 0}
+  .caja p:last-child{margin-bottom:0}
+  .alerta{border-left:4px solid var(--rojo);background:#fdf3f2;border-radius:0 10px 10px 0;
+    padding:18px 22px;margin:20px 0}
+  .alerta p:last-child{margin-bottom:0}
+  .aviso{border-left:4px solid var(--ambar);background:#fdf8ef;border-radius:0 10px 10px 0;
+    padding:16px 22px;margin:18px 0}
+  .aviso p:last-child{margin-bottom:0}
+  .ok{border-left:4px solid var(--verde);background:#f1f8f3;border-radius:0 10px 10px 0;
+    padding:16px 22px;margin:18px 0}
+  .ok p:last-child{margin-bottom:0}
+  .pregunta{border-left:4px solid var(--rojo);background:#fdf3f2;border-radius:0 10px 10px 0;
+    padding:18px 22px;margin:18px 0}
+  .pregunta b.t{display:block;margin-bottom:6px;font-size:16px}
+  .pregunta p:last-child{margin-bottom:0}
+  .pie{margin-top:56px;padding-top:20px;border-top:1px solid var(--linea);
+    color:var(--gris);font-size:13.5px}
+  .mal{color:var(--rojo);font-weight:700}
+</style>
+</head>
+<body>
+<div class="hoja">
+
+<header class="tapa">
+  <p class="marca">Plataforma de auditoría · Revisión técnica</p>
+  <h1>Health Index 360 — dos cosas que desvían el puntaje</h1>
+  <p class="bajada">Revisión sobre la corrida <code>f9bcbf9bd11f44</code> · 200 URLs · octubre 2026</p>
+</header>
+
+<p>Revisé el Health Index contra los datos reales de la última corrida. <b>Funciona y el
+diseño es sólido.</b> Encontré dos efectos que mueven el puntaje en sentidos opuestos, y
+conviene resolverlos antes de que el número se presente como métrica oficial del sprint.</p>
+
+<div class="caja">
+  <p><b>El índice hoy da 81,5 (nota B).</b> Mi lectura es que ese número no es todavía
+  confiable como valor absoluto: un efecto lo baja y otro lo sube, y no se compensan de forma
+  conocida. Para tendencia sí sirve, siempre que el método no cambie entre sprints.</p>
+</div>
+
+<h3>Lo que está bien resuelto</h3>
+<ul>
+  <li><b>La renormalización cuando falta un módulo.</b> Si una dimensión no tiene datos queda
+  N/A y su peso se reparte, en vez de puntuar cero. Es el tratamiento correcto, y evita el
+  problema que vimos en el Comparador, donde dos módulos sin corrida previa hacían parecer que
+  174 de 200 páginas habían empeorado.</li>
+  <li><b>El cruce por <code>finding_code</code> y no por <code>rule_id</code>.</b> Entre el
+  Excel original y el catálogo de la plataforma hay diez reglas renombradas
+  (<code>IDX_012</code> es <code>LINK_008</code>, etc.). Cruzando por código eso no afecta.
+  Verifiqué las 176: todas tienen código y todos existen en el catálogo.</li>
+  <li><b>La cobertura de Seguridad e Indexación</b>, que no tienen tabla propia.</li>
+  <li><b>El deduplicado.</b> La consulta usa <code>COUNT(DISTINCT page_url)</code>, así que no
+  está contando ocurrencias repetidas. Lo menciono porque es lo primero que uno sospecha al ver
+  los números de abajo, y no es eso.</li>
+</ul>
+
+
+<h2>Hallazgo 1 · El numerador y el denominador no miran el mismo conjunto</h2>
+
+<p>El denominador es <code>evaluated_urls = 200</code>, las URLs de la colección. El ranking
+por URL del propio índice también devuelve 200 páginas, así que ahí son consistentes.</p>
+
+<p>Pero las tablas de hallazgos de varios módulos contienen páginas <b>que no están entre esas
+200</b>. Como el numerador sale de esas tablas y el denominador de la corrida, hay reglas que
+marcan más páginas fallidas que páginas existen:</p>
+
+<pre><span class="c"># health_index.py · compute()</span>
+compliance = max(0.0, 1.0 - (fails / evaluated_urls))
+<span class="c">#              con fails=400 y evaluated_urls=200  →  max(0, -1)  →  0</span></pre>
+
+<p>El resultado es que esas reglas quedan <b class="mal">clavadas en cero</b>, pase lo que pase
+en el portal.</p>
+
+<table>
+  <tr><th>Regla</th><th class="n">URLs que marca</th><th class="n">Denominador</th><th>Dimensión</th></tr>
+  <tr><td class="c">Disclaimers</td><td class="n mal">400</td><td class="n">200</td><td>Identidad de marca</td></tr>
+  <tr><td class="c">Stock / condiciones obligatorias</td><td class="n mal">400</td><td class="n">200</td><td>Identidad de marca</td></tr>
+  <tr><td class="c">HTTPS + Security Headers</td><td class="n mal">400</td><td class="n">200</td><td>Seguridad y privacidad</td></tr>
+  <tr><td class="c">Imagen obsoleta (&gt;180 días)</td><td class="n mal">362</td><td class="n">200</td><td>Identidad de marca</td></tr>
+  <tr><td class="c">Performance bajo</td><td class="n mal">276</td><td class="n">200</td><td>Experiencia de usuario</td></tr>
+  <tr><td class="c">LCP alto</td><td class="n mal">268</td><td class="n">200</td><td>Experiencia de usuario</td></tr>
+  <tr><td class="c">TBT alto (&gt;300 ms)</td><td class="n mal">268</td><td class="n">200</td><td>Experiencia de usuario</td></tr>
+  <tr><td class="c">LCP crítico</td><td class="n mal">263</td><td class="n">200</td><td>Experiencia de usuario</td></tr>
+</table>
+
+<div class="aviso">
+  <p><b>Son al menos ocho, probablemente más.</b> El endpoint sólo devuelve las cinco reglas
+  peores de cada dimensión (<code>top_issues[:5]</code>), así que esta lista es un suelo, no el
+  total.</p>
+</div>
+
+<h3>De dónde salen esas páginas de más</h3>
+
+<p><b>Seguridad.</b> Pedí los eventos de alerta de HTTPS / Security Headers y devuelve más de
+500 URLs distintas, del sitio entero y no de la colección:</p>
+
+<pre>https://www.claro.com.pe/consulta-de-numero
+https://www.claro.com.pe/personas
+https://www.claro.com.pe/contactanos
+https://www.claro.com.pe/conoce-tu-recibo/canales-digitales</pre>
+
+<p><b>Contenido.</b> En la muestra aparecen rutas distintas del mismo contenido, que tampoco
+están entre las 200:</p>
+
+<pre>/hablando-claro/compromiso/<b>sustentabilidad</b>/aprende-con-claro-...
+/hablando-claro/compromiso/<b>sostenibilidad</b>/aprende-con-claro-...
+
+/hablando-claro/seguridad/claro-empresas-boletin-ciberseguridad-junio<b>-2026</b>
+/hablando-claro/seguridad/claro-empresas-boletin-ciberseguridad-junio</pre>
+
+<h3>Por qué importa más allá del número</h3>
+
+<div class="alerta">
+  <p><b>Una regla clavada en cero no puede mejorar, y el trending no la ve.</b> Si «Disclaimers»
+  pasara de 400 a 250 páginas afectadas —una mejora real y grande— el cumplimiento seguiría
+  siendo 0 y el índice no se movería. Justo lo que el Health Index existe para capturar.</p>
+  <p>Y afecta a tres dimensiones a la vez: Experiencia de usuario (64,1), Identidad de marca
+  (79,3) y Seguridad (66,7). Son 45 puntos de peso entre las tres.</p>
+</div>
+
+<h3>Lo que propondría</h3>
+<ul>
+  <li><b>Acotar el numerador al mismo conjunto que el denominador:</b> contar sólo las páginas
+  que pertenecen a la corrida auditada. Es la opción que mantiene la fórmula intacta.</li>
+  <li>O, si el alcance amplio es intencional en algunos módulos, <b>usar el denominador propio
+  de cada módulo</b> en vez del común — pero entonces el índice mezcla alcances y conviene
+  decirlo en pantalla.</li>
+  <li>Como red de seguridad, <b>avisar cuando <code>fails &gt; evaluated_urls</code></b>: hoy el
+  <code>max(0.0, …)</code> lo absorbe en silencio y no hay forma de notarlo desde la interfaz.</li>
+</ul>
+
+
+<h2>Hallazgo 2 · Media tabla de reglas nunca se dispara, y suma como perfecta</h2>
+
+<p>El índice informa <b>173 de 176 reglas evaluadas</b>. Pero «evaluada» significa, según la
+propia definición, <i>que su módulo corrió y la regla tiene un código real</i> — no que la
+comprobación haya producido un veredicto.</p>
+
+<p>Sumando los <code>failing_rules</code> que devuelve el propio endpoint:</p>
+
+<table>
+  <tr><th>Dimensión</th><th class="n">Peso</th><th class="n">Score</th><th class="n">Reglas evaluadas</th><th class="n">Con hallazgos</th><th class="n">Nunca se disparan</th></tr>
+  <tr><td class="c">Salud técnica</td><td class="n">25 %</td><td class="n">94,5</td><td class="n">46</td><td class="n">11</td><td class="n mal">35</td></tr>
+  <tr><td class="c">SEO</td><td class="n">20 %</td><td class="n">92,8</td><td class="n">23</td><td class="n">6</td><td class="n mal">17</td></tr>
+  <tr><td class="c">Experiencia de usuario</td><td class="n">20 %</td><td class="n">64,1</td><td class="n">46</td><td class="n">34</td><td class="n">12</td></tr>
+  <tr><td class="c">Identidad de marca</td><td class="n">15 %</td><td class="n">79,3</td><td class="n">42</td><td class="n">29</td><td class="n">13</td></tr>
+  <tr><td class="c">Medición y etiquetado</td><td class="n">10 %</td><td class="n">79,5</td><td class="n">13</td><td class="n">4</td><td class="n mal">9</td></tr>
+  <tr><td class="c">Seguridad y privacidad</td><td class="n">10 %</td><td class="n">66,7</td><td class="n">3</td><td class="n">1</td><td class="n">2</td></tr>
+  <tr><td class="c"><b>Total</b></td><td class="n"></td><td class="n"><b>81,5</b></td><td class="n"><b>173</b></td><td class="n"><b>85</b></td><td class="n mal"><b>88</b></td></tr>
+</table>
+
+<p><b>88 de 173 reglas aportan un cumplimiento de 1,0 sin haber detectado nada.</b> Puede ser
+porque la página está limpia —que es lo deseable— o porque esa comprobación todavía no se
+emite. Hoy las dos cosas puntúan igual.</p>
+
+<div class="caja">
+  <p><b>Se ve claro en Salud técnica.</b> Sale <b>94,5</b> aunque «Página huérfana» falla en 182
+  de 200 páginas, un 91 %. Lo que ocurre es que la dimensión tiene 46 reglas y sólo fallan 11:
+  las otras 35 la levantan.</p>
+  <p>Dicho de otro modo: <b>añadir reglas a una dimensión sube su puntaje</b> aunque las nuevas
+  nunca detecten nada. Esa propiedad hace difícil comparar dimensiones entre sí, y hace que el
+  índice se mueva cuando se amplía el catálogo aunque el portal no haya cambiado.</p>
+</div>
+
+<h3>Lo que propondría</h3>
+<ul>
+  <li><b>Distinguir tres estados por regla</b> en lugar de dos: <i>falla</i>, <i>comprobada y
+  limpia</i>, <i>sin veredicto</i>. Las de la tercera no entrarían al promedio, igual que hoy no
+  entran las de un módulo que no corrió.</li>
+  <li>Y <b>mostrar la cobertura real</b> junto al puntaje: «81,5 calculado sobre 85 de 176
+  reglas». Un 81,5 sobre 85 reglas y un 81,5 sobre 176 no son lo mismo, y hoy no hay forma de
+  distinguirlos desde la pantalla.</li>
+</ul>
+
+
+<h2>Dos apuntes menores</h2>
+
+<div class="aviso">
+  <p><b>La lámina del sprint dice 132 reglas; el modelo tiene 176.</b> El Excel y el catálogo de
+  la plataforma coinciden en 176. Conviene cuadrar la cifra antes de comunicarla, o se estará
+  anunciando un índice calculado sobre un conjunto distinto del que se presentó.</p>
+</div>
+
+<div class="aviso">
+  <p><b>Seguridad y privacidad es prácticamente binaria.</b> Tres reglas con el 10 % del peso:
+  cada una vale 33 puntos de esa dimensión. Hoy falla una y la dimensión queda en 66,7. No digo
+  que el peso esté mal — digo que con tres reglas el puntaje salta de golpe y no refleja
+  gradualidad.</p>
+</div>
+
+
+<h2>Cómo reproducir estas cifras</h2>
+
+<p>Todo sale de los endpoints del propio Health Index, sin tocar nada:</p>
+
+<pre><span class="c"># El índice y el desglose por dimensión</span>
+GET /api/health-index/f9bcbf9bd11f44
+
+<span class="c"># El ranking por URL — devuelve 200, igual que el denominador</span>
+GET /api/health-index/f9bcbf9bd11f44/urls?limit=500
+
+<span class="c"># Las páginas que ve cada módulo, que es donde aparecen las de más</span>
+GET /api/modules/alerts/runs/{alert_run_id}/events?limit=500
+GET /api/modules/content/runs/{content_run_id}/findings?limit=500</pre>
+
+<p>Las reglas que marcan más páginas que el denominador salen comparando
+<code>top_issues[].failing_urls</code> contra <code>evaluated_urls</code> en la primera
+respuesta.</p>
+
+
+<h2>En resumen</h2>
+
+<div class="pregunta">
+  <p><b class="t">1 · ¿Se puede acotar el numerador a las páginas de la corrida?</b></p>
+  <p>Es el cambio con más impacto. Hoy Seguridad mide sobre el sitio entero y se compara contra
+  las 200 de la colección, y eso deja ocho reglas clavadas en cero.</p>
+</div>
+
+<div class="pregunta">
+  <p><b class="t">2 · ¿Conviene separar «comprobado y limpio» de «sin veredicto»?</b></p>
+  <p>Hoy 88 de 173 reglas suben el índice sin haber detectado nada, y no hay forma de saber
+  cuáles desde la pantalla.</p>
+</div>
+
+<p class="pie">Revisión hecha sobre la corrida <code>f9bcbf9bd11f44</code> con los datos reales
+de la plataforma. No se modificó ningún archivo ni se ejecutó ninguna auditoría: todas las
+cifras provienen de consultas de lectura a los endpoints existentes.</p>
+
+</div>
+</body>
+</html>
